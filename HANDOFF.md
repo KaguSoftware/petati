@@ -12,6 +12,12 @@
   line.** No `Co-Authored-By`, no "Generated with" footer.
 - **Multi-store is unpaid and hidden.** Never surface it to the client. Gate every trace behind
   `FEATURE_MULTI_STORE` + Owner role.
+- **Security is layered, never optional** (owner's standing rule, 2026-09-07):
+  1. Row Level Security is enabled on **every** table in `public` (guarded by `supabase/tests/rls_enabled.test.sql`, which fails the test suite if a table lacks it). Every new migration must `enable row level security` and add policies.
+  2. The service-role client (`src/lib/supabase/admin.ts`) bypasses RLS, so it is only called after `requirePermission()` from `src/lib/auth/session.ts`, or for public catalog/tenant reads that are scoped by `store_id` in the query.
+  3. The permission matrix in `src/lib/auth/permissions.ts` mirrors the SQL helpers (`is_owner`, `has_store_access`). Both sides must agree.
+  4. All server actions validate input with zod; redirects only accept same-site relative paths; password-reset never reveals whether an email exists.
+  5. Storage bucket paths start with `<store_id>/` and policies check membership on that prefix.
 - Keep this file and the plan in lockstep; absolute dates only.
 
 ## What this is
@@ -44,26 +50,41 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
   API you are unsure about (see `AGENTS.md`). Middleware is `src/proxy.ts`.
 
 ## Current status (2026-09-07)
-Done:
-- Repo scaffolded, deps installed, shadcn initialised with base components, i18n config + message
-  files for three languages, `.env.example`, Supabase CLI initialised (`supabase/config.toml`).
+Done (build + typecheck + lint pass; nothing exercised against a live DB yet):
+- Step 1: repo, deps, shadcn (RTL on), next-intl with `messages/{en,tr,fa}.json`, `.env.example`.
+- Step 2: four migrations (platform, catalog, commerce, finance) with RLS on every table, SQL
+  helpers, stock-movement + rating triggers, finance views, seed (4 demo users, 1 store, 5
+  categories, 20 products with variants, coupons, shipping rates), pgTAP tests. SQL is
+  syntax-checked with a PG17 parser only; **not yet run** (no Docker).
+- Step 3: `src/proxy.ts` (tenant + locale + session refresh + admin guard), cached store lookup,
+  theme JSON parsing → CSS vars, permission matrix, session helpers, auth pages
+  (sign-in / sign-up / forgot-password, Google OAuth, callback route), admin shell with
+  role-filtered nav and flag-gated store switcher, locale switcher, storefront placeholder page.
 In progress:
-- Step 2: database migrations, RLS, seed (unverified until Docker is installed).
-Not started: tenant proxy, auth, storefront, admin, themes B–D, deploy config.
+- Step 4: storefront theme A (minimal) end to end.
+Not started: admin modules, themes B–D, deploy config.
 
 ## File map (key files)
 - `next.config.ts` — cacheComponents on, next-intl plugin, image hosts.
+- `src/proxy.ts` — tenant resolution (custom domain → subdomain → default), locale redirect, session refresh, `/admin` guard, rewrite to `/[locale]/s/[store]/…`.
+- `src/lib/tenant/{resolve,store,proxy-lookup}.ts` — pure host parsing, `"use cache"` store lookup (tag `store:<slug>`), proxy-side TTL cache.
+- `src/lib/theme/types.ts` — section keys, variant keys, theme JSON parser, CSS var mapping.
+- `src/lib/auth/{permissions,session,actions}.ts` — matrix, `requirePermission`, auth server actions.
+- `src/lib/supabase/{server,client,admin}.ts` — cookie client, browser client, service-role client.
+- `src/lib/db/types.ts` — hand-written row types (replace with generated types once Docker works).
+- `src/lib/{money,i18n,env}.ts` — minor-unit formatting, translated-JSON picker, env + feature flags.
+- `src/app/[locale]/layout.tsx` — root html (lang/dir/fonts), client intl provider, Suspense boundary.
+- `src/app/[locale]/s/[store]/` — storefront (layout injects theme CSS vars; auth pages live here so they are themed).
+- `src/app/[locale]/admin/` — admin (layout resolves active store + role; `components/admin/admin-shell.tsx`).
 - `src/i18n/{config,routing,navigation,request}.ts` — locales, RTL helper, next-intl wiring.
-- `messages/{en,tr,fa}.json` — all UI strings, namespaced (`common`, `nav`, `product`, `cart`, `checkout`, `account`, `auth`, `orderStatus`, `footer`, `admin`).
-- `components.json` — shadcn config.
-- `.env.example` — every env var with comments.
+- `messages/{en,tr,fa}.json` — all UI strings, namespaced.
 - `supabase/` — CLI config, migrations, seed, pgTAP tests.
 
 ## Roadmap / next steps
 1. ~~Repo + tooling + handoff~~ (done 2026-09-07)
-2. **← ACTIVE** Database schema, RLS, seed, generated types
-3. Tenant proxy, i18n layouts, Supabase auth, permission matrix, admin route guard
-4. Storefront theme A end to end (catalog, cart, checkout with manual payment, account, reviews, wishlist, emails)
+2. ~~Database schema, RLS, seed~~ (written 2026-09-07, unverified without Docker)
+3. ~~Tenant proxy, i18n layouts, Supabase auth, permission matrix, admin route guard~~ (done 2026-09-07)
+4. **← ACTIVE** Storefront theme A end to end (catalog, cart, checkout with manual payment, account, reviews, wishlist, emails)
 5. Admin panel (all modules; store creation hidden behind flag)
 6. Themes B, C, D
 7. Deploy readiness (vercel.ts, wildcard domain, `supabase link`/`db push` to client project)
@@ -78,8 +99,13 @@ Not started: tenant proxy, auth, storefront, admin, themes B–D, deploy config.
 
 ## Gotchas / open issues
 - `cacheComponents: true` means any page reading cookies/headers/params must sit under a Suspense
-  boundary or use `"use cache"` correctly. Expect build errors if you forget.
+  boundary or use `"use cache"` correctly. The `[locale]` layout wraps children in Suspense.
+- Do **not** use next-intl's server `NextIntlClientProvider`: it awaits request config and makes the
+  root layout dynamic. `src/components/intl-provider.tsx` wraps use-intl's pure provider instead.
+  Server components use `getTranslations` from `next-intl/server`; client components use `useTranslations`.
+- Zod 4: `.default({})` on objects needs the full output type. Parse partial then merge with a defaults object (see `parseTheme`).
 - next-intl `localePrefix: "always"`; the bare root is redirected by proxy to the store's default locale.
+- Path-mode URLs `/en/s/<slug>/…` pass through the proxy but storefront links do not preserve the prefix. Preview other stores with `<slug>.localhost:3000` instead.
 - shadcn `form` component was not added (needs react-hook-form); add it when building admin forms.
 - Docker Desktop missing → `npx supabase start` will fail until installed.
 - Owner has not yet provided the client's Supabase project; local only for now.
