@@ -16,7 +16,7 @@ export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.[a-z0-9]+$).*)"],
 };
 
-const SHARED_PREFIXES = ["/admin", "/auth"]; // never rewritten into a store
+const SHARED_PREFIXES = ["/admin", "/auth", "/preview"]; // never rewritten into a store
 
 export async function proxy(request: NextRequest) {
   const url = request.nextUrl;

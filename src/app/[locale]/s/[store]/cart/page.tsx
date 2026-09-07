@@ -25,11 +25,9 @@ async function CartContent({ ctx }: { ctx: StoreContext }) {
   const totals = computeTotals(cart, rate, store);
 
   const shippingNote =
-    totals.freeShippingApplied
-      ? t("freeShipping")
-      : rate?.free_over != null && cart.subtotal < rate.free_over
-        ? `${formatMoney(totals.shipping, store.currency, locale)} · ${t("freeShippingOver", { amount: formatMoney(rate.free_over, store.currency, locale) })}`
-        : null;
+    !totals.freeShippingApplied && rate?.free_over != null && cart.subtotal < rate.free_over
+      ? t("freeShippingOver", { amount: formatMoney(rate.free_over, store.currency, locale) })
+      : null;
 
   return renderSection("cartDrawer", store.theme.sections.cartDrawer, {
     cart,
@@ -46,6 +44,7 @@ async function CartContent({ ctx }: { ctx: StoreContext }) {
         total: t("total"),
         checkout: t("checkout"),
         continueShopping: t("continueShopping"),
+        freeShipping: t("freeShipping"),
         shippingNote,
     },
     lineControls: Object.fromEntries(

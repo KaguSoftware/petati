@@ -13,7 +13,7 @@ export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot
   return (
     <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
-        <MobileNav label={labels.menu} storeName={storeName} links={links} />
+        <MobileNav label={labels.menu} storeName={storeName} links={links} searchPlaceholder={labels.search} />
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
           {logoUrl ? <Image src={logoUrl} alt={storeName} width={32} height={32} className="size-8 rounded object-contain" /> : null}
           {storeName}

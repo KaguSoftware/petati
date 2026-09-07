@@ -10,6 +10,7 @@ export function formatMoney(amountMinor: number, currency: string, locale: strin
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
+    currencyDisplay: "narrowSymbol",
     minimumFractionDigits: divisor === 1 ? 0 : 2,
     maximumFractionDigits: divisor === 1 ? 0 : 2,
   }).format(amountMinor / divisor);

@@ -60,9 +60,20 @@ Done (build + typecheck + lint pass; nothing exercised against a live DB yet):
   theme JSON parsing → CSS vars, permission matrix, session helpers, auth pages
   (sign-in / sign-up / forgot-password, Google OAuth, callback route), admin shell with
   role-filtered nav and flag-gated store switcher, locale switcher, storefront placeholder page.
+- Step 4: storefront theme A ("minimal") end to end: cached catalog queries, cart (cookie token,
+  server actions), coupons, checkout with live totals and the `manual` payment provider, order
+  creation (customer upsert, items snapshot, stock movements, coupon redemption, confirmation email),
+  order page, account area (orders, addresses, wishlist, profile/password), reviews (pending →
+  moderated), newsletter opt-in, content pages. Twelve section variants under
+  `src/components/storefront/sections/*/minimal.tsx` behind the registry.
+- Dev QA harness: `/{locale}/preview/{variant}` renders every section with fixture data and no
+  database (`src/lib/theme/fixtures.ts`). Screenshot-checked at 390px and 1280px in EN and FA with
+  Playwright (Edge channel): no horizontal overflow, RTL mirrors correctly, Vazirmatn renders.
+- Friendly dev error screen (`src/app/[locale]/error.tsx`) explains when Supabase is unreachable.
+**Not verified against a live database**: nothing has run against Postgres yet (see Gotchas).
 In progress:
-- Step 4: storefront theme A (minimal) end to end.
-Not started: admin modules, themes B–D, deploy config.
+- Step 5: admin panel modules.
+Not started: themes B–D, deploy config.
 
 ## File map (key files)
 - `next.config.ts` — cacheComponents on, next-intl plugin, image hosts.
@@ -76,6 +87,15 @@ Not started: admin modules, themes B–D, deploy config.
 - `src/app/[locale]/layout.tsx` — root html (lang/dir/fonts), client intl provider, Suspense boundary.
 - `src/app/[locale]/s/[store]/` — storefront (layout injects theme CSS vars; auth pages live here so they are themed).
 - `src/app/[locale]/admin/` — admin (layout resolves active store + role; `components/admin/admin-shell.tsx`).
+- `src/app/[locale]/preview/[variant]/page.tsx` — dev-only section harness with fixture data.
+- `src/lib/catalog/{queries,types}.ts` — cached public catalog reads (tag `catalog:<storeId>`), view models.
+- `src/lib/cart/{cart,actions,coupon}.ts` — cart cookie/token, server actions, coupon validity.
+- `src/lib/checkout/{totals,actions}.ts` — single source of order maths; `placeOrderAction`.
+- `src/lib/payments/{provider,manual,iyzico,index}.ts` — gateway contract; manual live, iyzico stub.
+- `src/lib/account/{queries,actions}.ts` — orders/addresses/wishlist/reviews/profile for shoppers.
+- `src/lib/email/send.ts`, `src/emails/order-confirmation.tsx` — Resend or console fallback.
+- `src/components/storefront/sections/types.ts` — the props contract every variant must honour.
+- `src/components/storefront/shared/*` — interactive pieces shared by all variants (add-to-cart, cart controls, forms).
 - `src/i18n/{config,routing,navigation,request}.ts` — locales, RTL helper, next-intl wiring.
 - `messages/{en,tr,fa}.json` — all UI strings, namespaced.
 - `supabase/` — CLI config, migrations, seed, pgTAP tests.
@@ -84,8 +104,8 @@ Not started: admin modules, themes B–D, deploy config.
 1. ~~Repo + tooling + handoff~~ (done 2026-09-07)
 2. ~~Database schema, RLS, seed~~ (written 2026-09-07, unverified without Docker)
 3. ~~Tenant proxy, i18n layouts, Supabase auth, permission matrix, admin route guard~~ (done 2026-09-07)
-4. **← ACTIVE** Storefront theme A end to end (catalog, cart, checkout with manual payment, account, reviews, wishlist, emails)
-5. Admin panel (all modules; store creation hidden behind flag)
+4. ~~Storefront theme A end to end~~ (done 2026-09-07, DB-verification pending)
+5. **← ACTIVE** Admin panel (all modules; store creation hidden behind flag)
 6. Themes B, C, D
 7. Deploy readiness (vercel.ts, wildcard domain, `supabase link`/`db push` to client project)
 
@@ -95,9 +115,21 @@ Not started: admin modules, themes B–D, deploy config.
 | Multi-store | Built, hidden behind `FEATURE_MULTI_STORE` + Owner | Visible "Create store" wizard, domains UI | When client pays |
 | Payments | `manual` provider (order = pending_payment, admin marks paid) | iyzico checkout + webhooks + refunds | When client supplies iyzico credentials |
 | Local DB | Migrations written | Verified with `supabase start` | When Docker Desktop is installed |
-| Themes | Theme A only (step 4) | Four variants per section | Step 6 |
+| Themes | `minimal` only; registry falls back to it for any other variant | Four variants per section | Step 6 |
+| Content pages | privacy/terms/about read plain text from `store.settings.pages` | Rich text editor in admin | Step 5 |
+| Admin | Shell + dashboard placeholder | All modules | Step 5 |
 
 ## Gotchas / open issues
+- **BLOCKER for end-to-end testing (2026-09-07): Docker Desktop and WSL are not installed and the
+  dev shell is not elevated.** Owner must run as administrator: `wsl --install` (reboot), then
+  `winget install Docker.DockerDesktop`, open Docker Desktop once, then `npx supabase start`,
+  `npx supabase db reset`, `npx supabase status` → keys into `.env.local`. Until then `/en` shows the
+  dev error screen (ECONNREFUSED 127.0.0.1:54321); use `/en/preview/minimal` for UI work.
+- shadcn here is the Base UI build: `Button` has no `asChild`. Use `buttonVariants()` on a `Link`.
+- The React Compiler lint rule forbids creating components during render: never
+  `const X = getSection(...)`; use `renderSection(key, variant, props)` from `src/lib/theme/registry.tsx`.
+- Files with `"use server"` may only export async functions (helpers go in sibling modules).
+- Git Bash mangles leading-slash CLI args into Windows paths; prefix with `MSYS_NO_PATHCONV=1`.
 - `cacheComponents: true` means any page reading cookies/headers/params must sit under a Suspense
   boundary or use `"use cache"` correctly. The `[locale]` layout wraps children in Suspense.
 - Do **not** use next-intl's server `NextIntlClientProvider`: it awaits request config and makes the

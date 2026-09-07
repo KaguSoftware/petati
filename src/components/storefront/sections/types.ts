@@ -84,6 +84,8 @@ export interface CartViewProps {
     total: string;
     checkout: string;
     continueShopping: string;
+    freeShipping: string;
+    /** hint under the shipping row, e.g. "Free shipping on orders over X" */
     shippingNote: string | null;
   };
   /** cart line id → quantity controls node */

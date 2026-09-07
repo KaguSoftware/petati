@@ -43,7 +43,8 @@ export function CartViewMinimal({ cart, totals, currency, locale, labels, lineCo
             <dl className="flex flex-col gap-2 text-sm">
               <Row label={labels.subtotal} value={money(totals.subtotal)} />
               {totals.discount > 0 && <Row label={labels.discount} value={`−${money(totals.discount)}`} />}
-              <Row label={labels.shipping} value={labels.shippingNote ?? money(totals.shipping)} />
+              <Row label={labels.shipping} value={totals.shipping === 0 ? labels.freeShipping : money(totals.shipping)} />
+              {labels.shippingNote && <p className="text-xs text-muted-foreground">{labels.shippingNote}</p>}
               {totals.tax > 0 && <Row label={labels.tax} value={money(totals.tax)} muted />}
               <div className="my-1 border-t" />
               <Row label={labels.total} value={money(totals.total)} strong />
@@ -63,9 +64,9 @@ export function CartViewMinimal({ cart, totals, currency, locale, labels, lineCo
 
 function Row({ label, value, strong, muted }: { label: string; value: string; strong?: boolean; muted?: boolean }) {
   return (
-    <div className={`flex justify-between ${strong ? "text-base font-semibold" : ""} ${muted ? "text-muted-foreground" : ""}`}>
+    <div className={`flex justify-between gap-4 ${strong ? "text-base font-semibold" : ""} ${muted ? "text-muted-foreground" : ""}`}>
       <dt>{label}</dt>
-      <dd className="tabular-nums">{value}</dd>
+      <dd className="text-end tabular-nums">{value}</dd>
     </div>
   );
 }
