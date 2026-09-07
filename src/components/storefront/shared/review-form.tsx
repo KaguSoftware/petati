@@ -1,0 +1,40 @@
+"use client";
+
+import { useActionState, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { submitReviewAction, type SimpleState } from "@/lib/account/actions";
+import { cn } from "@/lib/utils";
+
+export function ReviewForm({ storeSlug, productId }: { storeSlug: string; productId: string }) {
+  const t = useTranslations("product");
+  const [rating, setRating] = useState(5);
+  const [state, action, pending] = useActionState(submitReviewAction, {} as SimpleState);
+
+  if (state.ok) return <p className="text-sm text-muted-foreground">{t("reviewSubmitted")}</p>;
+
+  return (
+    <form action={action} className="flex flex-col gap-3 rounded-lg border p-4">
+      <input type="hidden" name="storeSlug" value={storeSlug} />
+      <input type="hidden" name="productId" value={productId} />
+      <input type="hidden" name="rating" value={rating} />
+      <p className="font-medium">{t("writeReview")}</p>
+      <div className="inline-flex" dir="ltr">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <button key={i} type="button" aria-label={`${i}`} onClick={() => setRating(i)} className="p-0.5">
+            <Star className={cn("size-5", i <= rating ? "fill-accent text-accent" : "text-muted-foreground/40")} />
+          </button>
+        ))}
+      </div>
+      <Input name="title" placeholder={t("reviewTitle")} maxLength={120} />
+      <Textarea name="body" placeholder={t("reviewBody")} required minLength={3} rows={3} />
+      {state.error && <p className="text-sm text-destructive">{state.error}</p>}
+      <Button type="submit" disabled={pending} className="self-start">
+        {t("writeReview")}
+      </Button>
+    </form>
+  );
+}

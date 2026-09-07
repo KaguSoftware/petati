@@ -1,17 +1,16 @@
-import { notFound } from "next/navigation";
-import { getStoreBySlug } from "@/lib/tenant/store";
 import { themeToCssVars } from "@/lib/theme/types";
+import { storeContext } from "@/lib/tenant/context";
 import { StoreProvider } from "@/components/storefront/store-provider";
+import { StoreChrome } from "@/components/storefront/store-chrome";
 
 /**
  * Storefront root. Resolves the tenant from the (rewritten) path, injects the store's colour
- * scheme as CSS variables so every shadcn token inside is re-skinned, and exposes store basics to
- * client components via context.
+ * scheme as CSS variables so every shadcn token inside is re-skinned, exposes store basics to
+ * client components via context, and wraps pages in the store's chosen chrome.
  */
 export default async function StoreLayout({ children, params }: LayoutProps<"/[locale]/s/[store]">) {
-  const { store: slug, locale } = await params;
-  const store = await getStoreBySlug(slug);
-  if (!store || !store.is_active) notFound();
+  const ctx = await storeContext(params);
+  const { store, locale } = ctx;
 
   return (
     <div
@@ -30,7 +29,7 @@ export default async function StoreLayout({ children, params }: LayoutProps<"/[l
           logoUrl: store.logo_url,
         }}
       >
-        {children}
+        <StoreChrome ctx={ctx}>{children}</StoreChrome>
       </StoreProvider>
     </div>
   );

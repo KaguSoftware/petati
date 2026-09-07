@@ -27,7 +27,8 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "wishlist": "Wishlist",
-    "search": "Search products"
+    "search": "Search products",
+    "menu": "Menu"
   },
   "home": {
     "heroTitle": "Everything your pet loves",
@@ -35,7 +36,8 @@
     "shopNow": "Shop now",
     "featured": "Featured products",
     "newArrivals": "New arrivals",
-    "browseCategories": "Browse categories"
+    "browseCategories": "Browse categories",
+    "viewAll": "View all"
   },
   "product": {
     "addToCart": "Add to cart",
@@ -51,7 +53,13 @@
     "selectOption": "Select {option}",
     "sku": "SKU",
     "addToWishlist": "Add to wishlist",
-    "removeFromWishlist": "Remove from wishlist"
+    "removeFromWishlist": "Remove from wishlist",
+    "new": "New",
+    "reviewSubmitted": "Thanks! Your review will appear after moderation.",
+    "reviewTitle": "Title (optional)",
+    "reviewBody": "Your review",
+    "verifiedPurchase": "Verified purchase",
+    "signInToReview": "Sign in to write a review."
   },
   "cart": {
     "title": "Your cart",
@@ -88,7 +96,15 @@
     "placeOrder": "Place order",
     "orderPlaced": "Thank you! Your order has been placed.",
     "orderNumber": "Order number",
-    "guestNotice": "You can check out as a guest or sign in to save your details."
+    "guestNotice": "You can check out as a guest or sign in to save your details.",
+    "noteLabel": "Order note (optional)",
+    "marketingOptIn": "Email me about offers and news",
+    "errors": {
+      "empty": "Your cart is empty.",
+      "stock": "Some items are no longer available in the requested quantity.",
+      "shipping": "Please choose a shipping method.",
+      "failed": "We could not place your order. Please try again."
+    }
   },
   "account": {
     "title": "My account",
@@ -97,7 +113,19 @@
     "wishlist": "Wishlist",
     "profile": "Profile",
     "noOrders": "You have no orders yet.",
-    "orderStatus": "Status"
+    "orderStatus": "Status",
+    "wishlistEmpty": "Your wishlist is empty.",
+    "noAddresses": "No saved addresses yet.",
+    "defaultAddress": "Default address",
+    "editAddress": "Edit",
+    "deleteAddress": "Delete",
+    "addAddress": "Add address",
+    "label": "Label (e.g. Home)",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "newPassword": "New password",
+    "saved": "Saved."
   },
   "auth": {
     "signIn": "Sign in",
@@ -127,7 +155,10 @@
     "terms": "Terms of service",
     "newsletter": "Subscribe to our newsletter",
     "subscribe": "Subscribe",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "subscribed": "Thanks for subscribing!",
+    "emailPlaceholder": "Your email",
+    "newsletterSubtitle": "New arrivals and offers, straight to your inbox."
   },
   "admin": {
     "title": "Admin",
@@ -146,5 +177,24 @@
     "createStore": "Create store",
     "switchStore": "Switch store",
     "forbidden": "You do not have access to this area."
+  },
+  "shop": {
+    "title": "Shop",
+    "results": "{count} products",
+    "noResults": "No products found.",
+    "sort": "Sort",
+    "sort_newest": "Newest",
+    "sort_price_asc": "Price: low to high",
+    "sort_price_desc": "Price: high to low",
+    "sort_rating": "Top rated"
+  },
+  "order": {
+    "title": "Order",
+    "placedAt": "Placed on",
+    "thanks": "Thank you! Your order has been placed.",
+    "paymentPending": "We will contact you to arrange payment and delivery.",
+    "shippingTo": "Shipping to",
+    "contact": "Contact",
+    "tracking": "Tracking"
   }
 }

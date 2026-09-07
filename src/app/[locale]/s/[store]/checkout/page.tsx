@@ -1,0 +1,57 @@
+import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { storeContext, type StoreContext } from "@/lib/tenant/context";
+import { getCart } from "@/lib/cart/cart";
+import { getShippingRates } from "@/lib/catalog/queries";
+import { renderSection } from "@/lib/theme/registry";
+import { getSessionUser } from "@/lib/auth/session";
+import { getMyAddresses } from "@/lib/account/queries";
+import { pickJson } from "@/lib/catalog/types";
+import { CheckoutProvider, CheckoutSummary } from "@/components/storefront/checkout/checkout-client";
+import { CheckoutFormConnected } from "@/components/storefront/checkout/checkout-form-connected";
+
+export default async function CheckoutPage({ params }: PageProps<"/[locale]/s/[store]/checkout">) {
+  const ctx = await storeContext(params);
+  return (
+    <Suspense fallback={<div className="mx-auto max-w-6xl px-4 py-10 text-muted-foreground">…</div>}>
+      <CheckoutContent ctx={ctx} />
+    </Suspense>
+  );
+}
+
+async function CheckoutContent({ ctx }: { ctx: StoreContext }) {
+  const { store, locale, fallback } = ctx;
+  const [t, cart, rates, user] = await Promise.all([getTranslations("checkout"), getCart(store, locale), getShippingRates(store.id), getSessionUser()]);
+  if (cart.lines.length === 0) redirect(`/${locale}/cart`);
+  const addresses = user ? await getMyAddresses(store.id) : [];
+
+  const shippingOptions = rates.map((r) => ({
+    id: r.id,
+    name: pickJson(r.name, locale, fallback),
+    rate: r.rate,
+    freeOver: r.free_over,
+    isFree: r.rate === 0 || (r.free_over !== null && cart.subtotal >= r.free_over) || cart.coupon?.type === "free_shipping",
+  }));
+  const storeBits = { tax_rate_bp: store.tax_rate_bp, prices_include_tax: store.prices_include_tax };
+
+  return (
+    <CheckoutProvider initialRateId={rates[0]?.id ?? null}>
+      {renderSection("checkout", store.theme.sections.checkout, {
+        title: t("title"),
+        form: (
+          <CheckoutFormConnected
+            storeSlug={store.slug}
+            locale={locale}
+            currency={store.currency}
+            email={user?.email ?? null}
+            addresses={addresses}
+            shippingOptions={shippingOptions}
+            defaultCountry={(store.settings.default_country as string | undefined) ?? "TR"}
+          />
+        ),
+        summary: <CheckoutSummary lines={cart.lines} subtotal={cart.subtotal} coupon={cart.coupon} rates={rates} store={storeBits} currency={store.currency} locale={locale} />,
+      })}
+    </CheckoutProvider>
+  );
+}

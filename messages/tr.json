@@ -27,7 +27,8 @@
     "signIn": "Giriş yap",
     "signOut": "Çıkış yap",
     "wishlist": "Favoriler",
-    "search": "Ürün ara"
+    "search": "Ürün ara",
+    "menu": "Menü"
   },
   "home": {
     "heroTitle": "Evcil dostunuzun sevdiği her şey",
@@ -35,7 +36,8 @@
     "shopNow": "Alışverişe başla",
     "featured": "Öne çıkan ürünler",
     "newArrivals": "Yeni gelenler",
-    "browseCategories": "Kategorilere göz at"
+    "browseCategories": "Kategorilere göz at",
+    "viewAll": "Tümünü gör"
   },
   "product": {
     "addToCart": "Sepete ekle",
@@ -51,7 +53,13 @@
     "selectOption": "{option} seçin",
     "sku": "Stok kodu",
     "addToWishlist": "Favorilere ekle",
-    "removeFromWishlist": "Favorilerden çıkar"
+    "removeFromWishlist": "Favorilerden çıkar",
+    "new": "Yeni",
+    "reviewSubmitted": "Teşekkürler! Değerlendirmeniz onaylandıktan sonra yayınlanacak.",
+    "reviewTitle": "Başlık (isteğe bağlı)",
+    "reviewBody": "Değerlendirmeniz",
+    "verifiedPurchase": "Onaylı alışveriş",
+    "signInToReview": "Değerlendirme yazmak için giriş yapın."
   },
   "cart": {
     "title": "Sepetiniz",
@@ -88,7 +96,15 @@
     "placeOrder": "Siparişi ver",
     "orderPlaced": "Teşekkürler! Siparişiniz alındı.",
     "orderNumber": "Sipariş numarası",
-    "guestNotice": "Misafir olarak devam edebilir veya bilgilerinizi kaydetmek için giriş yapabilirsiniz."
+    "guestNotice": "Misafir olarak devam edebilir veya bilgilerinizi kaydetmek için giriş yapabilirsiniz.",
+    "noteLabel": "Sipariş notu (isteğe bağlı)",
+    "marketingOptIn": "Kampanya ve haberler için e-posta gönderin",
+    "errors": {
+      "empty": "Sepetiniz boş.",
+      "stock": "Bazı ürünler istenen adette artık mevcut değil.",
+      "shipping": "Lütfen bir kargo yöntemi seçin.",
+      "failed": "Siparişiniz oluşturulamadı. Lütfen tekrar deneyin."
+    }
   },
   "account": {
     "title": "Hesabım",
@@ -97,7 +113,19 @@
     "wishlist": "Favoriler",
     "profile": "Profil",
     "noOrders": "Henüz siparişiniz yok.",
-    "orderStatus": "Durum"
+    "orderStatus": "Durum",
+    "wishlistEmpty": "Favori listeniz boş.",
+    "noAddresses": "Kayıtlı adres yok.",
+    "defaultAddress": "Varsayılan adres",
+    "editAddress": "Düzenle",
+    "deleteAddress": "Sil",
+    "addAddress": "Adres ekle",
+    "label": "Etiket (örn. Ev)",
+    "name": "Ad",
+    "email": "E-posta",
+    "password": "Şifre",
+    "newPassword": "Yeni şifre",
+    "saved": "Kaydedildi."
   },
   "auth": {
     "signIn": "Giriş yap",
@@ -127,7 +155,10 @@
     "terms": "Kullanım koşulları",
     "newsletter": "Bültenimize abone olun",
     "subscribe": "Abone ol",
-    "rights": "Tüm hakları saklıdır."
+    "rights": "Tüm hakları saklıdır.",
+    "subscribed": "Abone olduğunuz için teşekkürler!",
+    "emailPlaceholder": "E-posta adresiniz",
+    "newsletterSubtitle": "Yeni ürünler ve kampanyalar doğrudan gelen kutunuza."
   },
   "admin": {
     "title": "Yönetim",
@@ -146,5 +177,24 @@
     "createStore": "Mağaza oluştur",
     "switchStore": "Mağaza değiştir",
     "forbidden": "Bu alana erişim yetkiniz yok."
+  },
+  "shop": {
+    "title": "Mağaza",
+    "results": "{count} ürün",
+    "noResults": "Ürün bulunamadı.",
+    "sort": "Sırala",
+    "sort_newest": "En yeni",
+    "sort_price_asc": "Fiyat: düşükten yükseğe",
+    "sort_price_desc": "Fiyat: yüksekten düşüğe",
+    "sort_rating": "En çok beğenilen"
+  },
+  "order": {
+    "title": "Sipariş",
+    "placedAt": "Sipariş tarihi",
+    "thanks": "Teşekkürler! Siparişiniz alındı.",
+    "paymentPending": "Ödeme ve teslimat için sizinle iletişime geçeceğiz.",
+    "shippingTo": "Teslimat adresi",
+    "contact": "İletişim",
+    "tracking": "Kargo takip"
   }
 }
