@@ -1,0 +1,197 @@
+-- ============================================================================
+-- Local development seed. Runs after migrations on `supabase db reset`.
+-- Demo users (password for all: "password123"):
+--   owner@petati.local    platform owner (sees hidden multi-store UI when FEATURE_MULTI_STORE=true)
+--   manager@petati.local  manager of the "default" store
+--   staff@petati.local    staff of the "default" store
+--   customer@petati.local a shopper
+-- ============================================================================
+set client_min_messages to warning;
+
+-- ---------- auth users ----------
+insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at,
+                        raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
+values
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+   'owner@petati.local', crypt('password123', gen_salt('bf')), now(),
+   '{"provider":"email","providers":["email"]}', '{"full_name":"Olivia Owner"}', now(), now()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+   'manager@petati.local', crypt('password123', gen_salt('bf')), now(),
+   '{"provider":"email","providers":["email"]}', '{"full_name":"Mehmet Manager"}', now(), now()),
+  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+   'staff@petati.local', crypt('password123', gen_salt('bf')), now(),
+   '{"provider":"email","providers":["email"]}', '{"full_name":"Sara Staff"}', now(), now()),
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+   'customer@petati.local', crypt('password123', gen_salt('bf')), now(),
+   '{"provider":"email","providers":["email"]}', '{"full_name":"Cem Customer"}', now(), now());
+
+insert into auth.identities (id, user_id, provider_id, provider, identity_data, last_sign_in_at, created_at, updated_at)
+select gen_random_uuid(), u.id, u.id::text, 'email',
+       jsonb_build_object('sub', u.id::text, 'email', u.email, 'email_verified', true),
+       now(), now(), now()
+from auth.users u where u.email like '%@petati.local';
+
+update public.profiles set platform_role = 'owner' where id = '00000000-0000-0000-0000-000000000001';
+
+-- ---------- store ----------
+insert into public.stores (id, slug, name, tagline, currency, default_locale, enabled_locales, contact_email,
+                           email_from, tax_rate_bp, low_stock_threshold, created_by, theme)
+values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything your pet loves',
+        'TRY', 'en', '{en,tr,fa}', 'hello@petati.local', 'Petati <noreply@petati.local>', 2000, 5,
+        '00000000-0000-0000-0000-000000000001',
+        '{
+          "sections": {
+            "announcementBar": "minimal", "navbar": "minimal", "hero": "minimal", "categoryBanner": "minimal",
+            "productGrid": "minimal", "productCard": "minimal", "productPage": "minimal",
+            "cartDrawer": "minimal", "checkout": "minimal", "reviews": "minimal",
+            "newsletter": "minimal", "footer": "minimal"
+          },
+          "colors": {
+            "primary": "#0f766e", "primaryForeground": "#ffffff",
+            "accent": "#f59e0b", "accentForeground": "#1c1917",
+            "background": "#ffffff", "foreground": "#0c0a09",
+            "muted": "#f5f5f4", "mutedForeground": "#57534e"
+          },
+          "fonts": { "heading": "Inter", "body": "Inter" },
+          "radius": "0.75rem"
+        }'::jsonb);
+
+insert into public.store_members (store_id, user_id, role) values
+  ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002', 'manager'),
+  ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003', 'staff');
+
+insert into public.customers (store_id, user_id, email, full_name) values
+  ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000004', 'customer@petati.local', 'Cem Customer');
+
+-- ---------- shipping & coupons ----------
+insert into public.shipping_rates (store_id, name, rate, free_over, min_days, max_days, sort_order) values
+  ('10000000-0000-0000-0000-000000000001', '{"en":"Standard delivery","tr":"Standart teslimat","fa":"ارسال عادی"}', 4990, 50000, 2, 5, 0),
+  ('10000000-0000-0000-0000-000000000001', '{"en":"Express delivery","tr":"Hızlı teslimat","fa":"ارسال سریع"}', 9990, null, 1, 2, 1);
+
+insert into public.coupons (store_id, code, type, value, min_subtotal, max_uses) values
+  ('10000000-0000-0000-0000-000000000001', 'WELCOME10', 'percent', 10, 20000, null),
+  ('10000000-0000-0000-0000-000000000001', 'FREESHIP', 'free_shipping', 0, null, 100),
+  ('10000000-0000-0000-0000-000000000001', 'PET50', 'fixed', 5000, 30000, 50);
+
+insert into public.expense_categories (store_id, name, sort_order) values
+  ('10000000-0000-0000-0000-000000000001', 'Stock purchase', 0),
+  ('10000000-0000-0000-0000-000000000001', 'Marketing', 1),
+  ('10000000-0000-0000-0000-000000000001', 'Shipping supplies', 2),
+  ('10000000-0000-0000-0000-000000000001', 'Rent & utilities', 3),
+  ('10000000-0000-0000-0000-000000000001', 'Other', 4);
+
+-- ---------- catalog ----------
+do $$
+declare
+  v_store uuid := '10000000-0000-0000-0000-000000000001';
+  v_cat record;
+  v_prod record;
+  v_pid uuid;
+  v_opt_id uuid;
+  v_val_ids uuid[];
+  v_val_id uuid;
+  v_var_id uuid;
+  v_size text;
+  v_sizes text[] := array['S','M','L'];
+  v_size_names jsonb := '{"S":{"en":"Small","tr":"Küçük","fa":"کوچک"},"M":{"en":"Medium","tr":"Orta","fa":"متوسط"},"L":{"en":"Large","tr":"Büyük","fa":"بزرگ"}}';
+  v_i int;
+  v_n int := 0;
+begin
+  -- categories
+  for v_cat in select * from (values
+    ('toys',        'Toys',        'Oyuncaklar',     'اسباب‌بازی‌ها', 0),
+    ('food',        'Food & Treats','Mama ve Ödüller','غذا و تشویقی',  1),
+    ('beds',        'Beds',        'Yataklar',       'جای خواب',      2),
+    ('collars',     'Collars & Leashes','Tasma ve Kayışlar','قلاده و بند', 3),
+    ('grooming',    'Grooming',    'Bakım',          'نظافت و بهداشت', 4)
+  ) as c(slug, en, tr, fa, ord) loop
+    insert into public.categories (id, store_id, slug, sort_order, image_url)
+    values (gen_random_uuid(), v_store, v_cat.slug, v_cat.ord, 'https://picsum.photos/seed/' || v_cat.slug || '/800/600')
+    returning id into v_pid;
+    insert into public.category_translations (category_id, locale, name) values
+      (v_pid, 'en', v_cat.en), (v_pid, 'tr', v_cat.tr), (v_pid, 'fa', v_cat.fa);
+  end loop;
+
+  -- products: (category slug, product slug, en, tr, fa, base price minor units, cost, has sizes, featured)
+  for v_prod in select * from (values
+    ('toys',    'rope-tug-toy',        'Rope Tug Toy',          'Halat Çekiştirme Oyuncağı', 'اسباب‌بازی طنابی',      14900,  6000, false, true),
+    ('toys',    'squeaky-duck',        'Squeaky Duck',          'Öten Ördek',                'اردک صدادار',           9900,   3500, false, false),
+    ('toys',    'feather-wand',        'Feather Wand',          'Tüylü Kedi Çubuğu',         'چوب پر گربه',           7900,   2500, false, true),
+    ('toys',    'treat-puzzle-ball',   'Treat Puzzle Ball',     'Ödül Bulmaca Topu',         'توپ معمایی تشویقی',     19900,  8000, false, false),
+    ('food',    'salmon-dog-kibble',   'Salmon Dog Kibble',     'Somonlu Köpek Maması',      'غذای خشک سگ با سالمون', 45900, 28000, true,  true),
+    ('food',    'chicken-cat-kibble',  'Chicken Cat Kibble',    'Tavuklu Kedi Maması',       'غذای خشک گربه با مرغ',  39900, 24000, true,  false),
+    ('food',    'dental-chews',        'Dental Chews',          'Diş Çubukları',             'تشویقی دندانی',         12900,  5000, false, false),
+    ('food',    'freeze-dried-liver',  'Freeze-dried Liver',    'Kurutulmuş Ciğer',          'جگر خشک‌شده',           16900,  7000, false, false),
+    ('beds',    'orthopedic-dog-bed',  'Orthopedic Dog Bed',    'Ortopedik Köpek Yatağı',    'تخت ارتوپدیک سگ',       89900, 42000, true,  true),
+    ('beds',    'donut-cat-bed',       'Donut Cat Bed',         'Donut Kedi Yatağı',         'جای خواب دونات گربه',   49900, 21000, true,  false),
+    ('beds',    'cooling-mat',         'Cooling Mat',           'Soğutucu Mat',              'زیرانداز خنک‌کننده',    34900, 15000, true,  false),
+    ('collars', 'reflective-collar',   'Reflective Collar',     'Reflektörlü Tasma',         'قلاده شب‌رنگ',          17900,  6500, true,  true),
+    ('collars', 'padded-harness',      'Padded Harness',        'Yastıklı Göğüs Tasması',    'قلاده کتفی نرم',        29900, 12000, true,  false),
+    ('collars', 'retractable-leash',   'Retractable Leash',     'Otomatik Kayış',            'بند خودجمع‌شونده',      24900, 10000, false, false),
+    ('collars', 'cat-breakaway-collar','Cat Breakaway Collar',  'Kedi Güvenlik Tasması',     'قلاده ایمن گربه',        8900,  3000, false, false),
+    ('grooming','slicker-brush',       'Slicker Brush',         'Tüy Fırçası',               'برس مو',                12900,  4500, false, false),
+    ('grooming','nail-clippers',       'Nail Clippers',         'Tırnak Makası',             'ناخن‌گیر',              10900,  3500, false, false),
+    ('grooming','oatmeal-shampoo',     'Oatmeal Shampoo',       'Yulaflı Şampuan',           'شامپو جو دوسر',         13900,  5000, false, true),
+    ('grooming','deshedding-tool',     'Deshedding Tool',       'Tüy Alma Aleti',            'ابزار ضد ریزش مو',      22900,  9000, false, false),
+    ('grooming','paw-balm',            'Paw Balm',              'Pati Balsamı',              'بالم پنجه',              8900,  3000, false, false)
+  ) as p(cat, slug, en, tr, fa, price, cost, sized, featured) loop
+    v_n := v_n + 1;
+    insert into public.products (id, store_id, slug, status, is_featured, tags)
+    values (gen_random_uuid(), v_store, v_prod.slug, 'active', v_prod.featured,
+            case when v_n % 3 = 0 then array['new'] else '{}'::text[] end)
+    returning id into v_pid;
+
+    insert into public.product_translations (product_id, locale, name, short_description, description) values
+      (v_pid, 'en', v_prod.en, 'Quality ' || lower(v_prod.en) || ' your pet will love.',
+        'Made from durable, pet-safe materials. ' || v_prod.en || ' is designed for everyday use and easy cleaning.'),
+      (v_pid, 'tr', v_prod.tr, 'Evcil dostunuzun bayılacağı kaliteli ' || lower(v_prod.tr) || '.',
+        'Dayanıklı ve evcil hayvan dostu malzemelerden üretilmiştir. Günlük kullanım için tasarlandı, kolay temizlenir.'),
+      (v_pid, 'fa', v_prod.fa, v_prod.fa || ' با کیفیت که حیوان خانگی شما عاشقش می‌شود.',
+        'ساخته‌شده از مواد بادوام و ایمن برای حیوانات خانگی. مناسب استفاده روزمره و تمیز کردن آسان.');
+
+    insert into public.product_categories (product_id, category_id)
+    select v_pid, c.id from public.categories c where c.store_id = v_store and c.slug = v_prod.cat;
+
+    for v_i in 1..3 loop
+      insert into public.product_images (product_id, url, alt, sort_order)
+      values (v_pid, 'https://picsum.photos/seed/' || v_prod.slug || '-' || v_i || '/900/900',
+              jsonb_build_object('en', v_prod.en, 'tr', v_prod.tr, 'fa', v_prod.fa), v_i - 1);
+    end loop;
+
+    if v_prod.sized then
+      insert into public.product_options (id, product_id, name, sort_order)
+      values (gen_random_uuid(), v_pid, '{"en":"Size","tr":"Beden","fa":"سایز"}', 0)
+      returning id into v_opt_id;
+      v_i := 0;
+      foreach v_size in array v_sizes loop
+        insert into public.product_option_values (id, option_id, value, sort_order)
+        values (gen_random_uuid(), v_opt_id, v_size_names -> v_size, v_i)
+        returning id into v_val_id;
+        insert into public.product_variants (id, store_id, product_id, sku, price, compare_at_price, cost_price, is_default, weight_grams)
+        values (gen_random_uuid(), v_store, v_pid, upper(replace(v_prod.slug, '-', '')) || '-' || v_size,
+                v_prod.price + v_i * 5000,
+                case when v_prod.featured then v_prod.price + v_i * 5000 + 8000 end,
+                v_prod.cost + v_i * 2000, v_i = 0, 300 + v_i * 200)
+        returning id into v_var_id;
+        insert into public.variant_option_values (variant_id, option_value_id) values (v_var_id, v_val_id);
+        insert into public.stock_movements (store_id, variant_id, delta, reason, actor_id, note)
+        values (v_store, v_var_id, 8 + (v_i * 7), 'initial', '00000000-0000-0000-0000-000000000002', 'Seed stock');
+        v_i := v_i + 1;
+      end loop;
+    else
+      insert into public.product_variants (id, store_id, product_id, sku, price, compare_at_price, cost_price, is_default, weight_grams)
+      values (gen_random_uuid(), v_store, v_pid, upper(replace(v_prod.slug, '-', '')),
+              v_prod.price, case when v_prod.featured then v_prod.price + 5000 end, v_prod.cost, true, 250)
+      returning id into v_var_id;
+      insert into public.stock_movements (store_id, variant_id, delta, reason, actor_id, note)
+      values (v_store, v_var_id, case when v_n % 5 = 0 then 3 else 25 end, 'initial',
+              '00000000-0000-0000-0000-000000000002', 'Seed stock');
+    end if;
+  end loop;
+end $$;
+
+-- ---------- a couple of approved reviews ----------
+insert into public.reviews (store_id, product_id, user_id, rating, title, body, status, is_verified_purchase)
+select p.store_id, p.id, '00000000-0000-0000-0000-000000000004', 5, 'Great quality',
+       'My dog has not put it down since it arrived.', 'approved', true
+from public.products p where p.slug in ('rope-tug-toy', 'orthopedic-dog-bed');
