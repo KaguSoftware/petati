@@ -3,8 +3,11 @@
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { CountrySelect } from "@/components/forms/country-select";
+import { LatinInput, type LatinKind } from "@/components/forms/latin-input";
 import { deleteAddressAction, saveAddressAction, type SimpleState } from "@/lib/account/actions";
 import type { AddressRow } from "@/lib/db/types";
 
@@ -61,16 +64,20 @@ function AddressForm({ storeSlug, address, defaultCountry, onDone }: { storeSlug
       {address && <input type="hidden" name="id" value={address.id} />}
       <F name="label" label={ta("label")} value={address?.label} />
       <F name="full_name" label={t("fullName")} value={address?.full_name} required auto="name" />
-      <F name="phone" label={t("phone")} value={address?.phone} auto="tel" />
+      <F name="phone" label={t("phone")} value={address?.phone} auto="tel" kind="tel" />
       <F name="line1" label={t("addressLine1")} value={address?.line1} required auto="address-line1" />
       <F name="line2" label={t("addressLine2")} value={address?.line2} auto="address-line2" />
       <F name="city" label={t("city")} value={address?.city} required auto="address-level2" />
       <F name="region" label={t("region")} value={address?.region} auto="address-level1" />
-      <F name="postal_code" label={t("postalCode")} value={address?.postal_code} auto="postal-code" />
-      <F name="country" label={t("country")} value={address?.country ?? defaultCountry} required auto="country" />
-      <label className="flex items-center gap-2 text-sm sm:col-span-2">
-        <input type="checkbox" name="is_default" defaultChecked={address?.is_default ?? false} /> {ta("defaultAddress")}
-      </label>
+      <F name="postal_code" label={t("postalCode")} value={address?.postal_code} auto="postal-code" kind="postal" />
+      <div className="grid gap-1.5">
+        <Label htmlFor="addr-country">{t("country")}</Label>
+        <CountrySelect id="addr-country" name="country" defaultValue={address?.country ?? defaultCountry} required />
+      </div>
+      <Label className="gap-2.5 font-normal sm:col-span-2">
+        <Checkbox name="is_default" defaultChecked={address?.is_default ?? false} />
+        {ta("defaultAddress")}
+      </Label>
       {state.error && <p className="text-sm text-destructive sm:col-span-2">{tc("error")}</p>}
       <div className="flex gap-2 sm:col-span-2">
         <Button type="submit" disabled={pending}>{tc("save")}</Button>
@@ -80,11 +87,16 @@ function AddressForm({ storeSlug, address, defaultCountry, onDone }: { storeSlug
   );
 }
 
-function F({ name, label, value, required, auto }: { name: string; label: string; value?: string | null; required?: boolean; auto?: string }) {
+function F({ name, label, value, required, auto, kind }: { name: string; label: string; value?: string | null; required?: boolean; auto?: string; kind?: LatinKind }) {
+  const id = `addr-${name}`;
   return (
     <div className="grid gap-1.5">
-      <Label htmlFor={`addr-${name}`}>{label}</Label>
-      <Input id={`addr-${name}`} name={name} defaultValue={value ?? ""} required={required} autoComplete={auto} />
+      <Label htmlFor={id}>{label}</Label>
+      {kind ? (
+        <LatinInput kind={kind} id={id} name={name} defaultValue={value ?? ""} required={required} autoComplete={auto} />
+      ) : (
+        <Input id={id} name={name} defaultValue={value ?? ""} required={required} autoComplete={auto} />
+      )}
     </div>
   );
 }

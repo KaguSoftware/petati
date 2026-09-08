@@ -1,44 +1,15 @@
 -- ============================================================================
--- Local development seed. Runs after migrations on `supabase db reset`.
--- Demo users (password for all: "password123"):
---   owner@petati.local    platform owner (sees hidden multi-store UI when FEATURE_MULTI_STORE=true)
---   manager@petati.local  manager of the "default" store
---   staff@petati.local    staff of the "default" store
---   customer@petati.local a shopper
+-- Store + catalog seed. Safe for any environment (no users, no passwords).
+-- Runs on `supabase db reset` (with 02_dev_users.sql) and `supabase db push --include-seed`.
 -- ============================================================================
 set client_min_messages to warning;
-
--- ---------- auth users ----------
-insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at,
-                        raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
-values
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
-   'owner@petati.local', crypt('password123', gen_salt('bf')), now(),
-   '{"provider":"email","providers":["email"]}', '{"full_name":"Olivia Owner"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
-   'manager@petati.local', crypt('password123', gen_salt('bf')), now(),
-   '{"provider":"email","providers":["email"]}', '{"full_name":"Mehmet Manager"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
-   'staff@petati.local', crypt('password123', gen_salt('bf')), now(),
-   '{"provider":"email","providers":["email"]}', '{"full_name":"Sara Staff"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
-   'customer@petati.local', crypt('password123', gen_salt('bf')), now(),
-   '{"provider":"email","providers":["email"]}', '{"full_name":"Cem Customer"}', now(), now());
-
-insert into auth.identities (id, user_id, provider_id, provider, identity_data, last_sign_in_at, created_at, updated_at)
-select gen_random_uuid(), u.id, u.id::text, 'email',
-       jsonb_build_object('sub', u.id::text, 'email', u.email, 'email_verified', true),
-       now(), now(), now()
-from auth.users u where u.email like '%@petati.local';
-
-update public.profiles set platform_role = 'owner' where id = '00000000-0000-0000-0000-000000000001';
 
 -- ---------- store ----------
 insert into public.stores (id, slug, name, tagline, currency, default_locale, enabled_locales, contact_email,
                            email_from, tax_rate_bp, low_stock_threshold, created_by, theme)
 values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything your pet loves',
         'TRY', 'en', '{en,tr,fa}', 'hello@petati.local', 'Petati <noreply@petati.local>', 2000, 5,
-        '00000000-0000-0000-0000-000000000001',
+        null,  -- created_by; the dev-users seed links the demo owner locally
         '{
           "sections": {
             "announcementBar": "minimal", "navbar": "minimal", "hero": "minimal", "categoryBanner": "minimal",
@@ -55,13 +26,6 @@ values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything
           "fonts": { "heading": "Inter", "body": "Inter" },
           "radius": "0.75rem"
         }'::jsonb);
-
-insert into public.store_members (store_id, user_id, role) values
-  ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002', 'manager'),
-  ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003', 'staff');
-
-insert into public.customers (store_id, user_id, email, full_name) values
-  ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000004', 'customer@petati.local', 'Cem Customer');
 
 -- ---------- shipping & coupons ----------
 insert into public.shipping_rates (store_id, name, rate, free_over, min_days, max_days, sort_order) values
@@ -175,7 +139,7 @@ begin
         returning id into v_var_id;
         insert into public.variant_option_values (variant_id, option_value_id) values (v_var_id, v_val_id);
         insert into public.stock_movements (store_id, variant_id, delta, reason, actor_id, note)
-        values (v_store, v_var_id, 8 + (v_i * 7), 'initial', '00000000-0000-0000-0000-000000000002', 'Seed stock');
+        values (v_store, v_var_id, 8 + (v_i * 7), 'initial', null, 'Seed stock');
         v_i := v_i + 1;
       end loop;
     else
@@ -185,13 +149,7 @@ begin
       returning id into v_var_id;
       insert into public.stock_movements (store_id, variant_id, delta, reason, actor_id, note)
       values (v_store, v_var_id, case when v_n % 5 = 0 then 3 else 25 end, 'initial',
-              '00000000-0000-0000-0000-000000000002', 'Seed stock');
+              null, 'Seed stock');
     end if;
   end loop;
 end $$;
-
--- ---------- a couple of approved reviews ----------
-insert into public.reviews (store_id, product_id, user_id, rating, title, body, status, is_verified_purchase)
-select p.store_id, p.id, '00000000-0000-0000-0000-000000000004', 5, 'Great quality',
-       'My dog has not put it down since it arrived.', 'approved', true
-from public.products p where p.slug in ('rope-tug-toy', 'orthopedic-dog-bed');

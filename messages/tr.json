@@ -16,7 +16,10 @@
     "language": "Dil",
     "currency": "Para birimi",
     "error": "Bir şeyler ters gitti.",
-    "notFound": "Sayfa bulunamadı"
+    "notFound": "Sayfa bulunamadı",
+    "close": "Kapat",
+    "noResults": "Sonuç yok",
+    "selectCountry": "Ülke seçin"
   },
   "nav": {
     "home": "Ana sayfa",
@@ -28,7 +31,8 @@
     "signOut": "Çıkış yap",
     "wishlist": "Favoriler",
     "search": "Ürün ara",
-    "menu": "Menü"
+    "menu": "Menü",
+    "closeMenu": "Menüyü kapat"
   },
   "home": {
     "heroTitle": "Evcil dostunuzun sevdiği her şey",

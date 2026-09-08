@@ -31,10 +31,10 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
 - Next.js 16.3.4 (App Router, `cacheComponents: true`, Turbopack, `src/` dir), React 19, TypeScript.
 - Tailwind v4 + shadcn/ui (`base-nova` style, `rtl: true` in `components.json`).
 - next-intl 4 with `messages/{en,tr,fa}.json`, `[locale]` prefix always.
-- Supabase (Postgres, Auth, Storage) via `@supabase/ssr`. Local stack through Supabase CLI (npm devDependency) which **needs Docker Desktop — not installed on the dev machine as of 2026-09-07**.
+- Supabase (Postgres, Auth, Storage) via `@supabase/ssr`. Local stack through Supabase CLI (npm devDependency) on Docker Desktop. Works on the second dev machine (2026-09-08); the first machine still has no Docker.
 - Resend + react-email for transactional mail (optional in dev, logs to console without a key).
 - Vercel for hosting. Vercel CLI not installed yet.
-- Dev OS: Windows 11, Node 22.14, npm 11.
+- Dev OS: Windows 11. Machine 1: Node 22.14, npm 11 (no Docker). Machine 2: Node 24.15, npm 12, Docker Desktop 29 (works).
 - No secrets in this file. Env template: `.env.example`.
 
 ## Conventions
@@ -49,13 +49,13 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
 - Next.js 16 differs from older training data: read `node_modules/next/dist/docs/` before using an
   API you are unsure about (see `AGENTS.md`). Middleware is `src/proxy.ts`.
 
-## Current status (2026-09-07)
-Done (build + typecheck + lint pass; nothing exercised against a live DB yet):
+## Current status (2026-09-08)
+Done (build + typecheck + lint pass; migrations, seed, pgTAP and the storefront verified against the local Supabase stack on 2026-09-08):
 - Step 1: repo, deps, shadcn (RTL on), next-intl with `messages/{en,tr,fa}.json`, `.env.example`.
 - Step 2: four migrations (platform, catalog, commerce, finance) with RLS on every table, SQL
   helpers, stock-movement + rating triggers, finance views, seed (4 demo users, 1 store, 5
-  categories, 20 products with variants, coupons, shipping rates), pgTAP tests. SQL is
-  syntax-checked with a PG17 parser only; **not yet run** (no Docker).
+  categories, 20 products with variants, coupons, shipping rates), pgTAP tests. Applied cleanly on
+  first run (2026-09-08); `npx supabase test db` passes 11/11.
 - Step 3: `src/proxy.ts` (tenant + locale + session refresh + admin guard), cached store lookup,
   theme JSON parsing → CSS vars, permission matrix, session helpers, auth pages
   (sign-in / sign-up / forgot-password, Google OAuth, callback route), admin shell with
@@ -70,7 +70,8 @@ Done (build + typecheck + lint pass; nothing exercised against a live DB yet):
   database (`src/lib/theme/fixtures.ts`). Screenshot-checked at 390px and 1280px in EN and FA with
   Playwright (Edge channel): no horizontal overflow, RTL mirrors correctly, Vazirmatn renders.
 - Friendly dev error screen (`src/app/[locale]/error.tsx`) explains when Supabase is unreachable.
-**Not verified against a live database**: nothing has run against Postgres yet (see Gotchas).
+Verified live (2026-09-08): `supabase start` + `db reset`, pgTAP green, storefront home / category /
+product / cart / sign-in render for en, tr, fa with no Cache Components warnings, password sign-in works.
 In progress:
 - Step 5: admin panel modules.
 Not started: themes B–D, deploy config.
@@ -102,9 +103,9 @@ Not started: themes B–D, deploy config.
 
 ## Roadmap / next steps
 1. ~~Repo + tooling + handoff~~ (done 2026-09-07)
-2. ~~Database schema, RLS, seed~~ (written 2026-09-07, unverified without Docker)
+2. ~~Database schema, RLS, seed~~ (written 2026-09-07, verified live 2026-09-08)
 3. ~~Tenant proxy, i18n layouts, Supabase auth, permission matrix, admin route guard~~ (done 2026-09-07)
-4. ~~Storefront theme A end to end~~ (done 2026-09-07, DB-verification pending)
+4. ~~Storefront theme A end to end~~ (done 2026-09-07, verified against the local DB 2026-09-08)
 5. **← ACTIVE** Admin panel (all modules; store creation hidden behind flag)
 6. Themes B, C, D
 7. Deploy readiness (vercel.ts, wildcard domain, `supabase link`/`db push` to client project)
@@ -114,24 +115,30 @@ Not started: themes B–D, deploy config.
 |---|---|---|---|
 | Multi-store | Built, hidden behind `FEATURE_MULTI_STORE` + Owner | Visible "Create store" wizard, domains UI | When client pays |
 | Payments | `manual` provider (order = pending_payment, admin marks paid) | iyzico checkout + webhooks + refunds | When client supplies iyzico credentials |
-| Local DB | Migrations written | Verified with `supabase start` | When Docker Desktop is installed |
 | Themes | `minimal` only; registry falls back to it for any other variant | Four variants per section | Step 6 |
 | Content pages | privacy/terms/about read plain text from `store.settings.pages` | Rich text editor in admin | Step 5 |
 | Admin | Shell + dashboard placeholder | All modules | Step 5 |
 
 ## Gotchas / open issues
-- **BLOCKER for end-to-end testing (2026-09-07): Docker Desktop and WSL are not installed and the
-  dev shell is not elevated.** Owner must run as administrator: `wsl --install` (reboot), then
-  `winget install Docker.DockerDesktop`, open Docker Desktop once, then `npx supabase start`,
-  `npx supabase db reset`, `npx supabase status` → keys into `.env.local`. Until then `/en` shows the
-  dev error screen (ECONNREFUSED 127.0.0.1:54321); use `/en/preview/minimal` for UI work.
+- Machine 1 has no Docker Desktop / WSL (needs an elevated shell: `wsl --install`, reboot,
+  `winget install Docker.DockerDesktop`). There `/en` shows the dev error screen
+  (ECONNREFUSED 127.0.0.1:54321); use `/en/preview/minimal` for UI work.
+- **Port clash**: another project's Supabase stack ("touchpadel") auto-starts with Docker Desktop on
+  machine 2 and holds 54321-54324. Run `npx supabase stop --project-id touchpadel` before `npx supabase start`.
+- **Seeded auth users must set the token columns to `''`** (`confirmation_token`, `recovery_token`,
+  `email_change*`, `phone_change*`, `reauthentication_token`). GoTrue cannot scan NULL there and every
+  sign-in fails with "Database error querying schema". `seed.sql` does this; copy the pattern when
+  inserting users by hand.
 - shadcn here is the Base UI build: `Button` has no `asChild`. Use `buttonVariants()` on a `Link`.
 - The React Compiler lint rule forbids creating components during render: never
   `const X = getSection(...)`; use `renderSection(key, variant, props)` from `src/lib/theme/registry.tsx`.
 - Files with `"use server"` may only export async functions (helpers go in sibling modules).
 - Git Bash mangles leading-slash CLI args into Windows paths; prefix with `MSYS_NO_PATHCONV=1`.
-- `cacheComponents: true` means any page reading cookies/headers/params must sit under a Suspense
-  boundary or use `"use cache"` correctly. The `[locale]` layout wraps children in Suspense.
+- `cacheComponents: true` means any page reading cookies/headers/params/searchParams must sit under a
+  Suspense boundary or use `"use cache"` correctly. The `[locale]` layout wraps children in Suspense;
+  pages read `searchParams` in a child component inside `<Suspense>` (see sign-in, category).
+  `new Date()` in a server component is also flagged; wrap it in a `"use cache"` helper
+  (see `copyrightYear` in `store-chrome.tsx`).
 - Do **not** use next-intl's server `NextIntlClientProvider`: it awaits request config and makes the
   root layout dynamic. `src/components/intl-provider.tsx` wraps use-intl's pure provider instead.
   Server components use `getTranslations` from `next-intl/server`; client components use `useTranslations`.
@@ -139,17 +146,20 @@ Not started: themes B–D, deploy config.
 - next-intl `localePrefix: "always"`; the bare root is redirected by proxy to the store's default locale.
 - Path-mode URLs `/en/s/<slug>/…` pass through the proxy but storefront links do not preserve the prefix. Preview other stores with `<slug>.localhost:3000` instead.
 - shadcn `form` component was not added (needs react-hook-form); add it when building admin forms.
-- Docker Desktop missing → `npx supabase start` will fail until installed.
 - Owner has not yet provided the client's Supabase project; local only for now.
 
 ## Running it
 ```
 npm install
-# once Docker Desktop is installed:
-npx supabase start
+npx supabase start               # Docker Desktop must be running; see port-clash gotcha
 npx supabase db reset            # applies migrations + seed.sql
 npx supabase status              # copy URL / anon / service_role into .env.local
 cp .env.example .env.local
 npm run dev                      # http://localhost:3000
 npm run lint && npx tsc --noEmit && npm run build
+npx supabase test db             # pgTAP: RLS on every table + role matrix
 ```
+Local accounts (password `password123`): owner@petati.local (platform owner), manager@petati.local,
+staff@petati.local, customer@petati.local. Extra platform-owner login for manual testing:
+`testuser@gmail.com` / `12345678`, created by hand in the local DB on 2026-09-08 (not in `seed.sql`,
+so re-create it after `npx supabase db reset` using the seed's insert pattern).

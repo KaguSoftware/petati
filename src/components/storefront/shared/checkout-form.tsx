@@ -3,9 +3,13 @@
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { CountrySelect } from "@/components/forms/country-select";
+import { LatinInput } from "@/components/forms/latin-input";
 import { placeOrderAction, type CheckoutState } from "@/lib/checkout/actions";
 import { formatMoney } from "@/lib/money";
 import type { AddressRow } from "@/lib/db/types";
@@ -58,10 +62,10 @@ export function CheckoutForm({ storeSlug, locale, currency, email, addresses, sh
         <h2 className="text-lg font-semibold">{t("contact")}</h2>
         {!email && <p className="text-sm text-muted-foreground">{t("guestNotice")}</p>}
         <Field name="email" label={t("email")} error={fe.email}>
-          <Input id="email" name="email" type="email" defaultValue={email ?? ""} required autoComplete="email" />
+          <LatinInput kind="email" id="email" name="email" defaultValue={email ?? ""} required autoComplete="email" />
         </Field>
         <Field name="phone" label={t("phone")} error={fe.phone}>
-          <Input id="phone" name="phone" type="tel" defaultValue={addr?.phone ?? ""} autoComplete="tel" />
+          <LatinInput kind="tel" id="phone" name="phone" defaultValue={addr?.phone ?? ""} autoComplete="tel" />
         </Field>
       </section>
 
@@ -70,14 +74,16 @@ export function CheckoutForm({ storeSlug, locale, currency, email, addresses, sh
         {addresses.length > 1 && (
           <div className="flex flex-wrap gap-2">
             {addresses.map((a) => (
-              <button
+              <Button
                 key={a.id}
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={() => setAddr(a)}
-                className={cn("rounded-md border px-3 py-1.5 text-sm", addr?.id === a.id && "border-primary bg-primary/10")}
+                className={cn(addr?.id === a.id && "border-primary bg-primary/10")}
               >
                 {a.label ?? a.city}
-              </button>
+              </Button>
             ))}
           </div>
         )}
@@ -98,25 +104,36 @@ export function CheckoutForm({ storeSlug, locale, currency, email, addresses, sh
             <Input id="region" name="region" key={`r-${addr?.id}`} defaultValue={addr?.region ?? ""} autoComplete="address-level1" />
           </Field>
           <Field name="postal_code" label={t("postalCode")} error={fe.postal_code}>
-            <Input id="postal_code" name="postal_code" key={`p-${addr?.id}`} defaultValue={addr?.postal_code ?? ""} autoComplete="postal-code" />
+            <LatinInput kind="postal" id="postal_code" name="postal_code" key={`p-${addr?.id}`} defaultValue={addr?.postal_code ?? ""} autoComplete="postal-code" />
           </Field>
           <Field name="country" label={t("country")} error={fe.country}>
-            <Input id="country" name="country" key={`co-${addr?.id}`} defaultValue={addr?.country ?? defaultCountry} required maxLength={2} className="uppercase" autoComplete="country" />
+            <CountrySelect id="country" name="country" key={`co-${addr?.id}`} defaultValue={addr?.country ?? defaultCountry} required />
           </Field>
         </div>
       </section>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">{tc("shipping")}</h2>
-        {shippingOptions.map((opt, i) => (
-          <label key={opt.id} className="flex cursor-pointer items-center justify-between gap-3 rounded-md border px-3 py-2 text-sm has-[:checked]:border-primary">
-            <span className="flex items-center gap-2">
-              <input type="radio" name="shipping_rate_id" value={opt.id} defaultChecked={i === 0} onChange={() => onShippingChange?.(opt.id)} required />
-              {opt.name}
-            </span>
-            <span className="tabular-nums">{opt.isFree ? tc("freeShipping") : formatMoney(opt.rate, currency, locale)}</span>
-          </label>
-        ))}
+        <RadioGroup
+          name="shipping_rate_id"
+          required
+          defaultValue={shippingOptions[0]?.id}
+          onValueChange={(value) => onShippingChange?.(String(value))}
+          className="gap-2"
+        >
+          {shippingOptions.map((opt) => (
+            <Label
+              key={opt.id}
+              className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border px-3 py-2.5 text-sm font-normal transition-colors has-data-checked:border-primary has-data-checked:bg-primary/5"
+            >
+              <span className="flex items-center gap-2.5">
+                <RadioGroupItem value={opt.id} />
+                {opt.name}
+              </span>
+              <span className="tabular-nums">{opt.isFree ? tc("freeShipping") : formatMoney(opt.rate, currency, locale)}</span>
+            </Label>
+          ))}
+        </RadioGroup>
         {state.error === "shipping" && <p className="text-sm text-destructive">{tc("shipping")}</p>}
       </section>
 
@@ -129,9 +146,10 @@ export function CheckoutForm({ storeSlug, locale, currency, email, addresses, sh
         <Textarea id="customer_note" name="customer_note" rows={3} />
       </Field>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" name="accepts_marketing" /> {t("marketingOptIn")}
-      </label>
+      <Label className="gap-2.5 font-normal">
+        <Checkbox name="accepts_marketing" />
+        {t("marketingOptIn")}
+      </Label>
 
       {state.error && state.error !== "invalid" && (
         <p role="alert" className="text-sm text-destructive">

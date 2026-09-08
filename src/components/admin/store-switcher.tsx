@@ -1,6 +1,8 @@
 "use client";
 
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from "@/i18n/navigation";
 import { switchAdminStoreAction } from "@/lib/admin/actions";
 
@@ -15,25 +17,35 @@ export function StoreSwitcher({
   current: string;
   stores: { id: string; name: string }[];
 }) {
+  const t = useTranslations("admin");
   const router = useRouter();
   const [pending, start] = useTransition();
+  const items = stores.map((s) => ({ value: s.id, label: s.name }));
+
   return (
-    <select
-      className="w-full rounded-md border bg-background px-2 py-1.5 text-sm"
+    <Select
+      items={items}
       value={current}
+      modal={false}
       disabled={pending}
-      onChange={(e) =>
+      onValueChange={(value) => {
+        if (!value || value === current) return;
         start(async () => {
-          await switchAdminStoreAction(e.target.value);
+          await switchAdminStoreAction(String(value));
           router.refresh();
-        })
-      }
+        });
+      }}
     >
-      {stores.map((s) => (
-        <option key={s.id} value={s.id}>
-          {s.name}
-        </option>
-      ))}
-    </select>
+      <SelectTrigger size="sm" aria-label={t("switchStore")} className="w-full">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent alignItemWithTrigger={false}>
+        {items.map((item) => (
+          <SelectItem key={item.value} value={item.value}>
+            {item.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

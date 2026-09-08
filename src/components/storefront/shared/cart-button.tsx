@@ -1,20 +1,24 @@
 import { ShoppingBag } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
 import { getCart } from "@/lib/cart/cart";
 import type { Store } from "@/lib/tenant/store";
+import { cn } from "@/lib/utils";
+
+const iconButton = buttonVariants({ variant: "ghost", size: "icon-lg" });
 
 /** Reads the cart cookie: dynamic. Always render inside <Suspense>. */
 export async function CartButton({ store, locale }: { store: Store; locale: Locale }) {
   const t = await getTranslations("nav");
   const cart = await getCart(store, locale);
   return (
-    <Link href="/cart" aria-label={t("cart")} className="relative inline-flex size-10 items-center justify-center rounded-md hover:bg-muted">
+    <Link href="/cart" aria-label={t("cart")} className={cn(iconButton, "relative")}>
       <ShoppingBag className="size-5" />
       {cart.itemCount > 0 && (
-        <span className="absolute -top-0.5 -end-0.5 min-w-5 rounded-full bg-primary px-1 text-center text-[11px] font-semibold leading-5 text-primary-foreground">
-          {cart.itemCount}
+        <span className="absolute -top-1 -end-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 text-[10px] leading-none font-semibold text-primary-foreground tabular-nums ring-2 ring-background">
+          {new Intl.NumberFormat(locale).format(cart.itemCount)}
         </span>
       )}
     </Link>
@@ -23,7 +27,7 @@ export async function CartButton({ store, locale }: { store: Store; locale: Loca
 
 export function CartButtonFallback() {
   return (
-    <span className="inline-flex size-10 items-center justify-center">
+    <span aria-hidden className={iconButton}>
       <ShoppingBag className="size-5" />
     </span>
   );

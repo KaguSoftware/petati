@@ -21,6 +21,9 @@ import { ReviewForm } from "@/components/storefront/shared/review-form";
  * Dev-only visual harness: every section of one variant rendered with fixture data, no database.
  * Used to QA mobile/desktop layouts and, later, as the admin design picker's preview.
  */
+/** Dev-only harness: allowed to block on params (no static params for variants). */
+export const instant = false;
+
 export default async function PreviewPage({ params }: PageProps<"/[locale]/preview/[variant]">) {
   if (process.env.NODE_ENV === "production") notFound();
   const { locale, variant } = await params;
@@ -49,8 +52,8 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
           storeName,
           logoUrl: null,
           categories: fixtureCategories,
-          labels: { home: tn("home"), shop: tn("shop"), search: tn("search"), menu: tn("menu") },
-          localeSlot: <LocaleSwitcher />,
+          labels: { home: tn("home"), shop: tn("shop"), search: tn("search"), menu: tn("menu"), closeMenu: tn("closeMenu"), categories: tn("categories") },
+          localeSlot: <LocaleSwitcher variant="compact" />,
           accountSlot: <AccountButtonFallback />,
           cartSlot: <CartButtonFallback />,
         })}

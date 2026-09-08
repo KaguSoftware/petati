@@ -1,7 +1,10 @@
 "use client";
 
+import { useId } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { ProductSort } from "@/lib/catalog/types";
 
@@ -12,30 +15,41 @@ export function ShopToolbar({ total }: { total: number }) {
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const id = useId();
   const current = (params.get("sort") as ProductSort) || "newest";
+  const items = SORTS.map((s) => ({ value: s, label: t(`sort_${s}`) }));
 
   return (
     <div className="flex items-center justify-between gap-4 text-sm">
       <span className="text-muted-foreground">{t("results", { count: total })}</span>
-      <label className="flex items-center gap-2">
-        {t("sort")}
-        <select
-          className="rounded-md border bg-background px-2 py-1"
+      <div className="flex items-center gap-2">
+        <Label htmlFor={id} className="text-muted-foreground">
+          {t("sort")}
+        </Label>
+        <Select
+          items={items}
           value={current}
-          onChange={(e) => {
+          modal={false}
+          onValueChange={(value) => {
+            if (!value) return;
             const next = new URLSearchParams(params.toString());
-            next.set("sort", e.target.value);
+            next.set("sort", String(value));
             next.delete("page");
             router.replace(`${pathname}?${next.toString()}`);
           }}
         >
-          {SORTS.map((s) => (
-            <option key={s} value={s}>
-              {t(`sort_${s}`)}
-            </option>
-          ))}
-        </select>
-      </label>
+          <SelectTrigger id={id} size="sm" aria-label={t("sort")}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="end" alignItemWithTrigger={false}>
+            {items.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

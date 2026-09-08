@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { LatinInput } from "@/components/forms/latin-input";
 import { subscribeNewsletterAction, type SimpleState } from "@/lib/account/actions";
 
 export function NewsletterForm({ storeSlug }: { storeSlug: string }) {
@@ -13,7 +13,7 @@ export function NewsletterForm({ storeSlug }: { storeSlug: string }) {
   return (
     <form action={action} className="flex w-full max-w-md gap-2">
       <input type="hidden" name="storeSlug" value={storeSlug} />
-      <Input name="email" type="email" required placeholder={t("emailPlaceholder")} aria-label={t("emailPlaceholder")} />
+      <LatinInput kind="email" name="email" required placeholder={t("emailPlaceholder")} aria-label={t("emailPlaceholder")} autoComplete="email" />
       <Button type="submit" disabled={pending}>
         {t("subscribe")}
       </Button>

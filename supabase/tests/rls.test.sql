@@ -1,12 +1,16 @@
 -- Run with: npx supabase test db   (needs the local stack running)
 begin;
+create schema if not exists tests;
 select plan(10);
 
--- helpers to impersonate users
+-- helpers to impersonate users (user lookup runs as definer so it works from the anon role)
+create or replace function tests.user_id(p_email text) returns uuid language sql security definer set search_path = auth, pg_temp as $$
+  select id from auth.users where email = p_email;
+$$;
 create or replace function tests.authenticate_as(p_email text) returns void language plpgsql as $$
 declare uid uuid;
 begin
-  select id into uid from auth.users where email = p_email;
+  uid := tests.user_id(p_email);
   perform set_config('request.jwt.claims', json_build_object('sub', uid, 'role', 'authenticated')::text, true);
   perform set_config('role', 'authenticated', true);
 end $$;
@@ -15,6 +19,9 @@ begin
   perform set_config('request.jwt.claims', '', true);
   perform set_config('role', 'anon', true);
 end $$;
+
+grant usage on schema tests to anon, authenticated;
+grant execute on all functions in schema tests to anon, authenticated;
 
 -- anon: sees active products of the active store, no coupons, no orders
 select tests.clear_auth();

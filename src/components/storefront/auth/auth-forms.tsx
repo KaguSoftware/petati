@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LatinInput } from "@/components/forms/latin-input";
 import { Link } from "@/i18n/navigation";
 import {
   requestPasswordResetAction,
@@ -41,7 +42,7 @@ export function SignInForm({ locale, next }: { locale: string; next?: string }) 
         {next && <input type="hidden" name="next" value={next} />}
         <div className="grid gap-2">
           <Label htmlFor="email">{t("email")}</Label>
-          <Input id="email" name="email" type="email" autoComplete="email" required />
+          <LatinInput kind="email" id="email" name="email" autoComplete="email" required />
         </div>
         <div className="grid gap-2">
           <div className="flex items-center justify-between">
@@ -50,7 +51,7 @@ export function SignInForm({ locale, next }: { locale: string; next?: string }) 
               {t("forgotPassword")}
             </Link>
           </div>
-          <Input id="password" name="password" type="password" autoComplete="current-password" required minLength={8} />
+          <LatinInput kind="password" id="password" name="password" autoComplete="current-password" required minLength={8} />
         </div>
         <Feedback state={state} />
         <Button type="submit" disabled={pending}>
@@ -87,11 +88,11 @@ export function SignUpForm({ locale, next }: { locale: string; next?: string }) 
         </div>
         <div className="grid gap-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
-          <Input id="email" name="email" type="email" autoComplete="email" required />
+          <LatinInput kind="email" id="email" name="email" autoComplete="email" required />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">{t("auth.password")}</Label>
-          <Input id="password" name="password" type="password" autoComplete="new-password" required minLength={8} />
+          <LatinInput kind="password" id="password" name="password" autoComplete="new-password" required minLength={8} />
         </div>
         <Feedback state={state} />
         <Button type="submit" disabled={pending}>
@@ -117,7 +118,7 @@ export function ForgotPasswordForm({ locale }: { locale: string }) {
       <input type="hidden" name="locale" value={locale} />
       <div className="grid gap-2">
         <Label htmlFor="email">{t("email")}</Label>
-        <Input id="email" name="email" type="email" autoComplete="email" required />
+        <LatinInput kind="email" id="email" name="email" autoComplete="email" required />
       </div>
       <Feedback state={state} />
       <Button type="submit" disabled={pending}>

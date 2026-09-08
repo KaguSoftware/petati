@@ -18,7 +18,7 @@ export interface NavbarProps {
   storeName: string;
   logoUrl: string | null;
   categories: Pick<CategoryData, "slug" | "name">[];
-  labels: { home: string; shop: string; search: string; menu: string };
+  labels: { home: string; shop: string; search: string; menu: string; closeMenu: string; categories: string };
   /** dynamic slots rendered by the page inside Suspense */
   cartSlot: ReactNode;
   accountSlot: ReactNode;

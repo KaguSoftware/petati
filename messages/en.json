@@ -16,7 +16,10 @@
     "language": "Language",
     "currency": "Currency",
     "error": "Something went wrong.",
-    "notFound": "Page not found"
+    "notFound": "Page not found",
+    "close": "Close",
+    "noResults": "No results",
+    "selectCountry": "Select country"
   },
   "nav": {
     "home": "Home",
@@ -28,7 +31,8 @@
     "signOut": "Sign out",
     "wishlist": "Wishlist",
     "search": "Search products",
-    "menu": "Menu"
+    "menu": "Menu",
+    "closeMenu": "Close menu"
   },
   "home": {
     "heroTitle": "Everything your pet loves",

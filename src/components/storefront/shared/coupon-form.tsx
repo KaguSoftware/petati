@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { LatinInput } from "@/components/forms/latin-input";
 import { applyCouponAction, removeCouponAction, type CartActionState } from "@/lib/cart/actions";
 
 export function CouponForm({ storeSlug, appliedCode }: { storeSlug: string; appliedCode: string | null }) {
@@ -16,11 +16,11 @@ export function CouponForm({ storeSlug, appliedCode }: { storeSlug: string; appl
       <form action={removeCouponAction} className="flex items-center justify-between rounded-md border border-dashed px-3 py-2 text-sm">
         <input type="hidden" name="storeSlug" value={storeSlug} />
         <span>
-          {t("couponCode")}: <strong>{appliedCode}</strong>
+          {t("couponCode")}: <strong dir="ltr">{appliedCode}</strong>
         </span>
-        <button type="submit" aria-label={t("remove")} className="text-muted-foreground hover:text-foreground">
-          <X className="size-4" />
-        </button>
+        <Button type="submit" variant="ghost" size="icon-sm" aria-label={t("remove")}>
+          <X />
+        </Button>
       </form>
     );
   }
@@ -29,7 +29,7 @@ export function CouponForm({ storeSlug, appliedCode }: { storeSlug: string; appl
     <form action={action} className="flex flex-col gap-2">
       <input type="hidden" name="storeSlug" value={storeSlug} />
       <div className="flex gap-2">
-        <Input name="code" placeholder={t("couponCode")} aria-label={t("couponCode")} required className="uppercase" />
+        <LatinInput kind="code" name="code" placeholder={t("couponCode")} aria-label={t("couponCode")} required />
         <Button type="submit" variant="outline" disabled={pending}>
           {t("applyCoupon")}
         </Button>

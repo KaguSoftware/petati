@@ -1,34 +1,65 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { Languages } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { localeNames, locales, type Locale } from "@/i18n/config";
+import { cn } from "@/lib/utils";
 
-export function LocaleSwitcher({ enabled }: { enabled?: readonly string[] }) {
+interface Props {
+  /** Restrict to the store's enabled locales. */
+  enabled?: readonly string[];
+  /** `compact` shows an icon + locale code (navbar); `full` shows the language name. */
+  variant?: "compact" | "full";
+  className?: string;
+}
+
+export function LocaleSwitcher({ enabled, variant = "full", className }: Props) {
   const locale = useLocale();
+  const t = useTranslations("common");
   const pathname = usePathname();
   const router = useRouter();
   const [pending, start] = useTransition();
-  const options = locales.filter((l) => !enabled || enabled.includes(l));
+  const items = locales
+    .filter((l) => !enabled || enabled.includes(l))
+    .map((l) => ({ value: l, label: localeNames[l] }));
 
   return (
-    <select
-      aria-label="Language"
-      className="rounded-md border bg-background px-2 py-1 text-sm"
+    <Select
+      items={items}
       value={locale}
+      modal={false}
       disabled={pending}
-      onChange={(e) => {
-        const next = e.target.value as Locale;
+      onValueChange={(value) => {
+        const next = value as Locale;
+        if (!next || next === locale) return;
         document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; samesite=lax`;
         start(() => router.replace(pathname, { locale: next }));
       }}
     >
-      {options.map((l) => (
-        <option key={l} value={l}>
-          {localeNames[l]}
-        </option>
-      ))}
-    </select>
+      <SelectTrigger
+        aria-label={t("language")}
+        size="sm"
+        className={cn(variant === "compact" && "border-transparent bg-transparent px-1.5 hover:bg-muted", className)}
+      >
+        {variant === "compact" ? (
+          <>
+            <Languages className="text-muted-foreground" />
+            <span className="text-xs font-medium uppercase tracking-wide">{locale}</span>
+          </>
+        ) : (
+          <SelectValue />
+        )}
+      </SelectTrigger>
+      <SelectContent align="end" alignItemWithTrigger={false}>
+        {items.map((item) => (
+          <SelectItem key={item.value} value={item.value}>
+            {item.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
