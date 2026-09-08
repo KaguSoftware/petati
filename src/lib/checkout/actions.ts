@@ -128,6 +128,8 @@ export async function placeOrderAction(_prev: CheckoutState, formData: FormData)
       subtotal: totals.subtotal,
       discount_total: totals.discount,
       shipping_total: totals.shipping,
+      // What the store pays the courier — charged even when the shopper's shipping is free.
+      shipping_cost: rate.cost,
       tax_total: totals.tax,
       total: totals.total,
       coupon_code: totals.discount > 0 || totals.freeShippingApplied ? (cart.coupon?.code ?? null) : null,

@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ProductForm } from "@/components/admin/products/product-form";
 import { PageHeader } from "@/components/admin/shared/page-header";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
+import { listBrandOptions } from "@/lib/admin/brands/queries";
 import { requireAdminPage } from "@/lib/admin/context";
 import { listCategoryOptions } from "@/lib/admin/products/queries";
 
@@ -24,8 +25,8 @@ export default async function NewProductPage({ params }: Props) {
 
 async function Content({ locale }: { locale: string }) {
   const ctx = await requireAdminPage(locale, "products.write");
-  const categories = await listCategoryOptions(ctx.store.id, ctx.locale, ctx.store.default_locale);
+  const [categories, brands] = await Promise.all([listCategoryOptions(ctx.store.id, ctx.locale, ctx.store.default_locale), listBrandOptions(ctx.store.id)]);
   return (
-    <ProductForm storeId={ctx.store.id} locale={ctx.locale} defaultLocale={ctx.store.default_locale} enabledLocales={ctx.store.enabled_locales} categories={categories} />
+    <ProductForm storeId={ctx.store.id} locale={ctx.locale} defaultLocale={ctx.store.default_locale} enabledLocales={ctx.store.enabled_locales} categories={categories} brands={brands} />
   );
 }

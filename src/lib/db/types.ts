@@ -64,6 +64,18 @@ export interface StoreMemberRow {
   created_at: string;
 }
 
+export interface BrandRow {
+  id: string;
+  store_id: string;
+  slug: string;
+  name: string;
+  logo_url: string | null;
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CategoryRow {
   id: string;
   store_id: string;
@@ -88,7 +100,7 @@ export interface ProductRow {
   store_id: string;
   slug: string;
   status: ProductStatus;
-  brand: string | null;
+  brand_id: string | null;
   tags: string[];
   is_featured: boolean;
   rating_avg: number;
@@ -181,6 +193,8 @@ export interface ShippingRateRow {
   name: Translated;
   rate: number;
   free_over: number | null;
+  /** What the store pays the courier per shipment (minor units). */
+  cost: number;
   countries: string[] | null;
   min_days: number | null;
   max_days: number | null;
@@ -257,6 +271,8 @@ export interface OrderRow {
   subtotal: number;
   discount_total: number;
   shipping_total: number;
+  /** What the store pays the courier for this order (minor units); copied from the rate at checkout. */
+  shipping_cost: number;
   tax_total: number;
   total: number;
   refunded_total: number;

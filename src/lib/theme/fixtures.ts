@@ -13,7 +13,13 @@ export const fixtureCategories: CategoryData[] = [
   { id: "c3", slug: "beds", name: "Beds", description: null, imageUrl: img("beds", 800, 600), parentId: null },
   { id: "c4", slug: "collars", name: "Collars & Leashes", description: null, imageUrl: img("collars", 800, 600), parentId: null },
   { id: "c5", slug: "grooming", name: "Grooming", description: null, imageUrl: img("grooming", 800, 600), parentId: null },
+  { id: "c6", slug: "dry-food", name: "Dry food", description: null, imageUrl: img("dry-food", 800, 600), parentId: "c2" },
+  { id: "c7", slug: "wet-food", name: "Wet food", description: null, imageUrl: img("wet-food", 800, 600), parentId: "c2" },
 ];
+/** Top-level categories only (banner, footer). */
+export const fixtureTopCategories = fixtureCategories.filter((c) => !c.parentId);
+
+const brands = ["Petati", "Royal Canin", null, "Gourmet"];
 
 const names = [
   "Rope Tug Toy", "Squeaky Duck", "Feather Wand", "Treat Puzzle Ball",
@@ -34,13 +40,15 @@ export const fixtureProducts: ProductCardData[] = names.map((name, i) => ({
   inStock: i !== 5,
   isNew: i % 3 === 1,
   isFeatured: i < 4,
+  brand: brands[i % brands.length],
 }));
 
 export const fixtureProduct: ProductDetail = {
   ...fixtureProducts[6],
   description:
     "Made from durable, pet-safe materials. Designed for everyday use and easy cleaning.\n\nMachine washable cover, non-slip base, and a supportive memory-foam core for older joints.",
-  brand: "Petati",
+  brand: "Royal Canin",
+  brandSlug: "royal-canin",
   images: [1, 2, 3].map((n) => ({ url: img(`Orthopedic Dog Bed-${n}`), alt: "Orthopedic Dog Bed" })),
   options: [
     {

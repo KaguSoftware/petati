@@ -23,6 +23,7 @@ export function ProductCardBold({ product, currency, locale, labels, wishlistSlo
       </Link>
       {wishlistSlot && <div className="absolute end-2 top-2">{wishlistSlot}</div>}
       <div className="flex flex-1 flex-col gap-2 p-3">
+        {product.brand && <p className="truncate text-[10px] font-bold tracking-widest text-muted-foreground uppercase">{product.brand}</p>}
         <Link
           href={`/p/${product.slug}`}
           className="line-clamp-2 text-sm leading-tight font-extrabold tracking-tight uppercase decoration-2 underline-offset-4 hover:underline"

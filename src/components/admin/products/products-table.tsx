@@ -72,6 +72,7 @@ export async function ProductsTable({ rows, storeId, locale, currency, lowStockT
       className: "text-end",
       hideBelow: "sm",
     },
+    { key: "brand", header: t("products.brand"), cell: (r) => <span className="text-muted-foreground">{r.brandName ?? "—"}</span>, hideBelow: "lg" },
     {
       key: "categories",
       header: t("products.categories"),

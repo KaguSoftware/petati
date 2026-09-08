@@ -18,19 +18,19 @@ values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything
             "newsletter": "minimal", "footer": "minimal"
           },
           "colors": {
-            "primary": "#0f766e", "primaryForeground": "#ffffff",
-            "accent": "#f59e0b", "accentForeground": "#1c1917",
-            "background": "#ffffff", "foreground": "#0c0a09",
-            "muted": "#f5f5f4", "mutedForeground": "#57534e"
+            "primary": "#157fa1", "primaryForeground": "#ffffff",
+            "accent": "#f7a83b", "accentForeground": "#1c1917",
+            "background": "#ffffff", "foreground": "#17323d",
+            "muted": "#eef8fb", "mutedForeground": "#4f6b75"
           },
           "fonts": { "heading": "Inter", "body": "Inter" },
           "radius": "0.75rem"
         }'::jsonb);
 
 -- ---------- shipping & coupons ----------
-insert into public.shipping_rates (store_id, name, rate, free_over, min_days, max_days, sort_order) values
-  ('10000000-0000-0000-0000-000000000001', '{"en":"Standard delivery","tr":"Standart teslimat","fa":"ارسال عادی"}', 4990, 50000, 2, 5, 0),
-  ('10000000-0000-0000-0000-000000000001', '{"en":"Express delivery","tr":"Hızlı teslimat","fa":"ارسال سریع"}', 9990, null, 1, 2, 1);
+insert into public.shipping_rates (store_id, name, rate, free_over, cost, min_days, max_days, sort_order) values
+  ('10000000-0000-0000-0000-000000000001', '{"en":"Standard delivery","tr":"Standart teslimat","fa":"ارسال عادی"}', 4990, 50000, 3500, 2, 5, 0),
+  ('10000000-0000-0000-0000-000000000001', '{"en":"Express delivery","tr":"Hızlı teslimat","fa":"ارسال سریع"}', 9990, null, 7000, 1, 2, 1);
 
 insert into public.coupons (store_id, code, type, value, min_subtotal, max_uses) values
   ('10000000-0000-0000-0000-000000000001', 'WELCOME10', 'percent', 10, 20000, null),
@@ -60,49 +60,82 @@ declare
   v_size_names jsonb := '{"S":{"en":"Small","tr":"Küçük","fa":"کوچک"},"M":{"en":"Medium","tr":"Orta","fa":"متوسط"},"L":{"en":"Large","tr":"Büyük","fa":"بزرگ"}}';
   v_i int;
   v_n int := 0;
+  v_brand record;
+  v_parent uuid;
 begin
+  -- brands (client: a second taxonomy by manufacturer)
+  for v_brand in select * from (values
+    ('royal-canin', 'Royal Canin', 0),
+    ('gourmet',     'Gourmet',     1),
+    ('whiskas',     'Whiskas',     2),
+    ('pedigree',    'Pedigree',    3),
+    ('cesar',       'Cesar',       4),
+    ('kong',        'KONG',        5),
+    ('trixie',      'Trixie',      6),
+    ('ferplast',    'Ferplast',    7)
+  ) as b(slug, name, ord) loop
+    insert into public.brands (store_id, slug, name, sort_order) values (v_store, v_brand.slug, v_brand.name, v_brand.ord);
+  end loop;
+
   -- categories
   for v_cat in select * from (values
-    ('toys',        'Toys',        'Oyuncaklar',     'اسباب‌بازی‌ها', 0),
-    ('food',        'Food & Treats','Mama ve Ödüller','غذا و تشویقی',  1),
-    ('beds',        'Beds',        'Yataklar',       'جای خواب',      2),
-    ('collars',     'Collars & Leashes','Tasma ve Kayışlar','قلاده و بند', 3),
-    ('grooming',    'Grooming',    'Bakım',          'نظافت و بهداشت', 4)
-  ) as c(slug, en, tr, fa, ord) loop
-    insert into public.categories (id, store_id, slug, sort_order, image_url)
-    values (gen_random_uuid(), v_store, v_cat.slug, v_cat.ord, 'https://picsum.photos/seed/' || v_cat.slug || '/800/600')
+    ('cat-food',    null,       'Cat food',        'Kedi maması',        'غذای گربه',       0),
+    ('cat-dry',     'cat-food', 'Dry food',        'Kuru mama',          'غذای خشک',        0),
+    ('cat-wet',     'cat-food', 'Wet food',        'Yaş mama',           'غذای تر',         1),
+    ('cat-treats',  'cat-food', 'Treats',          'Ödüller',            'تشویقی',          2),
+    ('dog-food',    null,       'Dog food',        'Köpek maması',       'غذای سگ',         1),
+    ('dog-dry',     'dog-food', 'Dry food',        'Kuru mama',          'غذای خشک',        0),
+    ('dog-wet',     'dog-food', 'Wet food',        'Yaş mama',           'غذای تر',         1),
+    ('dog-treats',  'dog-food', 'Treats',          'Ödüller',            'تشویقی',          2),
+    ('toys',        null,       'Toys',            'Oyuncaklar',         'اسباب‌بازی‌ها',    2),
+    ('beds',        null,       'Beds',            'Yataklar',           'جای خواب',        3),
+    ('collars',     null,       'Collars & Leashes','Tasma ve Kayışlar', 'قلاده و بند',     4),
+    ('grooming',    null,       'Grooming',        'Bakım',              'نظافت و بهداشت',  5)
+  ) as c(slug, parent, en, tr, fa, ord) loop
+    v_parent := null;
+    if v_cat.parent is not null then
+      select id into v_parent from public.categories where store_id = v_store and slug = v_cat.parent;
+    end if;
+    insert into public.categories (id, store_id, parent_id, slug, sort_order, image_url)
+    values (gen_random_uuid(), v_store, v_parent, v_cat.slug, v_cat.ord, 'https://picsum.photos/seed/' || v_cat.slug || '/800/600')
     returning id into v_pid;
     insert into public.category_translations (category_id, locale, name) values
       (v_pid, 'en', v_cat.en), (v_pid, 'tr', v_cat.tr), (v_pid, 'fa', v_cat.fa);
   end loop;
 
-  -- products: (category slug, product slug, en, tr, fa, base price minor units, cost, has sizes, featured)
+  -- products: (category slug, brand slug, product slug, en, tr, fa, base price minor units, cost, has sizes, featured)
   for v_prod in select * from (values
-    ('toys',    'rope-tug-toy',        'Rope Tug Toy',          'Halat Çekiştirme Oyuncağı', 'اسباب‌بازی طنابی',      14900,  6000, false, true),
-    ('toys',    'squeaky-duck',        'Squeaky Duck',          'Öten Ördek',                'اردک صدادار',           9900,   3500, false, false),
-    ('toys',    'feather-wand',        'Feather Wand',          'Tüylü Kedi Çubuğu',         'چوب پر گربه',           7900,   2500, false, true),
-    ('toys',    'treat-puzzle-ball',   'Treat Puzzle Ball',     'Ödül Bulmaca Topu',         'توپ معمایی تشویقی',     19900,  8000, false, false),
-    ('food',    'salmon-dog-kibble',   'Salmon Dog Kibble',     'Somonlu Köpek Maması',      'غذای خشک سگ با سالمون', 45900, 28000, true,  true),
-    ('food',    'chicken-cat-kibble',  'Chicken Cat Kibble',    'Tavuklu Kedi Maması',       'غذای خشک گربه با مرغ',  39900, 24000, true,  false),
-    ('food',    'dental-chews',        'Dental Chews',          'Diş Çubukları',             'تشویقی دندانی',         12900,  5000, false, false),
-    ('food',    'freeze-dried-liver',  'Freeze-dried Liver',    'Kurutulmuş Ciğer',          'جگر خشک‌شده',           16900,  7000, false, false),
-    ('beds',    'orthopedic-dog-bed',  'Orthopedic Dog Bed',    'Ortopedik Köpek Yatağı',    'تخت ارتوپدیک سگ',       89900, 42000, true,  true),
-    ('beds',    'donut-cat-bed',       'Donut Cat Bed',         'Donut Kedi Yatağı',         'جای خواب دونات گربه',   49900, 21000, true,  false),
-    ('beds',    'cooling-mat',         'Cooling Mat',           'Soğutucu Mat',              'زیرانداز خنک‌کننده',    34900, 15000, true,  false),
-    ('collars', 'reflective-collar',   'Reflective Collar',     'Reflektörlü Tasma',         'قلاده شب‌رنگ',          17900,  6500, true,  true),
-    ('collars', 'padded-harness',      'Padded Harness',        'Yastıklı Göğüs Tasması',    'قلاده کتفی نرم',        29900, 12000, true,  false),
-    ('collars', 'retractable-leash',   'Retractable Leash',     'Otomatik Kayış',            'بند خودجمع‌شونده',      24900, 10000, false, false),
-    ('collars', 'cat-breakaway-collar','Cat Breakaway Collar',  'Kedi Güvenlik Tasması',     'قلاده ایمن گربه',        8900,  3000, false, false),
-    ('grooming','slicker-brush',       'Slicker Brush',         'Tüy Fırçası',               'برس مو',                12900,  4500, false, false),
-    ('grooming','nail-clippers',       'Nail Clippers',         'Tırnak Makası',             'ناخن‌گیر',              10900,  3500, false, false),
-    ('grooming','oatmeal-shampoo',     'Oatmeal Shampoo',       'Yulaflı Şampuan',           'شامپو جو دوسر',         13900,  5000, false, true),
-    ('grooming','deshedding-tool',     'Deshedding Tool',       'Tüy Alma Aleti',            'ابزار ضد ریزش مو',      22900,  9000, false, false),
-    ('grooming','paw-balm',            'Paw Balm',              'Pati Balsamı',              'بالم پنجه',              8900,  3000, false, false)
-  ) as p(cat, slug, en, tr, fa, price, cost, sized, featured) loop
+    ('cat-dry',   'royal-canin', 'royal-canin-kitten',      'Royal Canin Kitten',        'Royal Canin Kitten',           'رویال کنین کیتن',            89900, 62000, true,  true),
+    ('cat-dry',   'whiskas',     'chicken-cat-kibble',      'Chicken Cat Kibble',        'Tavuklu Kedi Maması',          'غذای خشک گربه با مرغ',       39900, 24000, true,  false),
+    ('cat-wet',   'gourmet',     'gourmet-gold-pate',       'Gourmet Gold Pâté',         'Gourmet Gold Pate',            'پته گورمت گلد',              4900,  2900, false, true),
+    ('cat-wet',   'whiskas',     'whiskas-pouch-tuna',      'Whiskas Tuna Pouch',        'Whiskas Ton Balıklı Pouch',    'پوچ ویسکاس با تن',           3900,  2200, false, false),
+    ('cat-treats','gourmet',     'freeze-dried-liver',      'Freeze-dried Liver',        'Kurutulmuş Ciğer',             'جگر خشک‌شده',                16900,  7000, false, false),
+    ('dog-dry',   'royal-canin', 'royal-canin-medium-adult','Royal Canin Medium Adult',  'Royal Canin Medium Adult',     'رویال کنین مدیوم ادالت',     129900, 88000, true,  true),
+    ('dog-dry',   'pedigree',    'salmon-dog-kibble',       'Salmon Dog Kibble',         'Somonlu Köpek Maması',         'غذای خشک سگ با سالمون',      45900, 28000, true,  true),
+    ('dog-wet',   'cesar',       'cesar-beef-tray',         'Cesar Beef Tray',           'Cesar Sığır Etli',             'سزار با گوشت گاو',            5900,  3400, false, false),
+    ('dog-treats','pedigree',    'dental-chews',            'Dental Chews',              'Diş Çubukları',                'تشویقی دندانی',              12900,  5000, false, false),
+    ('toys',      'kong',        'rope-tug-toy',            'Rope Tug Toy',              'Halat Çekiştirme Oyuncağı',    'اسباب‌بازی طنابی',           14900,  6000, false, true),
+    ('toys',      'kong',        'squeaky-duck',            'Squeaky Duck',              'Öten Ördek',                   'اردک صدادار',                9900,   3500, false, false),
+    ('toys',      'trixie',      'feather-wand',            'Feather Wand',              'Tüylü Kedi Çubuğu',            'چوب پر گربه',                7900,   2500, false, true),
+    ('toys',      'kong',        'treat-puzzle-ball',       'Treat Puzzle Ball',         'Ödül Bulmaca Topu',            'توپ معمایی تشویقی',          19900,  8000, false, false),
+    ('beds',      'ferplast',    'orthopedic-dog-bed',      'Orthopedic Dog Bed',        'Ortopedik Köpek Yatağı',       'تخت ارتوپدیک سگ',            89900, 42000, true,  true),
+    ('beds',      'trixie',      'donut-cat-bed',           'Donut Cat Bed',             'Donut Kedi Yatağı',            'جای خواب دونات گربه',        49900, 21000, true,  false),
+    ('beds',      'trixie',      'cooling-mat',             'Cooling Mat',               'Soğutucu Mat',                 'زیرانداز خنک‌کننده',         34900, 15000, true,  false),
+    ('collars',   'trixie',      'reflective-collar',       'Reflective Collar',         'Reflektörlü Tasma',            'قلاده شب‌رنگ',               17900,  6500, true,  true),
+    ('collars',   'ferplast',    'padded-harness',          'Padded Harness',            'Yastıklı Göğüs Tasması',       'قلاده کتفی نرم',             29900, 12000, true,  false),
+    ('collars',   'ferplast',    'retractable-leash',       'Retractable Leash',         'Otomatik Kayış',               'بند خودجمع‌شونده',           24900, 10000, false, false),
+    ('collars',   'trixie',      'cat-breakaway-collar',    'Cat Breakaway Collar',      'Kedi Güvenlik Tasması',        'قلاده ایمن گربه',             8900,  3000, false, false),
+    ('grooming',  'trixie',      'slicker-brush',           'Slicker Brush',             'Tüy Fırçası',                  'برس مو',                     12900,  4500, false, false),
+    ('grooming',  'trixie',      'nail-clippers',           'Nail Clippers',             'Tırnak Makası',                'ناخن‌گیر',                   10900,  3500, false, false),
+    ('grooming',  null,          'oatmeal-shampoo',         'Oatmeal Shampoo',           'Yulaflı Şampuan',              'شامپو جو دوسر',              13900,  5000, false, true),
+    ('grooming',  'ferplast',    'deshedding-tool',         'Deshedding Tool',           'Tüy Alma Aleti',               'ابزار ضد ریزش مو',           22900,  9000, false, false),
+    ('grooming',  null,          'paw-balm',                'Paw Balm',                  'Pati Balsamı',                 'بالم پنجه',                   8900,  3000, false, false)
+  ) as p(cat, brand, slug, en, tr, fa, price, cost, sized, featured) loop
     v_n := v_n + 1;
-    insert into public.products (id, store_id, slug, status, is_featured, tags)
+    insert into public.products (id, store_id, slug, status, is_featured, tags, brand_id)
     values (gen_random_uuid(), v_store, v_prod.slug, 'active', v_prod.featured,
-            case when v_n % 3 = 0 then array['new'] else '{}'::text[] end)
+            case when v_n % 3 = 0 then array['new'] else '{}'::text[] end,
+            (select id from public.brands where store_id = v_store and slug = v_prod.brand))
     returning id into v_pid;
 
     insert into public.product_translations (product_id, locale, name, short_description, description) values

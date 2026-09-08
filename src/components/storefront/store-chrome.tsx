@@ -34,10 +34,11 @@ export async function StoreChrome({ ctx, children }: { ctx: StoreContext; childr
       {renderSection("navbar", store.theme.sections.navbar, {
         storeName: store.name,
         logoUrl: store.logo_url,
-        categories: topLevel,
+        categories,
         labels: {
           home: t("home"),
           shop: t("shop"),
+          brands: t("brands"),
           search: t("search"),
           menu: t("menu"),
           closeMenu: t("closeMenu"),

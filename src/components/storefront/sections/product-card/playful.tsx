@@ -23,6 +23,7 @@ export function ProductCardPlayful({ product, currency, locale, labels, wishlist
       </Link>
       {wishlistSlot && <div className="absolute end-5 top-5">{wishlistSlot}</div>}
       <div className="flex flex-col gap-1.5 px-1 pb-1">
+        {product.brand && <p className="truncate text-xs font-medium text-muted-foreground">{product.brand}</p>}
         <Link href={`/p/${product.slug}`} className="line-clamp-2 text-sm font-semibold hover:underline">
           {product.name}
         </Link>

@@ -105,6 +105,12 @@ export async function OrderDetail({ order, storeId, locale }: { order: OrderDeta
               {shippingName ? ` · ${shippingName}` : ""}
             </dt>
             <dd className="text-end tabular-nums">{money(order.shipping_total)}</dd>
+            {order.shipping_cost > 0 && (
+              <>
+                <dt className="ps-3 text-xs text-muted-foreground/80">{t("orders.shippingCost")}</dt>
+                <dd className="text-end text-xs text-muted-foreground/80 tabular-nums">{money(order.shipping_cost)}</dd>
+              </>
+            )}
             <dt className="text-muted-foreground">{tc("tax")}</dt>
             <dd className="text-end tabular-nums">{money(order.tax_total)}</dd>
             <dt className="border-t pt-1 font-medium">{tc("total")}</dt>

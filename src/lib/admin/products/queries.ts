@@ -40,10 +40,11 @@ type ListRaw = Pick<ProductRow, "id" | "slug" | "status" | "is_featured" | "upda
   product_images: Pick<ProductImageRow, "url" | "sort_order">[];
   product_variants: Pick<ProductVariantRow, "price" | "stock_qty" | "track_inventory" | "is_active">[];
   product_categories: { categories: { id: string; category_translations: Pick<CategoryTranslationRow, "locale" | "name">[] } | null }[];
+  brands: { name: string } | null;
 };
 
 const LIST_SELECT =
-  "id, slug, status, is_featured, updated_at, product_translations(locale, name), product_images(url, sort_order), product_variants(price, stock_qty, track_inventory, is_active), product_categories(categories(id, category_translations(locale, name)))";
+  "id, slug, status, is_featured, updated_at, brands(name), product_translations(locale, name), product_images(url, sort_order), product_variants(price, stock_qty, track_inventory, is_active), product_categories(categories(id, category_translations(locale, name)))";
 
 function toListRow(r: ListRaw, locale: Locale, fallback: Locale): ProductListRow {
   const tr = pickTranslation(r.product_translations, locale, fallback);
@@ -64,6 +65,7 @@ function toListRow(r: ListRaw, locale: Locale, fallback: Locale): ProductListRow
     stockTotal: tracked.reduce((a, v) => a + v.stock_qty, 0),
     tracksStock: tracked.length > 0,
     variantCount: active.length,
+    brandName: r.brands?.name ?? null,
     categoryNames: r.product_categories
       .map((pc) => pc.categories)
       .filter((c): c is NonNullable<typeof c> => !!c)
@@ -95,6 +97,7 @@ export async function listProducts(
   const base = () => {
     let q = db.from("products").select(LIST_SELECT, { count: "exact" }).eq("store_id", storeId);
     if (params.status) q = q.eq("status", params.status);
+    if (params.brandId) q = q.eq("brand_id", params.brandId);
     if (ids) q = q.in("id", ids);
     return q;
   };

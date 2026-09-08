@@ -32,7 +32,7 @@ export async function getSalesSummary(storeId: string, from: string, to: string)
   const db = createSupabaseAdminClient();
   const { data, error } = await db
     .from("v_daily_sales")
-    .select("day, orders_count, subtotal, discounts, shipping, tax, gross, paid_gross, refunds, cogs")
+    .select("day, orders_count, subtotal, discounts, shipping, tax, gross, paid_gross, refunds, cogs, shipping_cost")
     .eq("store_id", storeId)
     .gte("day", from)
     .lte("day", to)
@@ -43,7 +43,7 @@ export async function getSalesSummary(storeId: string, from: string, to: string)
   const byDay = new Map<string, DailySalesRow>();
   for (const r of data ?? []) {
     const day = String(r.day);
-    const cur = byDay.get(day) ?? { day, orders_count: 0, subtotal: 0, discounts: 0, shipping: 0, tax: 0, gross: 0, paid_gross: 0, refunds: 0, cogs: 0 };
+    const cur = byDay.get(day) ?? { day, orders_count: 0, subtotal: 0, discounts: 0, shipping: 0, tax: 0, gross: 0, paid_gross: 0, refunds: 0, cogs: 0, shipping_cost: 0 };
     cur.orders_count += num(r.orders_count);
     cur.subtotal += num(r.subtotal);
     cur.discounts += num(r.discounts);
@@ -53,6 +53,7 @@ export async function getSalesSummary(storeId: string, from: string, to: string)
     cur.paid_gross += num(r.paid_gross);
     cur.refunds += num(r.refunds);
     cur.cogs += num(r.cogs);
+    cur.shipping_cost += num(r.shipping_cost);
     byDay.set(day, cur);
   }
   const rows = [...byDay.values()];
@@ -63,11 +64,12 @@ export async function getSalesSummary(storeId: string, from: string, to: string)
       paidGross: a.paidGross + d.paid_gross,
       refunds: a.refunds + d.refunds,
       cogs: a.cogs + d.cogs,
+      shippingCost: a.shippingCost + d.shipping_cost,
       discounts: a.discounts + d.discounts,
       shipping: a.shipping + d.shipping,
       tax: a.tax + d.tax,
     }),
-    { orders: 0, gross: 0, paidGross: 0, refunds: 0, cogs: 0, discounts: 0, shipping: 0, tax: 0 },
+    { orders: 0, gross: 0, paidGross: 0, refunds: 0, cogs: 0, shippingCost: 0, discounts: 0, shipping: 0, tax: 0 },
   );
   return { rows, totals };
 }

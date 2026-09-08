@@ -32,7 +32,8 @@
     "wishlist": "Wishlist",
     "search": "Search products",
     "menu": "Menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "brands": "Brands"
   },
   "home": {
     "heroTitle": "Everything your pet loves",
@@ -263,6 +264,7 @@
       "new": "New",
       "edit": "Edit",
       "categories": "Categories",
+      "brands": "Brands",
       "movements": "Stock movements",
       "expenses": "Expenses",
       "commerce": "Commerce",
@@ -339,6 +341,7 @@
       "provider": "Provider",
       "paymentRef": "Reference",
       "refunded": "Refunded",
+      "shippingCost": "Shipping cost (paid to courier)",
       "searchPlaceholder": "Search by order number or email…",
       "actions": {
         "markPaid": "Mark as paid",
@@ -357,7 +360,9 @@
         "title": "Shipment",
         "description": "Add the tracking details; the customer receives them by email.",
         "trackingNumber": "Tracking number",
-        "trackingUrl": "Tracking link"
+        "trackingUrl": "Tracking link",
+        "cost": "Courier cost",
+        "costHint": "What the store pays for this shipment; prefilled from the shipping rate."
       },
       "refund": {
         "title": "Record a refund",
@@ -517,10 +522,12 @@
         "refunds": "Refunds",
         "cogs": "Cost of goods",
         "cogsHint": "From variant unit costs",
+        "shippingCost": "Shipping cost",
+        "shippingCostHint": "Paid to couriers",
         "expenses": "Expenses",
         "expensesHint": "{count, plural, =1 {1 entry} other {# entries}}",
         "net": "Net",
-        "netHint": "Paid − refunds − COGS − expenses",
+        "netHint": "Paid − refunds − COGS − shipping cost − expenses",
         "margin": "Net margin",
         "marginHint": "Net as a share of paid revenue",
         "noPaid": "No paid revenue in this period",
@@ -534,6 +541,7 @@
         "paidGross": "Paid",
         "refunds": "Refunds",
         "cogs": "COGS",
+        "shippingCost": "Shipping cost",
         "empty": "No orders in this period."
       },
       "margins": {
@@ -745,6 +753,25 @@
         "description": "{count, plural, =0 {No products are linked.} =1 {1 product loses this category.} other {# products lose this category.}} Sub-categories move to the top level."
       }
     },
+    "brands": {
+      "title": "Brands",
+      "hint": "Manufacturer brands (Royal Canin, Gourmet…). Each product can belong to one brand.",
+      "new": "New brand",
+      "edit": "Edit brand",
+      "dialogHint": "The slug is generated from the name; edit it only if you need a different URL.",
+      "name": "Name",
+      "slug": "URL slug",
+      "logo": "Logo",
+      "replaceLogo": "Replace logo",
+      "sortOrder": "Sort order",
+      "active": "Visible in the storefront",
+      "products": "Products",
+      "empty": "No brands yet",
+      "emptyHint": "Create brands to let shoppers browse by manufacturer.",
+      "deleteConfirm": "Delete this brand?",
+      "deleteDescription": "{count, plural, =0 {No products are linked.} =1 {1 product loses this brand.} other {# products lose this brand.}} Products themselves are kept.",
+      "none": "No brand"
+    },
     "inventory": {
       "subtitle": "Stock per variant. Adjustments are recorded as movements.",
       "product": "Product",
@@ -945,6 +972,8 @@
         "rate": "Rate",
         "freeOver": "Free over",
         "freeOverHint": "Order subtotal from which shipping is free. Leave empty to never be free.",
+        "cost": "Courier cost",
+        "costHint": "What you pay the courier per shipment. Recorded on each order and deducted in Finance.",
         "countries": "Countries",
         "countriesHint": "Leave empty to offer this rate everywhere.",
         "countriesPlaceholder": "All countries",
@@ -1023,7 +1052,16 @@
     "sort_newest": "Newest",
     "sort_price_asc": "Price: low to high",
     "sort_price_desc": "Price: high to low",
-    "sort_rating": "Top rated"
+    "sort_rating": "Top rated",
+    "brand": "Brand",
+    "allBrands": "All brands"
+  },
+  "brands": {
+    "title": "Brands",
+    "empty": "No brands yet."
+  },
+  "category": {
+    "subcategories": "Subcategories"
   },
   "order": {
     "title": "Order",

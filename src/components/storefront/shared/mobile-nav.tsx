@@ -3,21 +3,19 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { OverlayScroll } from "@/components/ui/overlay-scroll";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "@/i18n/navigation";
+import type { NavItem } from "./category-nav";
 import { SearchForm } from "./search-form";
-
-interface NavItem {
-  href: string;
-  label: string;
-}
 
 interface Props {
   labels: { menu: string; closeMenu: string; categories: string; search: string };
   /** Brand element shown in the drawer header (same node as the navbar logo). */
   brand: ReactNode;
   primary: NavItem[];
+  /** top-level categories; `children` render indented under their parent */
   categories: NavItem[];
   /** Locale switcher + account button, rendered in the drawer footer. */
   footer: ReactNode;
@@ -25,6 +23,7 @@ interface Props {
 
 const bar = "h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-out motion-reduce:transition-none";
 const drawerLink = "stagger-in rounded-lg px-3 py-2.5 text-base transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none";
+const childLink = "ms-4 border-s-2 border-border ps-4 py-2 text-[15px] text-muted-foreground hover:text-foreground focus-visible:text-foreground";
 
 /**
  * Hamburger + full-height drawer from the inline-start edge (mirrors under RTL). Links close the
@@ -33,16 +32,24 @@ const drawerLink = "stagger-in rounded-lg px-3 py-2.5 text-base transition-color
  */
 export function MobileNav({ labels, brand, primary, categories, footer }: Props) {
   const [open, setOpen] = useState(false);
-  const renderLink = (item: NavItem, index: number) => (
+  const renderLink = (item: NavItem, index: number, child = false) => (
     <SheetClose
       key={item.href}
       nativeButton={false}
       render={<Link href={item.href} />}
-      className={drawerLink}
+      className={cn(drawerLink, child && childLink)}
       style={{ "--stagger": index } as CSSProperties}
     >
       {item.label}
     </SheetClose>
+  );
+  // Stagger index counts every rendered row (children included) so the reveal stays sequential.
+  let row = primary.length + 1;
+  const renderCategory = (item: NavItem) => (
+    <div key={item.href} className="flex flex-col gap-0.5">
+      {renderLink(item, row++)}
+      {item.children?.map((child) => renderLink(child, row++, true))}
+    </div>
   );
 
   return (
@@ -72,7 +79,7 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
 
         <OverlayScroll className="flex-1">
           <nav aria-label={labels.menu} className="flex flex-col gap-0.5 px-2 pb-4">
-            {primary.map(renderLink)}
+            {primary.map((item, i) => renderLink(item, i))}
             {categories.length > 0 && (
               <p
                 className="stagger-in mt-4 mb-1 px-3 text-xs font-medium tracking-wide text-muted-foreground uppercase"
@@ -81,7 +88,7 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
                 {labels.categories}
               </p>
             )}
-            {categories.map((item, i) => renderLink(item, primary.length + 1 + i))}
+            {categories.map(renderCategory)}
           </nav>
         </OverlayScroll>
 

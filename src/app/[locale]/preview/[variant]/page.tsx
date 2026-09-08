@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { isLocale } from "@/i18n/config";
 import { DEFAULT_THEME, VARIANT_KEYS, themeToCssVars, type VariantKey } from "@/lib/theme/types";
 import { renderSection } from "@/lib/theme/registry";
-import { fixtureCart, fixtureCategories, fixtureProduct, fixtureProducts, fixtureReviews } from "@/lib/theme/fixtures";
+import { fixtureCart, fixtureCategories, fixtureProduct, fixtureProducts, fixtureReviews, fixtureTopCategories } from "@/lib/theme/fixtures";
 import { computeTotals } from "@/lib/checkout/totals";
 import { formatMoney } from "@/lib/money";
 import { StoreProvider } from "@/components/storefront/store-provider";
@@ -43,7 +43,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
   const currency = "TRY";
   const storeName = "Petati";
   const store = { id: "preview", slug: "preview", name: storeName, currency, locale, enabledLocales: ["en", "tr", "fa"], logoUrl: null };
-  const totals = computeTotals(fixtureCart, { id: "r", store_id: "s", name: { en: "Standard" }, rate: 4990, free_over: 200000, countries: null, min_days: 2, max_days: 5, is_active: true, sort_order: 0 }, { tax_rate_bp: 2000, prices_include_tax: true });
+  const totals = computeTotals(fixtureCart, { id: "r", store_id: "s", name: { en: "Standard" }, rate: 4990, free_over: 200000, cost: 3500, countries: null, min_days: 2, max_days: 5, is_active: true, sort_order: 0 }, { tax_rate_bp: 2000, prices_include_tax: true });
 
   return (
     <div data-storefront className="flex min-h-screen flex-col bg-background font-sans text-foreground" style={themeToCssVars(DEFAULT_THEME) as React.CSSProperties}>
@@ -53,7 +53,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
           storeName,
           logoUrl: null,
           categories: fixtureCategories,
-          labels: { home: tn("home"), shop: tn("shop"), search: tn("search"), menu: tn("menu"), closeMenu: tn("closeMenu"), categories: tn("categories") },
+          labels: { home: tn("home"), shop: tn("shop"), brands: tn("brands"), search: tn("search"), menu: tn("menu"), closeMenu: tn("closeMenu"), categories: tn("categories") },
           localeSlot: <LocaleSwitcher variant="compact" />,
           accountSlot: <AccountButtonFallback />,
           cartSlot: <CartButtonFallback />,
@@ -61,7 +61,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
         <Label text={`${ta("nav.design")} · ${v} · hero`} />
         {renderSection("hero", v, { title: t("heroTitle"), subtitle: t("heroSubtitle"), ctaLabel: t("shopNow"), ctaHref: "/shop", imageUrl: fixtureProducts[0].imageUrl })}
         <Label text="categoryBanner" />
-        {renderSection("categoryBanner", v, { title: t("browseCategories"), categories: fixtureCategories })}
+        {renderSection("categoryBanner", v, { title: t("browseCategories"), categories: fixtureTopCategories })}
         <Label text="productGrid + productCard" />
         {renderSection("productGrid", v, { title: t("featured"), products: fixtureProducts, currency, locale, cardVariant: v, emptyLabel: "", viewAllHref: "/shop", viewAllLabel: t("viewAll") })}
         <Label text="productPage + reviews" />
@@ -107,7 +107,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
         {renderSection("footer", v, {
           storeName,
           tagline: t("heroSubtitle"),
-          categories: fixtureCategories,
+          categories: fixtureTopCategories,
           contactEmail: "hello@petati.local",
           contactPhone: "+90 555 000 0000",
           labels: { categories: tn("categories"), contact: tf("contact"), rights: tf("rights"), about: tf("about"), privacy: tf("privacy"), terms: tf("terms") },

@@ -71,7 +71,7 @@ export function defaultDraft(): CreateStoreInput {
 
 /** Mirrors supabase/seeds/01_store.sql: a store without a shipping rate cannot check out. */
 export const DEFAULT_SHIPPING_RATES = [
-  { name: { en: "Standard delivery", tr: "Standart teslimat", fa: "ارسال عادی" }, rate: 4990, free_over: 50000, min_days: 2, max_days: 5, sort_order: 0 },
+  { name: { en: "Standard delivery", tr: "Standart teslimat", fa: "ارسال عادی" }, rate: 4990, free_over: 50000, cost: 0, min_days: 2, max_days: 5, sort_order: 0 },
 ];
 
 /** Mirrors supabase/seeds/01_store.sql. */

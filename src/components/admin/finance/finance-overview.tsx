@@ -1,4 +1,4 @@
-import { Banknote, Boxes, Percent, ReceiptText, RotateCcw, TrendingUp, Wallet } from "lucide-react";
+import { Banknote, Boxes, Percent, ReceiptText, RotateCcw, TrendingUp, Truck, Wallet } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { ExpenseTotals, SalesSummary } from "@/lib/admin/finance/types";
 import { formatMoney } from "@/lib/money";
@@ -11,12 +11,12 @@ interface Props {
   locale: string;
 }
 
-/** KPI grid for the period: gross, paid, refunds, COGS, expenses, net and margin %. */
+/** KPI grid for the period: gross, paid, refunds, COGS, shipping cost, expenses, net and margin %. */
 export async function FinanceOverview({ summary, expenses, currency, locale }: Props) {
   const t = await getTranslations("admin.finance.kpi");
   const money = (n: number) => formatMoney(n, currency, locale);
   const { totals } = summary;
-  const net = totals.paidGross - totals.refunds - totals.cogs - expenses.total;
+  const net = totals.paidGross - totals.refunds - totals.cogs - totals.shippingCost - expenses.total;
   const margin = totals.paidGross > 0 ? net / totals.paidGross : null;
   const pct = new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 });
 
@@ -26,6 +26,7 @@ export async function FinanceOverview({ summary, expenses, currency, locale }: P
       <KpiCard label={t("paidGross")} value={money(totals.paidGross)} hint={t("paidHint")} icon={Banknote} />
       <KpiCard label={t("refunds")} value={money(totals.refunds)} icon={RotateCcw} tone={totals.refunds > 0 ? "warning" : "default"} />
       <KpiCard label={t("cogs")} value={money(totals.cogs)} hint={t("cogsHint")} icon={Boxes} />
+      <KpiCard label={t("shippingCost")} value={money(totals.shippingCost)} hint={t("shippingCostHint")} icon={Truck} />
       <KpiCard label={t("expenses")} value={money(expenses.total)} hint={t("expensesHint", { count: expenses.rows.reduce((a, r) => a + r.count, 0) })} icon={ReceiptText} />
       <KpiCard label={t("net")} value={money(net)} hint={t("netHint")} icon={Wallet} tone={net < 0 ? "danger" : "default"} className="xl:col-span-1" />
       <KpiCard label={t("margin")} value={margin == null ? "—" : pct.format(margin)} hint={margin == null ? t("noPaid") : t("marginHint")} icon={Percent} tone={margin != null && margin < 0 ? "danger" : "default"} />

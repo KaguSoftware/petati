@@ -69,6 +69,7 @@ export async function DailySalesTable({ rows, currency, locale }: Props) {
       hideBelow: "sm",
     },
     { key: "cogs", header: t("cogs"), cell: (r) => <span className="text-muted-foreground tabular-nums">{money(r.cogs)}</span>, className: "text-end", hideBelow: "lg" },
+    { key: "shipping_cost", header: t("shippingCost"), cell: (r) => <span className="text-muted-foreground tabular-nums">{money(r.shipping_cost)}</span>, className: "text-end", hideBelow: "lg" },
   ];
 
   return (

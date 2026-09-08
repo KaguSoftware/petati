@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/admin/shared/page-header";
 import { StatusBadge } from "@/components/admin/shared/status-badge";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { buttonVariants } from "@/components/ui/button";
+import { listBrandOptions } from "@/lib/admin/brands/queries";
 import { requireAdminPage } from "@/lib/admin/context";
 import { getProductForEdit, listCategoryOptions } from "@/lib/admin/products/queries";
 import { can } from "@/lib/auth/permissions";
@@ -30,7 +31,12 @@ async function Content({ params }: { params: Props["params"] }) {
   setRequestLocale(locale);
   const ctx = await requireAdminPage(locale, "products.read");
   const fallback = ctx.store.default_locale;
-  const [data, categories, t] = await Promise.all([getProductForEdit(ctx.store.id, id), listCategoryOptions(ctx.store.id, ctx.locale, fallback), getTranslations("admin")]);
+  const [data, categories, brands, t] = await Promise.all([
+    getProductForEdit(ctx.store.id, id),
+    listCategoryOptions(ctx.store.id, ctx.locale, fallback),
+    listBrandOptions(ctx.store.id),
+    getTranslations("admin"),
+  ]);
   if (!data) notFound();
   const canWrite = can(ctx.role, "products.write");
   const name = pickTranslation(data.translations, ctx.locale, fallback)?.name ?? data.product.slug;
@@ -62,7 +68,7 @@ async function Content({ params }: { params: Props["params"] }) {
         }
       />
       <fieldset disabled={!canWrite} className="contents">
-        <ProductForm storeId={ctx.store.id} locale={ctx.locale} defaultLocale={fallback} enabledLocales={ctx.store.enabled_locales} product={data} categories={categories} />
+        <ProductForm storeId={ctx.store.id} locale={ctx.locale} defaultLocale={fallback} enabledLocales={ctx.store.enabled_locales} product={data} categories={categories} brands={brands} />
       </fieldset>
       {canWrite && (
         <>

@@ -49,6 +49,7 @@ async function Content({ params }: { params: Props["params"] }) {
               locale={ctx.locale}
               remainingRefundable={order.total - order.refunded_total}
               canRefund={can(ctx.role, "orders.refund")}
+              shippingCost={order.shipping_cost ?? 0}
             />
           ) : null
         }

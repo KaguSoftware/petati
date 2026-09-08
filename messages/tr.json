@@ -32,7 +32,8 @@
     "wishlist": "Favoriler",
     "search": "Ürün ara",
     "menu": "Menü",
-    "closeMenu": "Menüyü kapat"
+    "closeMenu": "Menüyü kapat",
+    "brands": "Markalar"
   },
   "home": {
     "heroTitle": "Evcil dostunuzun sevdiği her şey",
@@ -263,6 +264,7 @@
       "new": "Yeni",
       "edit": "Düzenle",
       "categories": "Kategoriler",
+      "brands": "Markalar",
       "movements": "Stok hareketleri",
       "expenses": "Giderler",
       "commerce": "Ticaret",
@@ -339,6 +341,7 @@
       "provider": "Sağlayıcı",
       "paymentRef": "Referans",
       "refunded": "İade edildi",
+      "shippingCost": "Kargo maliyeti (kargo firmasına ödenen)",
       "searchPlaceholder": "Sipariş numarası veya e-posta ile ara…",
       "actions": {
         "markPaid": "Ödendi olarak işaretle",
@@ -357,7 +360,9 @@
         "title": "Kargo",
         "description": "Takip bilgilerini ekleyin; müşteriye e-posta ile gönderilir.",
         "trackingNumber": "Takip numarası",
-        "trackingUrl": "Takip bağlantısı"
+        "trackingUrl": "Takip bağlantısı",
+        "cost": "Kargo maliyeti",
+        "costHint": "Bu gönderi için mağazanın ödediği tutar; kargo ücretinden önceden doldurulur."
       },
       "refund": {
         "title": "İade kaydet",
@@ -517,10 +522,12 @@
         "refunds": "İadeler",
         "cogs": "Ürün maliyeti",
         "cogsHint": "Varyant birim maliyetlerinden",
+        "shippingCost": "Kargo maliyeti",
+        "shippingCostHint": "Kargo firmalarına ödenen",
         "expenses": "Giderler",
         "expensesHint": "{count, plural, =1 {1 kayıt} other {# kayıt}}",
         "net": "Net",
-        "netHint": "Ödenen − iadeler − maliyet − giderler",
+        "netHint": "Ödenen − iadeler − maliyet − kargo maliyeti − giderler",
         "margin": "Net marj",
         "marginHint": "Ödenen gelire oranla net",
         "noPaid": "Bu dönemde ödenen gelir yok",
@@ -534,6 +541,7 @@
         "paidGross": "Ödenen",
         "refunds": "İade",
         "cogs": "Maliyet",
+        "shippingCost": "Kargo maliyeti",
         "empty": "Bu dönemde sipariş yok."
       },
       "margins": {
@@ -745,6 +753,25 @@
         "description": "{count, plural, =0 {Bağlı ürün yok.} =1 {1 ürün bu kategoriyi kaybeder.} other {# ürün bu kategoriyi kaybeder.}} Alt kategoriler en üst düzeye taşınır."
       }
     },
+    "brands": {
+      "title": "Markalar",
+      "hint": "Üretici markaları (Royal Canin, Gourmet…). Her ürün tek bir markaya ait olabilir.",
+      "new": "Yeni marka",
+      "edit": "Markayı düzenle",
+      "dialogHint": "Kısa ad addan otomatik üretilir; yalnızca farklı bir URL gerekiyorsa değiştirin.",
+      "name": "Ad",
+      "slug": "URL kısa adı",
+      "logo": "Logo",
+      "replaceLogo": "Logoyu değiştir",
+      "sortOrder": "Sıralama",
+      "active": "Mağazada görünür",
+      "products": "Ürünler",
+      "empty": "Henüz marka yok",
+      "emptyHint": "Müşterilerin üreticiye göre gezinebilmesi için marka oluşturun.",
+      "deleteConfirm": "Bu marka silinsin mi?",
+      "deleteDescription": "{count, plural, =0 {Bağlı ürün yok.} =1 {1 ürün bu markayı kaybeder.} other {# ürün bu markayı kaybeder.}} Ürünlerin kendisi korunur.",
+      "none": "Marka yok"
+    },
     "inventory": {
       "subtitle": "Varyant başına stok. Düzeltmeler hareket olarak kaydedilir.",
       "product": "Ürün",
@@ -945,6 +972,8 @@
         "rate": "Ücret",
         "freeOver": "Ücretsiz eşiği",
         "freeOverHint": "Bu ara toplamdan itibaren kargo ücretsizdir. Hiç ücretsiz olmaması için boş bırakın.",
+        "cost": "Kargo maliyeti",
+        "costHint": "Gönderi başına kargo firmasına ödediğiniz tutar. Her siparişe kaydedilir ve Finans'ta düşülür.",
         "countries": "Ülkeler",
         "countriesHint": "Her yerde sunmak için boş bırakın.",
         "countriesPlaceholder": "Tüm ülkeler",
@@ -1023,7 +1052,16 @@
     "sort_newest": "En yeni",
     "sort_price_asc": "Fiyat: düşükten yükseğe",
     "sort_price_desc": "Fiyat: yüksekten düşüğe",
-    "sort_rating": "En çok beğenilen"
+    "sort_rating": "En çok beğenilen",
+    "brand": "Marka",
+    "allBrands": "Tüm markalar"
+  },
+  "brands": {
+    "title": "Markalar",
+    "empty": "Henüz marka yok."
+  },
+  "category": {
+    "subcategories": "Alt kategoriler"
   },
   "order": {
     "title": "Sipariş",

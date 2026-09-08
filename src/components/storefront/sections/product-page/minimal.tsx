@@ -35,7 +35,17 @@ export function ProductPageMinimal({ product, labels, purchasePanel, reviewsSect
         </div>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            {product.brand && <p className="text-sm uppercase tracking-wide text-muted-foreground">{product.brand}</p>}
+            {product.brand && (
+              <p className="text-sm uppercase tracking-wide text-muted-foreground">
+                {product.brandSlug ? (
+                  <Link href={`/b/${product.brandSlug}`} className="hover:underline">
+                    {product.brand}
+                  </Link>
+                ) : (
+                  product.brand
+                )}
+              </p>
+            )}
             <h1 className="text-3xl font-semibold tracking-tight">{product.name}</h1>
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={16} />}
             {product.shortDescription && <p className="text-muted-foreground">{product.shortDescription}</p>}

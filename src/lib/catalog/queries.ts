@@ -4,6 +4,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import type { Locale } from "@/i18n/config";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type {
+  BrandRow,
   CategoryRow,
   CategoryTranslationRow,
   ProductImageRow,
@@ -18,6 +19,7 @@ import type {
 import {
   pickJson,
   pickTranslation,
+  type BrandData,
   type CategoryData,
   type ProductCardData,
   type ProductDetail,
@@ -39,6 +41,7 @@ type ProductWithRelations = ProductRow & {
   product_translations: ProductTranslationRow[];
   product_images: ProductImageRow[];
   product_variants: ProductVariantRow[];
+  brands: Pick<BrandRow, "name" | "slug"> | null;
 };
 
 function toCard(p: ProductWithRelations, locale: Locale, fallback: Locale): ProductCardData {
@@ -66,11 +69,23 @@ function toCard(p: ProductWithRelations, locale: Locale, fallback: Locale): Prod
     inStock,
     isNew: p.tags.includes("new") || ageDays < NEW_DAYS,
     isFeatured: p.is_featured,
+    brand: p.brands?.name ?? null,
   };
 }
 
 const CARD_SELECT =
-  "*, product_translations(*), product_images(*), product_variants(*)";
+  "*, product_translations(*), product_images(*), product_variants(*), brands(name, slug)";
+
+/** Ids of the category with the given slug plus every descendant (categories form a tree via parent_id). */
+function categorySubtreeIds(categories: Pick<CategoryData, "id" | "slug" | "parentId">[], slug: string): string[] {
+  const root = categories.find((c) => c.slug === slug);
+  if (!root) return [];
+  const ids = [root.id];
+  for (let i = 0; i < ids.length; i++) {
+    for (const c of categories) if (c.parentId === ids[i] && !ids.includes(c.id)) ids.push(c.id);
+  }
+  return ids;
+}
 
 export async function getCategories(
   storeId: string,
@@ -103,6 +118,24 @@ export async function getCategories(
   });
 }
 
+export async function getBrands(storeId: string): Promise<BrandData[]> {
+  "use cache";
+  cacheTag(catalogTag(storeId));
+  cacheLife("hours");
+
+  const db = createSupabaseAdminClient();
+  const { data, error } = await db
+    .from("brands")
+    .select("id, slug, name, logo_url")
+    .eq("store_id", storeId)
+    .eq("is_active", true)
+    .order("sort_order")
+    .order("name")
+    .returns<Pick<BrandRow, "id" | "slug" | "name" | "logo_url">[]>();
+  if (error) throw error;
+  return data.map((b) => ({ id: b.id, slug: b.slug, name: b.name, logoUrl: b.logo_url }));
+}
+
 export async function getProducts(
   storeId: string,
   locale: Locale,
@@ -119,20 +152,28 @@ export async function getProducts(
 
   let productIds: string[] | null = null;
   if (params.categorySlug) {
-    const { data: cat } = await db
-      .from("categories")
-      .select("id")
-      .eq("store_id", storeId)
-      .eq("slug", params.categorySlug)
-      .maybeSingle<{ id: string }>();
-    if (!cat) return { items: [], total: 0, page, pageSize };
+    // A parent category lists everything in its subtree (getCategories is cached under the same tag).
+    const categoryIds = categorySubtreeIds(await getCategories(storeId, locale, fallback), params.categorySlug);
+    if (categoryIds.length === 0) return { items: [], total: 0, page, pageSize };
     const { data: links } = await db
       .from("product_categories")
       .select("product_id")
-      .eq("category_id", cat.id)
+      .in("category_id", categoryIds)
       .returns<{ product_id: string }[]>();
-    productIds = (links ?? []).map((l) => l.product_id);
+    productIds = [...new Set((links ?? []).map((l) => l.product_id))];
     if (productIds.length === 0) return { items: [], total: 0, page, pageSize };
+  }
+  let brandId: string | null = null;
+  if (params.brandSlug) {
+    const { data: brand } = await db
+      .from("brands")
+      .select("id")
+      .eq("store_id", storeId)
+      .eq("slug", params.brandSlug)
+      .eq("is_active", true)
+      .maybeSingle<{ id: string }>();
+    if (!brand) return { items: [], total: 0, page, pageSize };
+    brandId = brand.id;
   }
   if (params.search) {
     const { data: hits } = await db
@@ -151,6 +192,7 @@ export async function getProducts(
     .eq("store_id", storeId)
     .eq("status", "active");
   if (productIds) q = q.in("id", productIds);
+  if (brandId) q = q.eq("brand_id", brandId);
   if (params.featuredOnly) q = q.eq("is_featured", true);
   switch (params.sort) {
     case "rating":
@@ -212,7 +254,7 @@ export async function getProductBySlug(
   return {
     ...card,
     description: tr?.description ?? null,
-    brand: data.brand,
+    brandSlug: data.brands?.slug ?? null,
     seoTitle: tr?.seo_title ?? null,
     seoDescription: tr?.seo_description ?? null,
     images: [...data.product_images]

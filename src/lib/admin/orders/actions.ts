@@ -4,7 +4,7 @@ import { refresh, updateTag } from "next/cache";
 import { z } from "zod";
 import { adminMutation, actionError } from "@/lib/admin/guard";
 import type { ActionState } from "@/lib/admin/types";
-import { moneyField, optionalText, parseForm, uuidField } from "@/lib/admin/validate";
+import { moneyField, optionalMoneyField, optionalText, parseForm, uuidField } from "@/lib/admin/validate";
 import { catalogTag } from "@/lib/catalog/queries";
 import type { OrderItemRow, OrderRow, OrderStatus, PaymentRow } from "@/lib/db/types";
 import { sendEmail } from "@/lib/email/send";
@@ -124,8 +124,12 @@ export async function shipOrderAction(_prev: ActionState, formData: FormData): P
     const order = await loadOrder(db, storeId, orderId);
     if (!order) return { error: "notFound" };
     if (!canTransition(order.status, "shipped")) return { error: "transition" };
-    await db.from("orders").update({ status: "shipped", shipped_at: new Date().toISOString(), tracking_number, tracking_url }).eq("id", order.id);
-    await logEvent(db, order.id, user.id, "shipment", { tracking_number, tracking_url });
+    // Courier cost needs the order's currency, so it is parsed after the order is loaded. Empty → keep the checkout value.
+    const costParsed = parseForm(z.object({ shipping_cost: optionalMoneyField(order.currency) }), formData);
+    if (!costParsed.data) return { error: "invalid", fieldErrors: costParsed.fieldErrors };
+    const shipping_cost = costParsed.data.shipping_cost ?? order.shipping_cost ?? 0;
+    await db.from("orders").update({ status: "shipped", shipped_at: new Date().toISOString(), tracking_number, tracking_url, shipping_cost }).eq("id", order.id);
+    await logEvent(db, order.id, user.id, "shipment", { tracking_number, tracking_url, shipping_cost });
     await notifyCustomer(db, order, "shipped", { trackingNumber: tracking_number, trackingUrl: tracking_url });
     refresh();
     return { ok: true };

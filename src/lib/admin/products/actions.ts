@@ -58,7 +58,7 @@ const saveProductSchema = z.object({
   productId: z.preprocess((v) => (v === "" ? undefined : v), uuidField.optional()),
   slug: slugField,
   status: z.enum(PRODUCT_STATUSES as [ProductStatus, ...ProductStatus[]]),
-  brand: optionalText(120),
+  brand_id: z.preprocess((v) => (v === "" || v == null ? null : v), uuidField.nullable()),
   tags: optionalText(1000),
   is_featured: boolField,
   categoryIds: multi(uuidField),
@@ -69,15 +69,19 @@ const saveProductSchema = z.object({
 export async function saveProductAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = parseForm(saveProductSchema, formData);
   if (!parsed.data) return { error: "invalid", fieldErrors: parsed.fieldErrors };
-  const { storeId, locale, productId, slug, status, brand, tags, is_featured, categoryIds, translations } = parsed.data;
+  const { storeId, locale, productId, slug, status, brand_id, tags, is_featured, categoryIds, translations } = parsed.data;
   let createdId: string | null = null;
   try {
     const { db } = await adminMutation(storeId, "products.write");
     const store = await storeSettings(db, storeId);
     if (!translations[store.default_locale]?.name) return { error: "invalid", fieldErrors: { name: "required", translations: store.default_locale } };
+    if (brand_id) {
+      const { data: brand } = await db.from("brands").select("id").eq("id", brand_id).eq("store_id", storeId).maybeSingle<{ id: string }>();
+      if (!brand) return { error: "invalid", fieldErrors: { brand_id: "invalid" } };
+    }
 
     const tagList = [...new Set((tags ?? "").split(",").map((t) => t.trim()).filter(Boolean))].slice(0, 30);
-    const patch = { slug, status, brand, tags: tagList, is_featured };
+    const patch = { slug, status, brand_id, tags: tagList, is_featured };
     let id = productId ?? null;
     if (id) {
       await assertProductInStore(db, id, storeId);

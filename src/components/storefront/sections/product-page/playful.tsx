@@ -35,7 +35,15 @@ export function ProductPagePlayful({ product, labels, purchasePanel, reviewsSect
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-2">
               {product.brand && (
-                <p className="rounded-full bg-accent/20 px-3 py-1 text-xs font-semibold text-accent-foreground">{product.brand}</p>
+                <p className="rounded-full bg-accent/20 px-3 py-1 text-xs font-semibold text-accent-foreground">
+                  {product.brandSlug ? (
+                    <Link href={`/b/${product.brandSlug}`} className="hover:underline">
+                      {product.brand}
+                    </Link>
+                  ) : (
+                    product.brand
+                  )}
+                </p>
               )}
               <p
                 className={cn(

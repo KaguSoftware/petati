@@ -31,12 +31,14 @@ export interface ProductListRow {
   /** False when every variant skips inventory tracking (stock total is meaningless). */
   tracksStock: boolean;
   variantCount: number;
+  brandName: string | null;
   categoryNames: string[];
 }
 
 export interface ProductListFilters {
   status?: ProductStatus;
   categoryId?: string;
+  brandId?: string;
 }
 
 export type OptionWithValues = ProductOptionRow & { values: ProductOptionValueRow[] };

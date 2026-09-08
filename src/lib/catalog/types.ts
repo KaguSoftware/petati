@@ -16,6 +16,8 @@ export interface ProductCardData {
   inStock: boolean;
   isNew: boolean;
   isFeatured: boolean;
+  /** brand name (localised names are not needed: brands are proper nouns) */
+  brand: string | null;
 }
 
 export interface CategoryData {
@@ -25,6 +27,13 @@ export interface CategoryData {
   description: string | null;
   imageUrl: string | null;
   parentId: string | null;
+}
+
+export interface BrandData {
+  id: string;
+  slug: string;
+  name: string;
+  logoUrl: string | null;
 }
 
 export interface VariantData {
@@ -48,7 +57,8 @@ export interface OptionData {
 
 export interface ProductDetail extends ProductCardData {
   description: string | null;
-  brand: string | null;
+  /** brand slug for the /b/<slug> link; null when the product has no brand */
+  brandSlug: string | null;
   images: { url: string; alt: string }[];
   options: OptionData[];
   variants: VariantData[];
@@ -70,7 +80,9 @@ export interface ReviewData {
 export type ProductSort = "newest" | "price_asc" | "price_desc" | "rating";
 
 export interface ProductListParams {
+  /** a category slug; matches the category AND every descendant */
   categorySlug?: string;
+  brandSlug?: string;
   search?: string;
   sort?: ProductSort;
   page?: number;

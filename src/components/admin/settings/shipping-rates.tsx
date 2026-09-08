@@ -44,6 +44,7 @@ export function ShippingRates({ storeId, currency, locale, enabledLocales, rates
     { key: "name", header: t("name"), cell: (r) => <span className="font-medium">{pick(r.name, locale)}</span> },
     { key: "rate", header: t("rate"), className: "text-end tabular-nums", cell: (r) => formatMoney(r.rate, currency, locale) },
     { key: "free_over", header: t("freeOver"), className: "text-end tabular-nums", hideBelow: "md", cell: (r) => (r.free_over == null ? "—" : formatMoney(r.free_over, currency, locale)) },
+    { key: "cost", header: t("cost"), className: "text-end text-muted-foreground tabular-nums", hideBelow: "lg", cell: (r) => formatMoney(r.cost ?? 0, currency, locale) },
     {
       key: "countries",
       header: t("countries"),
@@ -166,7 +167,10 @@ function RateForm({ storeId, currency, enabledLocales, rate, onDone }: { storeId
         <FormField name="rate" label={t("rate")} errors={errors} required>
           <MoneyInput id="rate" name="rate" currency={currency} defaultValue={rate?.rate ?? 0} required />
         </FormField>
-        <FormField name="free_over" label={t("freeOver")} description={t("freeOverHint")} errors={errors}>
+        <FormField name="cost" label={t("cost")} description={t("costHint")} errors={errors}>
+          <MoneyInput id="cost" name="cost" currency={currency} defaultValue={rate?.cost ?? 0} />
+        </FormField>
+        <FormField name="free_over" label={t("freeOver")} description={t("freeOverHint")} errors={errors} className="sm:col-span-2">
           <MoneyInput id="free_over" name="free_over" currency={currency} defaultValue={rate?.free_over ?? null} placeholder="—" />
         </FormField>
         <FormField name="countries" label={t("countries")} description={t("countriesHint")} errors={errors} className="sm:col-span-2">

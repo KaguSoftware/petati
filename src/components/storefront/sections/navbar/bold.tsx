@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { categoryNavItems } from "@/components/storefront/shared/category-nav";
 import { MobileNav } from "@/components/storefront/shared/mobile-nav";
 import { SearchForm } from "@/components/storefront/shared/search-form";
 import { StoreLogo } from "@/components/storefront/shared/store-logo";
@@ -12,8 +13,10 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
   const primary = [
     { href: "/", label: labels.home },
     { href: "/shop", label: labels.shop },
+    { href: "/brands", label: labels.brands },
   ];
-  const categoryLinks = categories.map((c) => ({ href: `/c/${c.slug}`, label: c.name }));
+  const categoryTree = categoryNavItems(categories);
+  const categoryLinks = categoryTree.map(({ href, label }) => ({ href, label }));
   const brand = <StoreLogo storeName={storeName} logoUrl={logoUrl} className="[&_span:last-child]:font-extrabold [&_span:last-child]:uppercase" />;
 
   return (
@@ -24,7 +27,7 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
             labels={{ menu: labels.menu, closeMenu: labels.closeMenu, categories: labels.categories, search: labels.search }}
             brand={brand}
             primary={primary}
-            categories={categoryLinks}
+            categories={categoryTree}
             footer={
               <>
                 {localeSlot}
@@ -38,6 +41,9 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
         <nav aria-label={labels.menu} className="hidden min-w-0 items-center justify-center gap-2 overflow-hidden md:flex lg:gap-4">
           <Link href="/shop" className={navLink}>
             {labels.shop}
+          </Link>
+          <Link href="/brands" className={navLink}>
+            {labels.brands}
           </Link>
           {categoryLinks.map((l, i) => (
             <Link key={l.href} href={l.href} className={cn(navLink, i >= 5 ? "hidden" : i >= 3 ? "hidden xl:inline-flex" : undefined)}>

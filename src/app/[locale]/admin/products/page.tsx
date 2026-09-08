@@ -1,4 +1,4 @@
-import { FolderTree, Plus } from "lucide-react";
+import { BadgeCheck, FolderTree, Plus } from "lucide-react";
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ProductsFilters, ProductsToolbar } from "@/components/admin/products/products-filters";
@@ -31,6 +31,10 @@ export default async function ProductsPage({ params, searchParams }: Props) {
               <FolderTree data-icon="inline-start" />
               {t("crumbs.categories")}
             </Link>
+            <Link href="/admin/products/brands" className={buttonVariants({ variant: "outline" })}>
+              <BadgeCheck data-icon="inline-start" />
+              {t("crumbs.brands")}
+            </Link>
             <Link href="/admin/products/new" className={buttonVariants()}>
               <Plus data-icon="inline-start" />
               {t("products.new")}
@@ -53,6 +57,7 @@ async function ProductsList({ locale, searchParams }: { locale: string; searchPa
   const list = parseListParams(sp, { sorts: PRODUCT_SORTS, defaultSort: "updated_at" });
   const status = pickParam(sp, "status", PRODUCT_STATUSES);
   const categoryId = stringParam(sp, "category", 36);
+  const brandId = stringParam(sp, "brand", 36);
   const fallback = ctx.store.default_locale;
   const canWrite = can(ctx.role, "products.write");
   const tableProps = { storeId: ctx.store.id, locale: ctx.locale, currency: ctx.store.currency, lowStockThreshold: ctx.store.low_stock_threshold, canWrite, sort: { sort: list.sort, dir: list.dir } };
@@ -90,8 +95,8 @@ async function ProductsList({ locale, searchParams }: { locale: string; searchPa
     );
   }
 
-  const { rows, total } = await listProducts(ctx.store.id, { ...list, status, categoryId, locale: ctx.locale, fallback });
-  const query = currentQuery(sp, ["q", "status", "category", "sort", "dir"]);
+  const { rows, total } = await listProducts(ctx.store.id, { ...list, status, categoryId, brandId, locale: ctx.locale, fallback });
+  const query = currentQuery(sp, ["q", "status", "category", "brand", "sort", "dir"]);
   return (
     <>
       <ProductsFilters counts={counts} status={status} categoryId={categoryId} categories={categories} />

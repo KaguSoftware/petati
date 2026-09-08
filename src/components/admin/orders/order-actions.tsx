@@ -27,11 +27,13 @@ interface Props {
   locale: string;
   remainingRefundable: number;
   canRefund: boolean;
+  /** What the store pays the courier (minor units); captured at checkout, editable when shipping. */
+  shippingCost: number;
 }
 
 type DialogKind = "paid" | "ship" | "refund" | "cancel" | null;
 
-export function OrderActions({ storeId, orderId, status: serverStatus, currency, locale, remainingRefundable, canRefund }: Props) {
+export function OrderActions({ storeId, orderId, status: serverStatus, currency, locale, remainingRefundable, canRefund, shippingCost }: Props) {
   const t = useTranslations("admin.orders");
   const tc = useTranslations("admin.common");
   const [dialog, setDialog] = useState<DialogKind>(null);
@@ -126,6 +128,9 @@ export function OrderActions({ storeId, orderId, status: serverStatus, currency,
             </FormField>
             <FormField name="tracking_url" label={t("ship.trackingUrl")} errors={shipState.fieldErrors}>
               <Input id="tracking_url" name="tracking_url" type="url" dir="ltr" placeholder="https://" />
+            </FormField>
+            <FormField name="shipping_cost" label={t("ship.cost")} description={t("ship.costHint")} errors={shipState.fieldErrors}>
+              <MoneyInput id="shipping_cost" name="shipping_cost" currency={currency} defaultValue={shippingCost} />
             </FormField>
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={close}>

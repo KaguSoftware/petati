@@ -39,7 +39,17 @@ export function ProductPageEditorial({ product, labels, purchasePanel, reviewsSe
         </div>
         <div className="flex flex-col gap-8 self-start lg:sticky lg:top-24 lg:col-span-5">
           <div className="flex flex-col gap-3">
-            {product.brand && <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{product.brand}</p>}
+            {product.brand && (
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                {product.brandSlug ? (
+                  <Link href={`/b/${product.brandSlug}`} className="hover:underline">
+                    {product.brand}
+                  </Link>
+                ) : (
+                  product.brand
+                )}
+              </p>
+            )}
             <h1 className="font-serif text-3xl font-medium tracking-tight text-balance md:text-4xl">{product.name}</h1>
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={16} className="opacity-70" />}
             {product.shortDescription && <p className="max-w-prose font-serif text-lg italic text-muted-foreground">{product.shortDescription}</p>}

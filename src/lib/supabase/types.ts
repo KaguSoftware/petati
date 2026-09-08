@@ -88,6 +88,57 @@ export type Database = {
             referencedRelation: "customers"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "addresses_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "v_customer_stats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brands: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          name: string
+          slug: string
+          sort_order: number
+          store_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name: string
+          slug: string
+          sort_order?: number
+          store_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number
+          store_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brands_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cart_items: {
@@ -309,6 +360,13 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_redemptions_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "v_customer_stats"
             referencedColumns: ["id"]
           },
           {
@@ -664,6 +722,7 @@ export type Database = {
           refunded_total: number
           shipped_at: string | null
           shipping_address: Json | null
+          shipping_cost: number
           shipping_method: Json | null
           shipping_total: number
           status: Database["public"]["Enums"]["order_status"]
@@ -697,6 +756,7 @@ export type Database = {
           refunded_total?: number
           shipped_at?: string | null
           shipping_address?: Json | null
+          shipping_cost?: number
           shipping_method?: Json | null
           shipping_total?: number
           status?: Database["public"]["Enums"]["order_status"]
@@ -730,6 +790,7 @@ export type Database = {
           refunded_total?: number
           shipped_at?: string | null
           shipping_address?: Json | null
+          shipping_cost?: number
           shipping_method?: Json | null
           shipping_total?: number
           status?: Database["public"]["Enums"]["order_status"]
@@ -748,6 +809,13 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "v_customer_stats"
             referencedColumns: ["id"]
           },
           {
@@ -1075,7 +1143,7 @@ export type Database = {
       }
       products: {
         Row: {
-          brand: string | null
+          brand_id: string | null
           created_at: string
           id: string
           is_featured: boolean
@@ -1088,7 +1156,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          brand?: string | null
+          brand_id?: string | null
           created_at?: string
           id?: string
           is_featured?: boolean
@@ -1101,7 +1169,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          brand?: string | null
+          brand_id?: string | null
           created_at?: string
           id?: string
           is_featured?: boolean
@@ -1114,6 +1182,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "products_store_id_fkey"
             columns: ["store_id"]
@@ -1130,6 +1205,8 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          phone: string | null
+          phone_country: string | null
           platform_role: Database["public"]["Enums"]["platform_role"] | null
           preferred_locale: Database["public"]["Enums"]["locale_code"] | null
           updated_at: string
@@ -1140,6 +1217,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          phone?: string | null
+          phone_country?: string | null
           platform_role?: Database["public"]["Enums"]["platform_role"] | null
           preferred_locale?: Database["public"]["Enums"]["locale_code"] | null
           updated_at?: string
@@ -1150,6 +1229,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          phone?: string | null
+          phone_country?: string | null
           platform_role?: Database["public"]["Enums"]["platform_role"] | null
           preferred_locale?: Database["public"]["Enums"]["locale_code"] | null
           updated_at?: string
@@ -1266,6 +1347,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "reviews_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "v_customer_stats"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "reviews_order_id_fkey"
             columns: ["order_id"]
             isOneToOne: false
@@ -1297,6 +1385,7 @@ export type Database = {
       }
       shipping_rates: {
         Row: {
+          cost: number
           countries: string[] | null
           free_over: number | null
           id: string
@@ -1309,6 +1398,7 @@ export type Database = {
           store_id: string
         }
         Insert: {
+          cost?: number
           countries?: string[] | null
           free_over?: number | null
           id?: string
@@ -1321,6 +1411,7 @@ export type Database = {
           store_id: string
         }
         Update: {
+          cost?: number
           countries?: string[] | null
           free_over?: number | null
           id?: string
@@ -1660,6 +1751,39 @@ export type Database = {
       }
     }
     Views: {
+      v_customer_stats: {
+        Row: {
+          accepts_marketing: boolean | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string | null
+          last_order_at: string | null
+          notes: string | null
+          orders_count: number | null
+          phone: string | null
+          store_id: string | null
+          total_spent: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_daily_sales: {
         Row: {
           cogs: number | null
@@ -1671,6 +1795,7 @@ export type Database = {
           paid_gross: number | null
           refunds: number | null
           shipping: number | null
+          shipping_cost: number | null
           store_id: string | null
           subtotal: number | null
           tax: number | null
@@ -1764,6 +1889,10 @@ export type Database = {
         Returns: boolean
       }
       is_owner: { Args: never; Returns: boolean }
+      my_platform_role: {
+        Args: never
+        Returns: Database["public"]["Enums"]["platform_role"]
+      }
       my_store_ids: { Args: never; Returns: string[] }
       next_order_number: { Args: { p_store_id: string }; Returns: string }
       order_store: { Args: { p_order_id: string }; Returns: string }

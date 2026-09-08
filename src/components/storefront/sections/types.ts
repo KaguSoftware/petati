@@ -17,8 +17,9 @@ export interface AnnouncementBarProps {
 export interface NavbarProps {
   storeName: string;
   logoUrl: string | null;
-  categories: Pick<CategoryData, "slug" | "name">[];
-  labels: { home: string; shop: string; search: string; menu: string; closeMenu: string; categories: string };
+  /** the whole active tree; variants show top-level links on desktop and nest children in the drawer */
+  categories: Pick<CategoryData, "id" | "slug" | "name" | "parentId">[];
+  labels: { home: string; shop: string; brands: string; search: string; menu: string; closeMenu: string; categories: string };
   /** dynamic slots rendered by the page inside Suspense */
   cartSlot: ReactNode;
   accountSlot: ReactNode;

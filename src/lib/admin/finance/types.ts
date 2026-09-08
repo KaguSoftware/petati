@@ -14,6 +14,8 @@ export interface DailySalesRow {
   paid_gross: number;
   refunds: number;
   cogs: number;
+  /** What the store paid couriers (non-cancelled orders). */
+  shipping_cost: number;
 }
 
 export interface SalesTotals {
@@ -22,6 +24,7 @@ export interface SalesTotals {
   paidGross: number;
   refunds: number;
   cogs: number;
+  shippingCost: number;
   discounts: number;
   shipping: number;
   tax: number;

@@ -35,7 +35,17 @@ export function ProductPageBold({ product, labels, purchasePanel, reviewsSection
         </div>
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-3">
-            {product.brand && <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{product.brand}</p>}
+            {product.brand && (
+              <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                {product.brandSlug ? (
+                  <Link href={`/b/${product.brandSlug}`} className="hover:underline">
+                    {product.brand}
+                  </Link>
+                ) : (
+                  product.brand
+                )}
+              </p>
+            )}
             <h1 className="text-4xl leading-[0.95] font-extrabold tracking-tight text-balance uppercase md:text-6xl">{product.name}</h1>
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={18} />}
             {product.shortDescription && <p className="text-lg font-medium text-muted-foreground">{product.shortDescription}</p>}

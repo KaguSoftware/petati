@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { LatinInput } from "@/components/forms/latin-input";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
+import type { BrandOption } from "@/lib/admin/brands/types";
 import { saveProductAction } from "@/lib/admin/products/actions";
 import { PRODUCT_STATUSES, type CategoryOption, type ProductEditData, type ProductTranslationInput } from "@/lib/admin/products/types";
 import type { ProductStatus } from "@/lib/db/types";
@@ -27,7 +28,10 @@ interface Props {
   enabledLocales: Locale[];
   product?: ProductEditData | null;
   categories: CategoryOption[];
+  brands: BrandOption[];
 }
+
+const NO_BRAND = "__none";
 
 const EMPTY: ProductTranslationInput = { name: "", short_description: "", description: "", seo_title: "", seo_description: "" };
 
@@ -54,7 +58,7 @@ export function useProductFieldErrors(raw: Record<string, string> | undefined) {
   }, [raw, t]);
 }
 
-export function ProductForm({ storeId, locale, defaultLocale, enabledLocales, product, categories }: Props) {
+export function ProductForm({ storeId, locale, defaultLocale, enabledLocales, product, categories, brands }: Props) {
   const t = useTranslations("admin");
   const [state, action, pending] = useActionToast(saveProductAction, { errorNamespace: "admin.products" });
   const errors = useProductFieldErrors(state.fieldErrors);
@@ -79,7 +83,7 @@ export function ProductForm({ storeId, locale, defaultLocale, enabledLocales, pr
   }
   // Every field is controlled: React resets uncontrolled inputs after a form action completes.
   const [slug, setSlug] = useState(product?.product.slug ?? "");
-  const [brand, setBrand] = useState(product?.product.brand ?? "");
+  const [brandId, setBrandId] = useState(product?.product.brand_id ?? NO_BRAND);
   const [tags, setTags] = useState(product?.product.tags.join(", ") ?? "");
   const [featured, setFeatured] = useState(product?.product.is_featured ?? false);
   const [slugTouched, setSlugTouched] = useState(!!product);
@@ -88,6 +92,7 @@ export function ProductForm({ storeId, locale, defaultLocale, enabledLocales, pr
   const current = translations[activeLocale] ?? EMPTY;
   const missing = enabledLocales.filter((l) => !translations[l]?.name?.trim());
   const statusItems = PRODUCT_STATUSES.map((s) => ({ value: s, label: t(`status.product.${s}`) }));
+  const brandItems = [{ value: NO_BRAND, label: t("brands.none") }, ...brands.map((b) => ({ value: b.id, label: b.name }))];
   const dirFor = (l: Locale) => (l === "fa" ? "rtl" : "ltr");
 
   function patch(field: keyof ProductTranslationInput, value: string) {
@@ -103,6 +108,7 @@ export function ProductForm({ storeId, locale, defaultLocale, enabledLocales, pr
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="productId" value={product?.product.id ?? ""} />
       <input type="hidden" name="translations" value={JSON.stringify(translations)} />
+      <input type="hidden" name="brand_id" value={brandId === NO_BRAND ? "" : brandId} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <section className="flex flex-col gap-4 rounded-xl border bg-card p-4">
@@ -163,8 +169,19 @@ export function ProductForm({ storeId, locale, defaultLocale, enabledLocales, pr
                 }}
               />
             </FormField>
-            <FormField name="brand" label={t("products.brand")} errors={errors}>
-              <Input id="brand" name="brand" value={brand} onChange={(e) => setBrand(e.target.value)} autoComplete="off" />
+            <FormField name="brand_id" label={t("products.brand")} errors={errors}>
+              <Select items={brandItems} value={brandId} onValueChange={(v) => v && setBrandId(String(v))} modal={false}>
+                <SelectTrigger id="brand_id" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent alignItemWithTrigger={false}>
+                  {brandItems.map((b) => (
+                    <SelectItem key={b.value} value={b.value}>
+                      {b.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FormField>
             <FormField name="tags" label={t("products.tags")} errors={errors} description={t("products.tagsHint")}>
               <Input id="tags" name="tags" value={tags} onChange={(e) => setTags(e.target.value)} autoComplete="off" dir="auto" />

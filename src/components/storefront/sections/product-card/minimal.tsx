@@ -18,6 +18,7 @@ export function ProductCardMinimal({ product, currency, locale, labels, wishlist
       </Link>
       {wishlistSlot && <div className="absolute end-2 top-2">{wishlistSlot}</div>}
       <div className="flex flex-col gap-0.5">
+        {product.brand && <p className="truncate text-xs text-muted-foreground">{product.brand}</p>}
         <Link href={`/p/${product.slug}`} className="line-clamp-2 text-sm font-medium hover:underline">
           {product.name}
         </Link>
