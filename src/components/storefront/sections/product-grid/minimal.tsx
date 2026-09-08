@@ -9,7 +9,7 @@ export async function ProductGridMinimal({ title, products, currency, locale, ca
   const t = await getTranslations("product");
   const labels = { new: t("new"), outOfStock: t("outOfStock") };
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 @desktop:py-16">
+    <section className="mx-auto max-w-7xl px-gutter py-12 @desktop:py-16">
       {(title || viewAllHref) && (
         <div className="mb-6 flex items-end justify-between gap-4">
           {title && <h2 className="text-2xl font-semibold tracking-tight @tablet:text-3xl">{title}</h2>}

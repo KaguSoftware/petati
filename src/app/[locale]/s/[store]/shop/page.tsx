@@ -11,7 +11,7 @@ export default async function ShopPage({ params, searchParams }: PageProps<"/[lo
   const ctx = await storeContext(params);
   const t = await getTranslations("shop");
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8">
+    <main className="mx-auto w-full max-w-7xl px-gutter pt-6 pb-16 md:pt-8 md:pb-24">
       <h1 className="mb-6 text-3xl font-semibold tracking-tight">{t("title")}</h1>
       <Suspense fallback={<p className="text-muted-foreground">…</p>}>
         <Results ctx={ctx} searchParams={searchParams} />

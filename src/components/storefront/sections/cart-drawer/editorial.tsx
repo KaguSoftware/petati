@@ -11,7 +11,7 @@ const textLink = "text-xs uppercase tracking-[0.2em] text-muted-foreground trans
 export function CartViewEditorial({ cart, totals, currency, locale, labels, lineControls, couponSlot, checkoutHref, shopHref }: CartViewProps) {
   const money = (n: number) => formatMoney(n, currency, locale);
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12 @tablet:py-16">
+    <main className="mx-auto max-w-2xl px-gutter py-12 @tablet:py-16">
       <h1 className="mb-8 border-b border-foreground/15 pb-4 text-center font-serif text-4xl font-medium tracking-tight @tablet:text-5xl">{labels.title}</h1>
       {cart.lines.length === 0 ? (
         <div className="flex flex-col items-center gap-5 py-20 text-center">
@@ -52,7 +52,7 @@ export function CartViewEditorial({ cart, totals, currency, locale, labels, line
             <Row label={labels.total} value={money(totals.total)} strong />
           </dl>
           <div className="flex flex-col items-center gap-4">
-            <Link href={checkoutHref} className={buttonVariants({ size: "lg", className: "w-full uppercase tracking-[0.15em]" })}>
+            <Link href={checkoutHref} className={buttonVariants({ size: "xl", className: "w-full text-sm uppercase tracking-[0.15em]" })}>
               {labels.checkout}
             </Link>
             <Link href={shopHref} className={textLink}>

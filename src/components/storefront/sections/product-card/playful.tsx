@@ -24,8 +24,8 @@ export function ProductCardPlayful({ product, currency, locale, labels, wishlist
         )}
       </Link>
       <div className="flex min-w-0 flex-1 flex-col gap-1 py-1 pe-6">
-        {product.brand && <p className="truncate text-xs font-medium text-muted-foreground">{product.brand}</p>}
-        <Link href={`/p/${product.slug}`} className="line-clamp-2 text-sm leading-snug font-semibold hover:underline @tablet:text-base">
+        <p className="min-h-[1lh] truncate text-xs font-medium text-muted-foreground">{product.brand}</p>
+        <Link href={`/p/${product.slug}`} className="line-clamp-2 bidi-auto text-sm leading-snug font-semibold hover:underline @tablet:text-base">
           {product.name}
         </Link>
         {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} />}

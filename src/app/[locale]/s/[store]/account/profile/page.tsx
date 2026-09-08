@@ -12,11 +12,11 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/s/[st
   return (
     <div className="flex flex-col gap-10">
       <section className="flex flex-col gap-4">
-        <h2 className="text-xl font-semibold">{t("profile")}</h2>
+        <h2 className="text-xl font-semibold tracking-tight md:text-2xl">{t("profile")}</h2>
         <ProfileForm fullName={user.profile.full_name ?? ""} email={user.email ?? ""} phone={phone} />
       </section>
       <section className="flex flex-col gap-4">
-        <h2 className="text-xl font-semibold">{t("password")}</h2>
+        <h2 className="text-xl font-semibold tracking-tight md:text-2xl">{t("password")}</h2>
         <PasswordForm />
       </section>
     </div>

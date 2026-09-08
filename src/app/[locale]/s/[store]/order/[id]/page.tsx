@@ -14,7 +14,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/[l
   const { id } = await params;
   if (!z.string().uuid().safeParse(id).success) notFound();
   return (
-    <Suspense fallback={<div className="mx-auto max-w-3xl px-4 py-10 text-muted-foreground">…</div>}>
+    <Suspense fallback={<div className="mx-auto max-w-3xl px-gutter py-10 text-muted-foreground">…</div>}>
       <OrderContent ctx={ctx} id={id} searchParams={searchParams} />
     </Suspense>
   );
@@ -28,7 +28,7 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
   const a = order.shipping_address;
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10">
+    <main className="mx-auto w-full max-w-3xl px-gutter py-10">
       {sp.placed === "1" && (
         <div className="mb-6 rounded-lg border border-primary/30 bg-primary/5 p-4">
           <p className="font-medium">{t("thanks")}</p>

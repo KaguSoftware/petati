@@ -8,7 +8,7 @@ export default async function WishlistPage({ params }: PageProps<"/[locale]/s/[s
   const [t, products] = await Promise.all([getTranslations("account"), getMyWishlistProducts(ctx.store.id, ctx.locale, ctx.fallback)]);
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-semibold">{t("wishlist")}</h2>
+      <h2 className="text-xl font-semibold tracking-tight md:text-2xl">{t("wishlist")}</h2>
       <div className="-mx-4">
         <ProductGridWithWishlist ctx={ctx} products={products} emptyLabel={t("wishlistEmpty")} />
       </div>

@@ -33,8 +33,8 @@ export function ReviewsMinimal({ reviews, ratingAvg, ratingCount, locale, labels
                   {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
                 </time>
               </div>
-              {r.title && <p className="font-medium">{r.title}</p>}
-              {r.body && <p className="text-sm text-muted-foreground">{r.body}</p>}
+              {r.title && <p className="bidi-auto font-medium">{r.title}</p>}
+              {r.body && <p className="bidi-auto text-sm text-muted-foreground">{r.body}</p>}
             </li>
           ))}
         </ul>

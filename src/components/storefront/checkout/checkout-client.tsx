@@ -63,7 +63,7 @@ export function CheckoutSummary({ lines, subtotal, coupon, rates, store, currenc
         <div className="flex justify-between"><dt>{t("subtotal")}</dt><dd className="tabular-nums">{money(totals.subtotal)}</dd></div>
         {totals.discount > 0 && <div className="flex justify-between"><dt>{t("discount")}{coupon ? ` (${coupon.code})` : ""}</dt><dd className="tabular-nums">−{money(totals.discount)}</dd></div>}
         <div className="flex justify-between"><dt>{t("shipping")}</dt><dd className="tabular-nums">{totals.shipping === 0 ? t("freeShipping") : money(totals.shipping)}</dd></div>
-        {totals.tax > 0 && <div className="flex justify-between text-muted-foreground"><dt>{t("tax")}</dt><dd className="tabular-nums">{money(totals.tax)}</dd></div>}
+        {totals.tax > 0 && <div className="flex justify-between text-muted-foreground"><dt>{store.prices_include_tax ? t("taxIncluded") : t("tax")}</dt><dd className="tabular-nums">{money(totals.tax)}</dd></div>}
         <div className="mt-1 flex justify-between border-t pt-2 text-base font-semibold"><dt>{t("total")}</dt><dd className="tabular-nums">{money(totals.total)}</dd></div>
       </dl>
     </div>

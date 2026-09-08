@@ -23,7 +23,7 @@ interface Props {
 
 const bar = "h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-out motion-reduce:transition-none";
 const drawerLink = "stagger-in rounded-lg px-3 py-2.5 text-base transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none";
-const childLink = "ms-4 border-s-2 border-border ps-4 py-2 text-[15px] text-muted-foreground hover:text-foreground focus-visible:text-foreground";
+const childLink = "py-2 text-[15px] text-foreground/75 hover:text-foreground focus-visible:text-foreground";
 
 /**
  * Hamburger + full-height drawer from the inline-start edge (mirrors under RTL). Links close the
@@ -48,7 +48,9 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
   const renderCategory = (item: NavItem) => (
     <div key={item.href} className="flex flex-col gap-0.5">
       {renderLink(item, row++)}
-      {item.children?.map((child) => renderLink(child, row++, true))}
+      {item.children && item.children.length > 0 && (
+        <div className="ms-5 flex flex-col gap-0.5 border-s-2 border-border ps-2">{item.children.map((child) => renderLink(child, row++, true))}</div>
+      )}
     </div>
   );
 
@@ -67,7 +69,7 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
       <SheetContent side="start" showCloseButton={false} className="gap-0 p-0">
         <div className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">
           {brand}
-          <SheetClose render={<Button variant="ghost" size="icon" aria-label={labels.closeMenu} />}>
+          <SheetClose render={<Button variant="ghost" size="icon-lg" aria-label={labels.closeMenu} />}>
             <XIcon />
           </SheetClose>
         </div>
@@ -82,7 +84,7 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
             {primary.map((item, i) => renderLink(item, i))}
             {categories.length > 0 && (
               <p
-                className="stagger-in mt-4 mb-1 px-3 text-xs font-medium tracking-wide text-muted-foreground uppercase"
+                className="stagger-in mt-5 mb-2 px-3 text-xs font-medium tracking-wide text-muted-foreground uppercase"
                 style={{ "--stagger": primary.length } as CSSProperties}
               >
                 {labels.categories}

@@ -7,7 +7,7 @@ import type { ProductPageProps } from "../types";
 export function ProductPageMinimal({ product, labels, purchasePanel, reviewsSection, wishlistSlot }: ProductPageProps) {
   const [main, ...rest] = product.images;
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 @desktop:py-12">
+    <main className="mx-auto max-w-7xl px-gutter py-8 @desktop:py-12">
       <nav className="mb-5 text-sm text-muted-foreground">
         {product.categories.map((c, i) => (
           <span key={c.slug}>
@@ -47,15 +47,15 @@ export function ProductPageMinimal({ product, labels, purchasePanel, reviewsSect
                 )}
               </p>
             )}
-            <h1 className="text-3xl font-semibold tracking-tight text-balance @tablet:text-4xl">{product.name}</h1>
+            <h1 className="bidi-auto text-3xl font-semibold tracking-tight text-balance @tablet:text-4xl">{product.name}</h1>
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={16} />}
-            {product.shortDescription && <p className="text-muted-foreground">{product.shortDescription}</p>}
+            {product.shortDescription && <p className="bidi-auto text-muted-foreground">{product.shortDescription}</p>}
           </div>
-          <div className="rounded-xl border p-5">{purchasePanel}</div>
+          <div className="rounded-xl border p-5 @tablet:p-6">{purchasePanel}</div>
           {product.description && (
             <section className="border-t pt-6">
               <h2 className="mb-2 font-medium">{labels.description}</h2>
-              <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-line">{product.description}</div>
+              <div className="bidi-auto prose prose-sm max-w-none text-muted-foreground whitespace-pre-line">{product.description}</div>
             </section>
           )}
         </div>

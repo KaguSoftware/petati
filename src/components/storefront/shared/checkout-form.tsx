@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -141,14 +142,17 @@ export function CheckoutForm({ storeSlug, locale, currency, email, phone, addres
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">{t("payment")}</h2>
-        <p className="rounded-md border border-dashed px-3 py-2 text-sm text-muted-foreground">{t("paymentManual")}</p>
+        <p className="flex items-start gap-2.5 rounded-lg bg-muted/60 px-4 py-3 text-sm text-muted-foreground">
+          <Info aria-hidden className="mt-0.5 size-4 shrink-0" />
+          <span>{t("paymentManual")}</span>
+        </p>
       </section>
 
       <Field name="customer_note" label={t("noteLabel")}>
         <Textarea id="customer_note" name="customer_note" rows={3} />
       </Field>
 
-      <Label className="gap-2.5 font-normal">
+      <Label className="items-center gap-2.5 font-normal leading-none">
         <Checkbox name="accepts_marketing" />
         {t("marketingOptIn")}
       </Label>
@@ -159,7 +163,7 @@ export function CheckoutForm({ storeSlug, locale, currency, email, phone, addres
         </p>
       )}
 
-      <Button type="submit" size="lg" disabled={pending}>
+      <Button type="submit" size="xl" disabled={pending}>
         {t("placeOrder")}
       </Button>
     </form>

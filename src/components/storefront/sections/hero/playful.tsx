@@ -6,7 +6,7 @@ import type { HeroProps } from "../types";
 
 export function HeroPlayful({ title, subtitle, ctaLabel, ctaHref, imageUrl }: HeroProps) {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-8 @tablet:py-12">
+    <section className="mx-auto max-w-7xl px-gutter py-8 @tablet:py-12">
       <div className="relative overflow-hidden rounded-3xl bg-muted ring-1 ring-foreground/5">
         <div aria-hidden className="pointer-events-none absolute -start-24 -top-24 size-72 rounded-full bg-accent/20 blur-3xl" />
         <div aria-hidden className="pointer-events-none absolute -end-16 -bottom-32 size-96 rounded-full bg-primary/15 blur-3xl" />
@@ -17,7 +17,7 @@ export function HeroPlayful({ title, subtitle, ctaLabel, ctaHref, imageUrl }: He
             </span>
             <h1 className="text-3xl font-bold tracking-tight @tablet:text-5xl">{title}</h1>
             <p className="max-w-prose text-lg text-muted-foreground">{subtitle}</p>
-            <Link href={ctaHref} className={buttonVariants({ size: "lg", className: "h-12 rounded-full px-6 text-base shadow-lg shadow-primary/20" })}>
+            <Link href={ctaHref} className={buttonVariants({ size: "xl", className: "rounded-full shadow-lg shadow-primary/20" })}>
               <PawPrint data-icon="inline-start" />
               {ctaLabel}
             </Link>

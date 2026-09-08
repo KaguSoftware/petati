@@ -100,8 +100,20 @@ function stripUndefined<T extends object>(obj: T): Partial<T> {
   return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as Partial<T>;
 }
 
-/** CSS custom properties that re-skin shadcn tokens for the storefront subtree. */
-export function themeToCssVars(theme: StoreTheme): Record<string, string> {
+/**
+ * Per-navbar-layout CSS variables set on the storefront root: `--navbar-h` (height of the sticky
+ * bar, for scroll margins) and `--hero-pull` (how far a full-bleed hero may slide under the bar;
+ * 0 for the stacked layout, whose dark category strip must not cover the photo).
+ */
+export const NAVBAR_VARS: Record<VariantKey, string> = {
+  minimal: "[--navbar-h:4rem] [--hero-pull:4rem]",
+  bold: "[--navbar-h:4rem] [--hero-pull:0px] @tablet:[--navbar-h:7.75rem]",
+  editorial: "[--navbar-h:4rem] [--hero-pull:4rem] @tablet:[--navbar-h:5rem] @tablet:[--hero-pull:5rem]",
+  playful: "[--navbar-h:4.25rem] [--hero-pull:4.25rem] @tablet:[--navbar-h:4.75rem] @tablet:[--hero-pull:4.75rem]",
+};
+
+/** CSS custom properties that re-skin shadcn tokens for the storefront subtree. Fonts depend on the locale's script. */
+export function themeToCssVars(theme: StoreTheme, locale = "en"): Record<string, string> {
   const c = theme.colors;
   return {
     "--primary": c.primary,
@@ -121,7 +133,7 @@ export function themeToCssVars(theme: StoreTheme): Record<string, string> {
     "--ring": c.primary,
     "--radius": theme.radius,
     // Fonts: the storefront wrapper carries `font-sans`, headings read `--font-heading` (globals.css).
-    "--font-sans": fontStack(theme.fonts.body),
-    "--heading-font": fontStack(theme.fonts.heading),
+    "--font-sans": fontStack(theme.fonts.body, locale),
+    "--heading-font": fontStack(theme.fonts.heading, locale),
   };
 }

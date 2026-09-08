@@ -22,7 +22,7 @@ export function ReviewsPlayful({ reviews, ratingAvg, ratingCount, locale, labels
           {reviews.map((r) => (
             <li
               key={r.id}
-              className="relative flex w-[85%] shrink-0 snap-start flex-col gap-1.5 rounded-3xl bg-muted p-5 after:absolute after:-bottom-2 after:start-8 after:size-4 after:rotate-45 after:rounded-sm after:bg-muted @phablet:w-[60%] @desktop:w-[38%]"
+              className="relative mb-2 flex w-[85%] shrink-0 snap-start flex-col gap-1.5 rounded-3xl bg-muted p-5 after:absolute after:bottom-0 after:start-8 after:size-4 after:translate-y-1/2 after:rotate-45 after:rounded-sm after:bg-muted @phablet:w-[60%] @desktop:w-[38%]"
             >
               <div className="flex flex-wrap items-center gap-2">
                 <RatingStars value={r.rating} />
@@ -30,8 +30,8 @@ export function ReviewsPlayful({ reviews, ratingAvg, ratingCount, locale, labels
                   {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
                 </time>
               </div>
-              {r.title && <p className="font-semibold">{r.title}</p>}
-              {r.body && <p className="text-sm text-muted-foreground">{r.body}</p>}
+              {r.title && <p className="bidi-auto font-semibold">{r.title}</p>}
+              {r.body && <p className="bidi-auto text-sm text-muted-foreground">{r.body}</p>}
               <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
                 <span className="text-sm font-semibold">{r.authorName}</span>
                 {r.isVerifiedPurchase && (

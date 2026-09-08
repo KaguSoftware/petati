@@ -7,8 +7,8 @@ const link = "text-xs font-bold tracking-widest whitespace-nowrap uppercase text
 export function FooterBold({ storeName, tagline, categories, contactEmail, contactPhone, labels, localeSlot, year }: FooterProps) {
   return (
     <footer className="overflow-hidden bg-foreground text-background">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 pt-14 pb-8 @tablet:pt-20">
-        <p aria-hidden className="-mb-2 truncate text-[22vw] leading-[0.8] font-extrabold tracking-tighter uppercase @tablet:text-[15vw] @wide:text-[12rem]">
+      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-gutter pt-14 pb-8 @tablet:pt-20">
+        <p aria-hidden className="-mb-2 -ms-[0.05em] truncate text-[21cqw] leading-[0.8] font-extrabold tracking-tighter uppercase @tablet:text-[14cqw] @wide:text-[12rem]">
           {storeName}
         </p>
         {tagline && <p className="max-w-md text-sm font-medium text-background/70">{tagline}</p>}
@@ -18,7 +18,8 @@ export function FooterBold({ storeName, tagline, categories, contactEmail, conta
               {c.name}
             </Link>
           ))}
-          <span aria-hidden className="hidden h-4 w-0.5 bg-background/30 @tablet:block" />
+        </div>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <Link href="/privacy" className={link}>
             {labels.privacy}
           </Link>
@@ -31,12 +32,12 @@ export function FooterBold({ storeName, tagline, categories, contactEmail, conta
             </a>
           )}
           {contactPhone && (
-            <a href={`tel:${contactPhone}`} className={link} dir="ltr">
-              {contactPhone}
+            <a href={`tel:${contactPhone}`} className={link}>
+              <bdi dir="ltr">{contactPhone}</bdi>
             </a>
           )}
         </div>
-        <div className="flex items-center justify-between gap-4 text-[11px] font-bold tracking-widest text-background/60 uppercase">
+        <div className="flex flex-col gap-4 pb-2 text-[11px] font-bold tracking-widest text-background/60 uppercase @phablet:flex-row @phablet:items-center @phablet:justify-between">
           <span>
             © {year} {storeName}. {labels.rights}
           </span>

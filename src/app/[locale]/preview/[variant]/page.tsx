@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { isLocale } from "@/i18n/config";
-import { DEFAULT_THEME, VARIANT_KEYS, themeToCssVars, type VariantKey } from "@/lib/theme/types";
+import { DEFAULT_THEME, NAVBAR_VARS, VARIANT_KEYS, themeToCssVars, type VariantKey } from "@/lib/theme/types";
+import { cn } from "@/lib/utils";
 import { buildSectionPreviews, PREVIEW_STORE_SLUG } from "@/lib/theme/preview";
 import { gridCombo } from "@/lib/theme/preview-compose";
 import { StoreProvider } from "@/components/storefront/store-provider";
@@ -30,7 +31,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
   const store = { id: PREVIEW_STORE_SLUG, slug: PREVIEW_STORE_SLUG, name: storeName, currency, locale, enabledLocales: ["en", "tr", "fa"], logoUrl: null };
 
   return (
-    <div data-storefront className="@container flex min-h-screen flex-col bg-background font-sans text-foreground" style={themeToCssVars(DEFAULT_THEME) as React.CSSProperties}>
+    <div data-storefront className={cn("@container flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[v])} style={themeToCssVars(DEFAULT_THEME, locale) as React.CSSProperties}>
       <StoreProvider value={store}>
         {p.announcementBar[v]}
         {p.navbar[v]}

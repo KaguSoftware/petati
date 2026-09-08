@@ -14,7 +14,7 @@ export function NewsletterForm({ storeSlug }: { storeSlug: string }) {
     <form action={action} className="flex w-full max-w-md gap-2">
       <input type="hidden" name="storeSlug" value={storeSlug} />
       <LatinInput kind="email" name="email" required placeholder={t("emailPlaceholder")} aria-label={t("emailPlaceholder")} autoComplete="email" />
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" size="xl" disabled={pending} className="shrink-0">
         {t("subscribe")}
       </Button>
     </form>

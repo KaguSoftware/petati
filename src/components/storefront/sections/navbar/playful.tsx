@@ -21,8 +21,8 @@ export function NavbarPlayful({ storeName, logoUrl, categories, labels, cartSlot
   const brand = <StoreLogo storeName={storeName} logoUrl={logoUrl} className="[&>span:first-child]:rounded-full [&_img]:rounded-full" />;
 
   return (
-    <header className="sticky top-0 z-40 px-3 pt-3 @tablet:px-4">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 rounded-full bg-background/85 ps-2 pe-2 shadow-lg shadow-primary/10 ring-1 ring-foreground/10 backdrop-blur supports-backdrop-filter:bg-background/75 @tablet:h-16 @tablet:ps-3">
+    <header className="sticky top-0 z-40 pt-3 px-gutter">
+      <div className="relative mx-auto flex h-14 max-w-7xl items-center gap-2 rounded-full bg-background/85 ps-2 pe-2 shadow-lg shadow-primary/10 ring-1 ring-foreground/10 backdrop-blur supports-backdrop-filter:bg-background/75 @tablet:h-16 @tablet:ps-3 @tablet:pe-3">
         <MobileNav
           labels={{ menu: labels.menu, closeMenu: labels.closeMenu, categories: labels.categories, search: labels.search }}
           brand={brand}
@@ -36,7 +36,10 @@ export function NavbarPlayful({ storeName, logoUrl, categories, labels, cartSlot
           }
         />
         {brand}
-        <nav aria-label={labels.menu} className="hidden min-w-0 flex-1 items-center justify-center @tablet:flex">
+        <nav
+          aria-label={labels.menu}
+          className="hidden min-w-0 flex-1 items-center justify-center @tablet:flex @desktop:absolute @desktop:start-1/2 @desktop:flex-none @desktop:-translate-x-1/2 rtl:@desktop:translate-x-1/2"
+        >
           <div className="flex min-w-0 items-center gap-1 overflow-hidden rounded-full bg-muted/70 p-1 ring-1 ring-foreground/5">
             <Link href="/shop" className={navLink}>
               {labels.shop}
@@ -45,15 +48,15 @@ export function NavbarPlayful({ storeName, logoUrl, categories, labels, cartSlot
               {labels.brands}
             </Link>
             {categoryLinks.map((l, i) => (
-              <Link key={l.href} href={l.href} className={cn(navLink, i >= 4 ? "hidden" : i >= 2 ? "hidden @wide:inline-flex" : undefined)}>
+              <Link key={l.href} href={l.href} className={cn(navLink, i >= 3 ? "hidden" : i >= 2 ? "hidden @wide:inline-flex" : "hidden @desktop:inline-flex")}>
                 {l.label}
               </Link>
             ))}
           </div>
         </nav>
-        <div className="ms-auto flex items-center gap-0.5 @tablet:ms-0">
-          <SearchForm placeholder={labels.search} className="hidden w-40 @desktop:block @desktop:me-1" />
-          <div className="hidden @tablet:block">{localeSlot}</div>
+        <div className="ms-auto flex items-center gap-0.5 @tablet:gap-1">
+          <SearchForm placeholder={labels.search} className="hidden w-40 @tablet:block @wide:w-52 @tablet:me-1" />
+          <div className="hidden @desktop:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>

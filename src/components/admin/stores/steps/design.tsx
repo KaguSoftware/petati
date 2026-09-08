@@ -65,7 +65,7 @@ export function DesignStep({ draft, update, errors, locale, variants, showPrevie
                     <span className="text-sm text-muted-foreground">{t(`variants.${v}.description`)}</span>
                   </span>
                 </span>
-                <PreviewFrame device="mobile" theme={previewTheme} dir={dir} label={t(`variants.${v}.name`)} maxHeight={1100} className="rounded-lg border">
+                <PreviewFrame device="mobile" theme={previewTheme} dir={dir} locale={locale} label={t(`variants.${v}.name`)} maxHeight={1100} className="rounded-lg border">
                   {presetPreviews[v]}
                 </PreviewFrame>
               </Label>

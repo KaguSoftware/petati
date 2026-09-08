@@ -9,12 +9,12 @@ import type { CartViewProps } from "../types";
 export function CartViewPlayful({ cart, totals, currency, locale, labels, lineControls, couponSlot, checkoutHref, shopHref }: CartViewProps) {
   const money = (n: number) => formatMoney(n, currency, locale);
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
+    <main className="mx-auto max-w-6xl px-gutter py-10">
       <h1 className="mb-8 text-3xl font-bold tracking-tight @tablet:text-4xl">{labels.title}</h1>
       {cart.lines.length === 0 ? (
         <div className="flex flex-col items-center gap-5 rounded-3xl bg-muted px-6 py-16 text-center ring-1 ring-foreground/5">
           <p className="text-lg text-muted-foreground">{labels.empty}</p>
-          <Link href={shopHref} className={buttonVariants({ size: "lg", className: "h-11 rounded-full px-6" })}>
+          <Link href={shopHref} className={buttonVariants({ size: "xl", className: "rounded-full" })}>
             {labels.continueShopping}
           </Link>
         </div>
@@ -22,16 +22,16 @@ export function CartViewPlayful({ cart, totals, currency, locale, labels, lineCo
         <div className="grid gap-8 @desktop:grid-cols-[1fr_360px]">
           <ul className="flex flex-col gap-4">
             {cart.lines.map((l) => (
-              <li key={l.id} className="flex gap-4 rounded-2xl bg-muted/50 p-4 ring-1 ring-foreground/5">
+              <li key={l.id} className="flex items-center gap-4 rounded-2xl bg-muted/50 p-4 ring-1 ring-foreground/5">
                 <Link href={`/p/${l.productSlug}`} className="shrink-0">
                   <ProductImage src={l.imageUrl} alt={l.name} className="size-24 rounded-2xl" sizes="96px" />
                 </Link>
-                <div className="flex flex-1 flex-col gap-1">
-                  <Link href={`/p/${l.productSlug}`} className="font-semibold hover:underline">
+                <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
+                  <Link href={`/p/${l.productSlug}`} className="bidi-auto font-semibold hover:underline">
                     {l.name}
                   </Link>
                   {l.variantLabel && <p className="text-sm text-muted-foreground">{l.variantLabel}</p>}
-                  <div className="mt-auto flex items-center justify-between gap-3">
+                  <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
                     {lineControls[l.id]}
                     <Price amount={l.lineTotal} currency={currency} locale={locale} />
                   </div>
@@ -50,7 +50,7 @@ export function CartViewPlayful({ cart, totals, currency, locale, labels, lineCo
               <div className="my-1 border-t border-foreground/10" />
               <Row label={labels.total} value={money(totals.total)} strong />
             </dl>
-            <Link href={checkoutHref} className={buttonVariants({ size: "lg", className: "h-12 rounded-full text-base shadow-lg shadow-primary/20" })}>
+            <Link href={checkoutHref} className={buttonVariants({ size: "xl", className: "rounded-full shadow-lg shadow-primary/20" })}>
               {labels.checkout}
             </Link>
             <Link href={shopHref} className="rounded-full py-1 text-center text-sm font-medium text-muted-foreground transition-colors hover:bg-background hover:text-foreground">

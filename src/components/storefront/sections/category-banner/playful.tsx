@@ -9,9 +9,9 @@ const tiles = ["bg-primary/10", "bg-accent/20", "bg-muted"];
 export function CategoryBannerPlayful({ title, categories }: CategoryBannerProps) {
   if (categories.length === 0) return null;
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10 @tablet:py-14">
+    <section className="mx-auto max-w-7xl px-gutter py-10 @tablet:py-14">
       <h2 className="mb-5 text-2xl font-bold tracking-tight @tablet:text-3xl">{title}</h2>
-      <ul className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pt-2 pb-5 contain-inline-size [scrollbar-width:thin]">
+      <ul className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pt-2 pb-5 contain-inline-size [scrollbar-width:thin] [mask-image:linear-gradient(to_right,black_92%,transparent)] rtl:[mask-image:linear-gradient(to_left,black_92%,transparent)]">
         {categories.map((c, i) => (
           <li key={c.id} className="w-36 shrink-0 snap-start @tablet:w-44 @desktop:w-48">
             <Link

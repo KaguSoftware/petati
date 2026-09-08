@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export function RatingStars({
@@ -12,6 +13,7 @@ export function RatingStars({
   className?: string;
   size?: number;
 }) {
+  const locale = useLocale();
   return (
     <span className={cn("inline-flex items-center gap-1", className)} aria-label={`${value} / 5`}>
       <span className="inline-flex" dir="ltr">
@@ -24,7 +26,7 @@ export function RatingStars({
           />
         ))}
       </span>
-      {count !== undefined && <span className="text-xs text-muted-foreground">({count})</span>}
+      {count !== undefined && <span className="text-xs text-muted-foreground">({new Intl.NumberFormat(locale).format(count)})</span>}
     </span>
   );
 }

@@ -57,12 +57,12 @@ export function SignInForm({ locale, next }: { locale: string; next?: string }) 
           <LatinInput kind="password" id="password" name="password" autoComplete="current-password" required minLength={8} />
         </div>
         <Feedback state={state} />
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" size="xl" disabled={pending}>
           {t("signIn")}
         </Button>
       </form>
       <form action={google}>
-        <Button type="submit" variant="outline" className="w-full">
+        <Button type="submit" variant="outline" size="xl" className="w-full">
           {t("continueWithGoogle")}
         </Button>
       </form>
@@ -104,7 +104,7 @@ export function SignUpForm({ locale, next }: { locale: string; next?: string }) 
           <LatinInput kind="password" id="password" name="password" autoComplete="new-password" required minLength={8} />
         </div>
         {!phoneError && <Feedback state={state} />}
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" size="xl" disabled={pending}>
           {t("auth.signUp")}
         </Button>
       </form>
@@ -130,7 +130,7 @@ export function ForgotPasswordForm({ locale }: { locale: string }) {
         <LatinInput kind="email" id="email" name="email" autoComplete="email" required />
       </div>
       <Feedback state={state} />
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" size="xl" disabled={pending}>
         {t("resetPassword")}
       </Button>
     </form>

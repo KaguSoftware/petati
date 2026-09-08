@@ -4,7 +4,7 @@ import type { CheckoutLayoutProps } from "../types";
 /** One narrow column: the summary folds open above the form, like a printed order slip. */
 export function CheckoutEditorial({ title, form, summary }: CheckoutLayoutProps) {
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12 @tablet:py-16">
+    <main className="mx-auto max-w-2xl px-gutter py-12 @tablet:py-16">
       <h1 className="mb-8 border-b border-foreground/15 pb-4 font-serif text-4xl font-medium tracking-tight @tablet:text-5xl">{title}</h1>
       <details className="group mb-10 border-y border-foreground/15" open>
         <summary className="flex cursor-pointer list-none items-center justify-between py-3 text-xs uppercase tracking-[0.2em] text-muted-foreground [&::-webkit-details-marker]:hidden">

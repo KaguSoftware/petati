@@ -81,7 +81,8 @@
     "applyCoupon": "اعمال",
     "couponInvalid": "این کد تخفیف معتبر نیست.",
     "freeShipping": "رایگان",
-    "freeShippingOver": "ارسال رایگان برای سفارش‌های بالای {amount}"
+    "freeShippingOver": "ارسال رایگان برای سفارش‌های بالای {amount}",
+    "taxIncluded": "شامل مالیات"
   },
   "checkout": {
     "title": "تسویه حساب",

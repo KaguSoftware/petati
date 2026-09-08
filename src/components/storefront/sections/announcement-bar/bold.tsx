@@ -16,7 +16,7 @@ export function AnnouncementBarBold({ text }: AnnouncementBarProps) {
   );
   return (
     <div role="status" aria-label={text} className="group overflow-hidden bg-foreground py-2 text-[11px] font-bold tracking-widest text-background uppercase">
-      <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none">
+      <div className="flex w-max animate-marquee [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] group-hover:[animation-play-state:paused] motion-reduce:animate-none">
         {track(false)}
         {track(true)}
       </div>

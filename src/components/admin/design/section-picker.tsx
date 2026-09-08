@@ -10,6 +10,7 @@ import { PreviewFrame, type PreviewDevice } from "./preview-frame";
 interface Props {
   theme: StoreTheme;
   dir: "ltr" | "rtl";
+  locale: string;
   device: PreviewDevice;
   onPick: (section: SectionKey, variant: VariantKey) => void;
   /** The node to draw for a section option (server-rendered previews, or live client renders). */
@@ -17,13 +18,13 @@ interface Props {
 }
 
 /** Sections whose previews are long: cap the frame so four options still fit on a screen or two. */
-const MAX_HEIGHT: Partial<Record<SectionKey, number>> = { productPage: 760, cartDrawer: 640, checkout: 720, reviews: 560, productGrid: 720 };
+const MAX_HEIGHT: Partial<Record<SectionKey, number>> = { announcementBar: 420, navbar: 420, productPage: 760, cartDrawer: 640, checkout: 720, reviews: 560, productGrid: 720 };
 
 /**
  * One section at a time (list on the side), four layout options drawn for real. Every section's
  * options stay mounted (hidden) so switching sections is instant, per the fast-admin rule.
  */
-export function SectionPicker({ theme, dir, device, onPick, nodeFor }: Props) {
+export function SectionPicker({ theme, dir, locale, device, onPick, nodeFor }: Props) {
   const t = useTranslations("admin.design");
   const [active, setActive] = useState<SectionKey>("navbar");
 
@@ -74,6 +75,7 @@ export function SectionPicker({ theme, dir, device, onPick, nodeFor }: Props) {
                     device={device}
                     theme={theme}
                     dir={dir}
+                    locale={locale}
                     label={`${t(`sections.keys.${key}`)}: ${t(`layouts.${key}.${v}.name`)}`}
                     maxHeight={MAX_HEIGHT[key]}
                     className="rounded-lg border"

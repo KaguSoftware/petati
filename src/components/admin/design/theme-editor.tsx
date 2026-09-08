@@ -82,7 +82,20 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
       case "hero":
         return renderHero(v, heroProps);
       case "announcementBar":
-        return renderAnnouncementBar(v, { text: announcementText || t("announcement.placeholder") });
+        return (
+          <>
+            {renderAnnouncementBar(v, { text: announcementText || t("announcement.placeholder") })}
+            {previews.navbar[draft.theme.sections.navbar]}
+            {renderHero(draft.theme.sections.hero, heroProps)}
+          </>
+        );
+      case "navbar":
+        return (
+          <>
+            {previews.navbar[v]}
+            {renderHero(draft.theme.sections.hero, heroProps)}
+          </>
+        );
       case "productGrid":
         return previews.productGrid[gridCombo(v, draft.theme.sections.productCard)];
       case "productCard":
@@ -200,7 +213,7 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
                 <Tabs defaultValue={textLocales.includes(locale) ? locale : textLocales[0]}>
                   <TabsList>
                     {textLocales.map((l) => (
-                      <TabsTrigger key={l} value={l}>
+                      <TabsTrigger key={l} value={l} className="leading-5">
                         {localeNames[l]}
                       </TabsTrigger>
                     ))}
@@ -237,7 +250,7 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
                 {deviceToggle}
               </CardHeader>
               <CardContent>
-                <SectionPicker theme={draft.theme} dir={dir} device={device} onPick={pick} nodeFor={nodeFor} />
+                <SectionPicker theme={draft.theme} dir={dir} locale={locale} device={device} onPick={pick} nodeFor={nodeFor} />
               </CardContent>
             </Card>
           </div>
@@ -246,7 +259,7 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
           <div className="flex flex-col gap-3 lg:sticky lg:top-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-sm font-medium">{t("preview.title")}</h2>
-              <div className="flex items-center gap-1">
+              <div className="flex flex-wrap items-center gap-1">
                 {deviceToggle}
                 <a href={`/${locale}`} target="_blank" rel="noreferrer" className={buttonVariants({ variant: "ghost", size: "sm" })}>
                   {t("preview.openStorefront")}
@@ -261,7 +274,7 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
               </div>
             </div>
             <OverlayScroll className="max-h-[calc(100dvh-8rem)] rounded-xl border shadow-sm">
-              <PreviewFrame device={device} theme={draft.theme} dir={dir} label={t("preview.home")} className="bg-background">
+              <PreviewFrame device={device} theme={draft.theme} dir={dir} locale={locale} label={t("preview.home")} className="bg-background">
                 {home}
               </PreviewFrame>
             </OverlayScroll>
@@ -269,8 +282,11 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
           </div>
         </div>
 
-        {/* Sticky save bar */}
-        <div className="sticky bottom-3 z-10 flex items-center justify-between gap-3 rounded-xl border bg-background/95 px-4 py-3 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80">
+        {/* Sticky save bar: only while there is something to save, so it never covers the picker while browsing. */}
+        <div
+          hidden={!dirty && !pending}
+          className="sticky bottom-3 z-10 flex items-center justify-between gap-3 rounded-xl border bg-background/95 px-4 py-3 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80"
+        >
           <p className="text-sm text-muted-foreground">{dirty ? t("unsaved") : t("allSaved")}</p>
           <div className="flex items-center gap-2">
             <Button type="button" variant="ghost" size="sm" disabled={!dirty || pending} onClick={() => setDraft(JSON.parse(saved) as Draft)}>

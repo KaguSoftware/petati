@@ -42,7 +42,7 @@ export function LocaleSwitcher({ enabled, variant = "full", className }: Props) 
       <SelectTrigger
         aria-label={t("language")}
         size="sm"
-        className={cn(variant === "compact" && "border-transparent bg-transparent px-1.5 hover:bg-muted", className)}
+        className={cn(variant === "compact" && "h-9 rounded-full border-border/70 bg-transparent px-2.5 hover:bg-muted", className)}
       >
         {variant === "compact" ? (
           <>

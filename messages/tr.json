@@ -81,7 +81,8 @@
     "applyCoupon": "Uygula",
     "couponInvalid": "Bu kupon geçerli değil.",
     "freeShipping": "Ücretsiz",
-    "freeShippingOver": "{amount} üzeri siparişlerde ücretsiz kargo"
+    "freeShippingOver": "{amount} üzeri siparişlerde ücretsiz kargo",
+    "taxIncluded": "KDV dahil"
   },
   "checkout": {
     "title": "Ödeme",

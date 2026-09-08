@@ -10,7 +10,7 @@ export async function ProductGridEditorial({ title, products, currency, locale, 
   const t = await getTranslations("product");
   const labels = { new: t("new"), outOfStock: t("outOfStock") };
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 @tablet:py-16">
+    <section className="mx-auto max-w-7xl px-gutter py-12 @tablet:py-16">
       {(title || viewAllHref) && (
         <div className="mb-10 flex items-end justify-between gap-6 border-b border-foreground/15 pb-4">
           {title && <h2 className="font-serif text-3xl font-medium tracking-tight @tablet:text-4xl">{title}</h2>}
@@ -27,7 +27,7 @@ export async function ProductGridEditorial({ title, products, currency, locale, 
       ) : (
         <ul className="grid grid-cols-2 gap-x-6 gap-y-10 @tablet:grid-cols-3 @desktop:grid-cols-4">
           {products.map((p, i) => (
-            <li key={p.id} className={cn(i === 0 && "col-span-2 @tablet:row-span-2 [&_h3]:text-2xl [&_img]:object-cover")}>
+            <li key={p.id} className={cn(i === 0 && products.length >= 5 && "col-span-2 @tablet:row-span-2 [&_h3]:text-2xl", i === 0 && products.length < 5 && "col-span-2 @tablet:col-span-1")}>
               {renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}
             </li>
           ))}

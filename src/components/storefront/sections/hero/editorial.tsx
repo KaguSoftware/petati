@@ -6,7 +6,7 @@ import type { HeroProps } from "../types";
 /** Magazine opener: a very large headline first, then one wide photograph underneath. */
 export function HeroEditorial({ title, subtitle, ctaLabel, ctaHref, imageUrl }: HeroProps) {
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-12 @tablet:gap-12 @tablet:py-20">
+    <section className="mx-auto flex max-w-7xl flex-col gap-8 px-gutter py-12 @tablet:gap-12 @tablet:py-20">
       <div className="grid gap-6 @tablet:grid-cols-12 @tablet:items-end">
         <div className="flex flex-col gap-5 @tablet:col-span-8">
           <span aria-hidden className="font-mono text-xs tracking-[0.2em] text-muted-foreground">

@@ -81,7 +81,8 @@
     "applyCoupon": "Apply",
     "couponInvalid": "This coupon is not valid.",
     "freeShipping": "Free",
-    "freeShippingOver": "Free shipping on orders over {amount}"
+    "freeShippingOver": "Free shipping on orders over {amount}",
+    "taxIncluded": "Includes tax"
   },
   "checkout": {
     "title": "Checkout",

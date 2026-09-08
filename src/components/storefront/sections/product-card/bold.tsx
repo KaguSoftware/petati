@@ -16,14 +16,14 @@ export function ProductCardBold({ product, currency, locale, labels, wishlistSlo
           alt={product.imageAlt}
           className="aspect-square transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
         />
-        {product.isNew && <span className={cn("absolute start-0 top-0 bg-accent text-accent-foreground", squareBadge)}>{labels.new}</span>}
+        {product.isNew && <span className={cn("absolute start-2 top-2 bg-accent text-accent-foreground", squareBadge)}>{labels.new}</span>}
         {!product.inStock && (
           <span className={cn("absolute inset-x-0 bottom-0 bg-foreground text-center text-background", squareBadge)}>{labels.outOfStock}</span>
         )}
       </Link>
       {wishlistSlot && <div className="absolute end-2 top-2">{wishlistSlot}</div>}
       <div className="flex flex-1 flex-col gap-2 p-3">
-        {product.brand && <p className="truncate text-[10px] font-bold tracking-widest text-muted-foreground uppercase">{product.brand}</p>}
+        <p className="min-h-[1lh] truncate text-[10px] font-bold tracking-widest text-muted-foreground uppercase">{product.brand}</p>
         <Link
           href={`/p/${product.slug}`}
           className="line-clamp-2 text-sm leading-tight font-extrabold tracking-tight uppercase decoration-2 underline-offset-4 hover:underline"

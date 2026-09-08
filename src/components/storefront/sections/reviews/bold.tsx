@@ -25,7 +25,7 @@ export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, f
         <div className="@tablet:max-w-xs">{formSlot}</div>
       </div>
       {reviews.length === 0 ? (
-        <p className="border-4 border-foreground py-12 text-center text-lg font-bold tracking-wide uppercase">{labels.empty}</p>
+        <p className="text-sm font-bold tracking-wide text-muted-foreground uppercase">{labels.empty}</p>
       ) : (
         <ul className="grid gap-4 @tablet:grid-cols-2 @desktop:grid-cols-3">
           {reviews.map((r) => (
@@ -36,8 +36,8 @@ export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, f
                   {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
                 </time>
               </div>
-              {r.title && <p className="text-lg leading-tight font-extrabold tracking-tight">{r.title}</p>}
-              {r.body && <p className="text-sm text-muted-foreground">{r.body}</p>}
+              {r.title && <p className="bidi-auto text-lg leading-tight font-extrabold tracking-tight">{r.title}</p>}
+              {r.body && <p className="bidi-auto text-sm text-muted-foreground">{r.body}</p>}
               <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
                 <span className="text-sm font-extrabold tracking-wide uppercase">{r.authorName}</span>
                 {r.isVerifiedPurchase && (

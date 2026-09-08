@@ -37,7 +37,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
   );
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-6 md:py-8">
+    <main className="mx-auto w-full max-w-7xl px-gutter pt-6 pb-16 md:pt-8 md:pb-24">
       {category.imageUrl ? (
         <header className="relative mb-6 overflow-hidden rounded-xl bg-muted text-white">
           <ProductImage src={category.imageUrl} alt="" className="aspect-[16/9] sm:aspect-[21/9] lg:aspect-[3/1]" sizes="(min-width: 1280px) 1280px, 100vw" priority />

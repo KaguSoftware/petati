@@ -17,7 +17,7 @@ export default async function BrandsPage({ params }: PageProps<"/[locale]/s/[sto
   const [t, brands] = await Promise.all([getTranslations("brands"), getBrands(ctx.store.id)]);
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8">
+    <main className="mx-auto w-full max-w-7xl px-gutter pt-6 pb-16 md:pt-8 md:pb-24">
       <h1 className="mb-6 text-3xl font-semibold tracking-tight">{t("title")}</h1>
       {brands.length === 0 ? (
         <p className="text-muted-foreground">{t("empty")}</p>

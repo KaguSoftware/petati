@@ -18,11 +18,12 @@ export function ProductCardEditorial({ product, currency, locale, labels, wishli
       </Link>
       {wishlistSlot && <div className="absolute end-2 top-2">{wishlistSlot}</div>}
       <div className="flex flex-col gap-1">
-        {eyebrow && (
-          <p className={cn("text-[10px] uppercase tracking-[0.2em]", product.inStock ? "text-primary" : "text-muted-foreground")}>{eyebrow}</p>
-        )}
-        {product.brand && <p className="truncate text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{product.brand}</p>}
-        <Link href={`/p/${product.slug}`} className="line-clamp-2 font-serif text-base font-medium leading-snug transition-colors hover:text-primary @tablet:text-lg">
+        <p className="flex min-h-[1lh] items-baseline gap-2 truncate text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          {eyebrow && <span className={product.inStock ? "text-primary" : "font-medium text-foreground"}>{eyebrow}</span>}
+          {eyebrow && product.brand && <span aria-hidden>·</span>}
+          {product.brand && <span className="truncate">{product.brand}</span>}
+        </p>
+        <Link href={`/p/${product.slug}`} className="line-clamp-2 bidi-auto font-serif text-base font-medium leading-snug transition-colors hover:text-primary @tablet:text-lg">
           {product.name}
         </Link>
         {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} className="opacity-70" />}

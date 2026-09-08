@@ -74,7 +74,7 @@ export function HeroCard({ storeId, locale, locales, hero, onChange }: Props) {
         <Tabs defaultValue={locales.includes(locale) ? locale : locales[0]}>
           <TabsList>
             {locales.map((l) => (
-              <TabsTrigger key={l} value={l}>
+              <TabsTrigger key={l} value={l} className="leading-5">
                 {localeNames[l]}
               </TabsTrigger>
             ))}

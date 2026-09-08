@@ -8,7 +8,7 @@ export default async function AddressesPage({ params }: PageProps<"/[locale]/s/[
   const [t, addresses] = await Promise.all([getTranslations("account"), getMyAddresses(store.id)]);
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-semibold">{t("addresses")}</h2>
+      <h2 className="text-xl font-semibold tracking-tight md:text-2xl">{t("addresses")}</h2>
       <AddressList storeSlug={store.slug} addresses={addresses} defaultCountry={(store.settings.default_country as string | undefined) ?? "TR"} />
     </div>
   );

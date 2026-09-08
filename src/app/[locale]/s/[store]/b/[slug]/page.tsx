@@ -21,7 +21,7 @@ export default async function BrandPage({ params, searchParams }: PageProps<"/[l
   if (!brand) notFound();
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8">
+    <main className="mx-auto w-full max-w-7xl px-gutter pt-6 pb-16 md:pt-8 md:pb-24">
       <div className="mb-8 flex items-center gap-5">
         <BrandMark name={brand.name} logoUrl={brand.logoUrl} size={80} />
         <h1 className="text-3xl font-semibold tracking-tight">{brand.name}</h1>

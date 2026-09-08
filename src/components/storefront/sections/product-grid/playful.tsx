@@ -9,13 +9,13 @@ export async function ProductGridPlayful({ title, products, currency, locale, ca
   const t = await getTranslations("product");
   const labels = { new: t("new"), outOfStock: t("outOfStock") };
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10 @tablet:py-14">
+    <section className="mx-auto max-w-7xl px-gutter py-10 @tablet:py-14">
       {(title || viewAllHref) && (
         <div className="mb-6 flex items-center justify-between gap-4">
           {title && (
             <h2 className="relative text-2xl font-bold tracking-tight @tablet:text-3xl">
               <span className="relative z-10">{title}</span>
-              <span aria-hidden className="absolute start-0 bottom-0.5 h-3 w-16 rounded-full bg-accent/50" />
+              <span aria-hidden className="absolute start-0 bottom-0.5 h-3 w-1/2 rounded-full bg-accent/50" />
             </h2>
           )}
           {viewAllHref && (
@@ -29,7 +29,7 @@ export async function ProductGridPlayful({ title, products, currency, locale, ca
       {products.length === 0 ? (
         <p className="rounded-3xl bg-muted py-12 text-center text-muted-foreground">{emptyLabel}</p>
       ) : (
-        <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pt-2 pb-6 contain-inline-size [scrollbar-width:thin]">
+        <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pt-2 pb-6 contain-inline-size [scrollbar-width:thin] [mask-image:linear-gradient(to_right,black_92%,transparent)] rtl:[mask-image:linear-gradient(to_left,black_92%,transparent)]">
           {products.map((p) => (
             <li key={p.id} className="w-[82%] shrink-0 snap-start @phablet:w-[46%] @desktop:w-[31.5%]">
               {renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}

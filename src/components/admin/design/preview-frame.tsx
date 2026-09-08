@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { themeToCssVars, type StoreTheme } from "@/lib/theme/types";
+import { NAVBAR_VARS, themeToCssVars, type StoreTheme } from "@/lib/theme/types";
 import { cn } from "@/lib/utils";
 
 export type PreviewDevice = "desktop" | "mobile";
@@ -11,6 +11,8 @@ interface Props {
   device: PreviewDevice;
   theme: StoreTheme;
   dir: "ltr" | "rtl";
+  /** Locale the preview is drawn in (font stacks depend on the script). */
+  locale?: string;
   children: ReactNode;
   /** Accessible name; the frame is inert, a picture of the layout. */
   label: string;
@@ -25,7 +27,7 @@ interface Props {
  * device width, not the admin viewport; `zoom` keeps the height in flow, so nothing has to be
  * measured but the box width. Colours/fonts/radius come from the draft theme, so edits show live.
  */
-export function PreviewFrame({ device, theme, dir, children, label, className, maxHeight }: Props) {
+export function PreviewFrame({ device, theme, dir, locale, children, label, className, maxHeight }: Props) {
   const width = DEVICE_WIDTH[device];
   const outer = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState<number | null>(null);
@@ -58,12 +60,12 @@ export function PreviewFrame({ device, theme, dir, children, label, className, m
         inert
         dir={dir}
         data-storefront
-        className="@container pointer-events-none select-none bg-background font-sans text-foreground"
+        className={cn("@container pointer-events-none select-none bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[theme.sections.navbar])}
         style={{
           width,
           zoom: scale ?? 1,
           visibility: measured ? undefined : "hidden",
-          ...(themeToCssVars(theme) as CSSProperties),
+          ...(themeToCssVars(theme, locale ?? (dir === "rtl" ? "fa" : "en")) as CSSProperties),
         }}
       >
         {children}

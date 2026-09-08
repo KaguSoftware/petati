@@ -22,7 +22,7 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-foreground bg-background">
-      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 @tablet:h-20">
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-gutter @tablet:h-20">
         <div className="flex items-center gap-1">
           <MobileNav
             labels={{ menu: labels.menu, closeMenu: labels.closeMenu, categories: labels.categories, search: labels.search }}
@@ -40,13 +40,13 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
         </div>
         <div className="justify-self-center">{brand}</div>
         <div className="flex items-center justify-end gap-0.5 @tablet:gap-1">
-          <div className="hidden @tablet:block">{localeSlot}</div>
+          <div className="hidden @desktop:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>
       </div>
       <nav aria-label={labels.menu} className="hidden bg-foreground text-background @tablet:block">
-        <div className="mx-auto flex h-11 max-w-7xl items-center justify-center gap-5 overflow-hidden px-4 @desktop:gap-8">
+        <div className="mx-auto flex h-11 max-w-7xl items-center justify-center gap-5 overflow-hidden px-gutter @desktop:gap-8">
           <Link href="/shop" className={navLink}>
             {labels.shop}
           </Link>
@@ -54,7 +54,7 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
             {labels.brands}
           </Link>
           {categoryLinks.map((l, i) => (
-            <Link key={l.href} href={l.href} className={cn(navLink, i >= 6 ? "hidden" : i >= 4 ? "hidden @wide:inline-flex" : undefined)}>
+            <Link key={l.href} href={l.href} className={cn(navLink, i >= 5 ? "hidden" : i >= 3 ? "hidden @wide:inline-flex" : undefined)}>
               {l.label}
             </Link>
           ))}

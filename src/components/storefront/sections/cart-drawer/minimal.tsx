@@ -8,12 +8,12 @@ import type { CartViewProps } from "../types";
 export function CartViewMinimal({ cart, totals, currency, locale, labels, lineControls, couponSlot, checkoutHref, shopHref }: CartViewProps) {
   const money = (n: number) => formatMoney(n, currency, locale);
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
+    <main className="mx-auto max-w-6xl px-gutter py-10">
       <h1 className="mb-8 text-3xl font-semibold tracking-tight">{labels.title}</h1>
       {cart.lines.length === 0 ? (
         <div className="flex flex-col items-center gap-4 py-16 text-center">
           <p className="text-muted-foreground">{labels.empty}</p>
-          <Link href={shopHref} className={buttonVariants({ variant: "outline" })}>
+          <Link href={shopHref} className={buttonVariants({ variant: "outline", size: "lg" })}>
             {labels.continueShopping}
           </Link>
         </div>
@@ -21,16 +21,16 @@ export function CartViewMinimal({ cart, totals, currency, locale, labels, lineCo
         <div className="grid gap-10 @desktop:grid-cols-[1fr_360px]">
           <ul className="divide-y">
             {cart.lines.map((l) => (
-              <li key={l.id} className="flex gap-4 py-4">
+              <li key={l.id} className="flex items-center gap-4 py-5">
                 <Link href={`/p/${l.productSlug}`}>
-                  <ProductImage src={l.imageUrl} alt={l.name} className="size-24 rounded-md" sizes="96px" />
+                  <ProductImage src={l.imageUrl} alt={l.name} className="size-24 rounded-lg" sizes="96px" />
                 </Link>
-                <div className="flex flex-1 flex-col gap-1">
-                  <Link href={`/p/${l.productSlug}`} className="font-medium hover:underline">
+                <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
+                  <Link href={`/p/${l.productSlug}`} className="bidi-auto font-medium hover:underline">
                     {l.name}
                   </Link>
                   {l.variantLabel && <p className="text-sm text-muted-foreground">{l.variantLabel}</p>}
-                  <div className="mt-auto flex items-center justify-between">
+                  <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
                     {lineControls[l.id]}
                     <Price amount={l.lineTotal} currency={currency} locale={locale} />
                   </div>
@@ -49,7 +49,7 @@ export function CartViewMinimal({ cart, totals, currency, locale, labels, lineCo
               <div className="my-1 border-t" />
               <Row label={labels.total} value={money(totals.total)} strong />
             </dl>
-            <Link href={checkoutHref} className={buttonVariants({ size: "lg" })}>
+            <Link href={checkoutHref} className={buttonVariants({ size: "xl" })}>
               {labels.checkout}
             </Link>
             <Link href={shopHref} className="text-center text-sm text-muted-foreground underline-offset-4 hover:underline">

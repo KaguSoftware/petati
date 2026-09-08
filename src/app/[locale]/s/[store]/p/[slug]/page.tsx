@@ -9,7 +9,7 @@ import { getSessionUser } from "@/lib/auth/session";
 import { getMyWishlistIds } from "@/lib/account/queries";
 import { AddToCartPanel } from "@/components/storefront/shared/add-to-cart-panel";
 import { ReviewForm } from "@/components/storefront/shared/review-form";
-import { WishlistButton } from "@/components/storefront/shared/wishlist-button";
+import { GuestWishlistButton, WishlistButton } from "@/components/storefront/shared/wishlist-button";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/s/[store]/p/[slug]">): Promise<Metadata> {
   const ctx = await storeContext(params);
@@ -59,7 +59,7 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/s/[st
 
 async function ProductWishlist({ storeId, storeSlug, productId }: { storeId: string; storeSlug: string; productId: string }) {
   const user = await getSessionUser();
-  if (!user) return null;
+  if (!user) return <GuestWishlistButton />;
   const ids = await getMyWishlistIds(storeId);
   return <WishlistButton storeSlug={storeSlug} productId={productId} active={ids.has(productId)} />;
 }

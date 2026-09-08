@@ -42,7 +42,7 @@ export function CompleteProfileForm({ locale, next, defaultCountry, askName }: P
           {state.error === "invalid" || state.error === "auth" ? t("common.error") : t.has(`auth.errors.${state.error}`) ? t(`auth.errors.${state.error}`) : state.error}
         </p>
       )}
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" size="xl" disabled={pending}>
         {t("auth.continue")}
       </Button>
     </form>

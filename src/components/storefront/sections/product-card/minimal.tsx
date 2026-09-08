@@ -12,15 +12,15 @@ export function ProductCardMinimal({ product, currency, locale, labels, wishlist
         <ProductImage
           src={product.imageUrl}
           alt={product.imageAlt}
-          className="aspect-[4/5] transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+          className="aspect-[4/3] transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none @phablet:aspect-[4/5]"
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
         />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-black/80 via-black/35 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-4 @tablet:p-5">
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-[72%] bg-linear-to-t from-black/85 via-black/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-4 [text-shadow:0_1px_2px_rgb(0_0_0/.45)] @tablet:p-5">
           {product.brand && <p className="truncate text-[11px] font-medium tracking-wide text-white/75 uppercase">{product.brand}</p>}
-          <h3 className="line-clamp-2 text-lg leading-snug font-semibold text-balance @tablet:text-xl">{product.name}</h3>
+          <h3 className="bidi-auto line-clamp-2 text-lg leading-snug font-semibold text-balance @tablet:text-xl">{product.name}</h3>
           <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
-            <Price amount={product.price} compareAt={product.compareAtPrice} currency={currency} locale={locale} className="text-base [&>span]:text-white [&_s]:text-white/60" />
+            <Price amount={product.price} compareAt={product.compareAtPrice} currency={currency} locale={locale} className="text-base [&>span]:text-white [&_s]:text-white/70" />
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} className="[&_span:last-child]:text-white/70" />}
           </div>
         </div>

@@ -13,12 +13,12 @@ export function CartViewBold({ cart, totals, currency, locale, labels, lineContr
   const money = (n: number) => formatMoney(n, currency, locale);
   return (
     <main className="py-10 @tablet:py-14">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-gutter">
         <h1 className="mb-8 text-4xl font-extrabold tracking-tight uppercase @tablet:text-6xl">{labels.title}</h1>
         {cart.lines.length === 0 && (
           <div className="flex flex-col items-center gap-6 border-4 border-foreground px-4 py-20 text-center">
             <p className="text-xl font-bold tracking-wide uppercase">{labels.empty}</p>
-            <Link href={shopHref} className={cn(buttonVariants({ variant: "outline", size: "lg" }), bigButton, "border-2 border-foreground")}>
+            <Link href={shopHref} className={cn(buttonVariants({ variant: "outline", size: "xl" }), bigButton, "border-2 border-foreground")}>
               {labels.continueShopping}
             </Link>
           </div>
@@ -26,7 +26,7 @@ export function CartViewBold({ cart, totals, currency, locale, labels, lineContr
         {cart.lines.length > 0 && (
           <ul className="divide-y-2 divide-foreground border-y-4 border-foreground">
             {cart.lines.map((l) => (
-              <li key={l.id} className="grid grid-cols-[auto_1fr] items-center gap-4 py-5 @tablet:grid-cols-[auto_1fr_auto_auto] @tablet:gap-8">
+              <li key={l.id} className="grid grid-cols-[auto_1fr] items-center gap-4 py-5 @tablet:grid-cols-[auto_1fr_auto_auto] @tablet:gap-6">
                 <Link href={`/p/${l.productSlug}`} className="shrink-0 border-2 border-foreground">
                   <ProductImage src={l.imageUrl} alt={l.name} className="size-20 @tablet:size-24" sizes="96px" />
                 </Link>
@@ -48,8 +48,8 @@ export function CartViewBold({ cart, totals, currency, locale, labels, lineContr
       </div>
       {cart.lines.length > 0 && (
         <div className="mt-10 bg-foreground text-background">
-          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 @tablet:grid-cols-[1fr_auto] @tablet:items-end">
-            <dl className="grid gap-x-8 gap-y-2 text-sm font-medium @tablet:max-w-lg">
+          <div className="mx-auto flex max-w-6xl flex-col gap-8 px-gutter py-10 @tablet:flex-row @tablet:items-end @tablet:justify-end @tablet:gap-12">
+            <dl className="grid w-full gap-x-8 gap-y-2 text-sm font-medium @tablet:max-w-md">
               <Row label={labels.subtotal} value={money(totals.subtotal)} />
               {totals.discount > 0 && <Row label={labels.discount} value={`−${money(totals.discount)}`} />}
               <Row label={labels.shipping} value={totals.shipping === 0 ? labels.freeShipping : money(totals.shipping)} />
@@ -59,7 +59,7 @@ export function CartViewBold({ cart, totals, currency, locale, labels, lineContr
               <Row label={labels.total} value={money(totals.total)} strong />
             </dl>
             <div className="flex flex-col gap-3">
-              <Link href={checkoutHref} className={cn(buttonVariants({ size: "lg" }), bigButton, "bg-accent text-accent-foreground hover:bg-accent/90")}>
+              <Link href={checkoutHref} className={cn(buttonVariants({ size: "xl" }), bigButton, "bg-accent text-accent-foreground hover:bg-accent/90")}>
                 {labels.checkout}
               </Link>
               <Link href={shopHref} className="text-center text-xs font-bold tracking-widest uppercase underline decoration-2 underline-offset-4 hover:decoration-4">

@@ -42,7 +42,7 @@ export function AddressList({ storeSlug, addresses, defaultCountry }: { storeSlu
       {editing ? (
         <AddressForm storeSlug={storeSlug} address={editing === "new" ? null : editing} defaultCountry={defaultCountry} onDone={() => setEditing(null)} />
       ) : (
-        <Button className="self-start" onClick={() => setEditing("new")}>{t("addAddress")}</Button>
+        <Button size="lg" className="self-start" onClick={() => setEditing("new")}>{t("addAddress")}</Button>
       )}
     </div>
   );
@@ -80,8 +80,8 @@ function AddressForm({ storeSlug, address, defaultCountry, onDone }: { storeSlug
       </Label>
       {state.error && <p className="text-sm text-destructive @phablet:col-span-2">{tc("error")}</p>}
       <div className="flex gap-2 @phablet:col-span-2">
-        <Button type="submit" disabled={pending}>{tc("save")}</Button>
-        <Button type="button" variant="ghost" onClick={onDone}>{tc("cancel")}</Button>
+        <Button type="submit" size="lg" disabled={pending}>{tc("save")}</Button>
+        <Button type="button" variant="ghost" size="lg" onClick={onDone}>{tc("cancel")}</Button>
       </div>
     </form>
   );

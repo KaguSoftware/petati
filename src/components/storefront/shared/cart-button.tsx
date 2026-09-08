@@ -17,7 +17,7 @@ export async function CartButton({ store, locale }: { store: Store; locale: Loca
     <Link href="/cart" aria-label={t("cart")} className={cn(iconButton, "relative")}>
       <ShoppingBag className="size-5" />
       {cart.itemCount > 0 && (
-        <span className="absolute -top-1 -end-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 text-[10px] leading-none font-semibold text-primary-foreground tabular-nums ring-2 ring-background">
+        <span className="absolute top-0 end-0 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 text-[10px] leading-none font-semibold text-primary-foreground tabular-nums ring-2 ring-background">
           {new Intl.NumberFormat(locale).format(cart.itemCount)}
         </span>
       )}

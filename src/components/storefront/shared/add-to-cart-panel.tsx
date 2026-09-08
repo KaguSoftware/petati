@@ -89,12 +89,12 @@ export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) 
       ))}
 
       <div className="flex items-center gap-3">
-        <div className="inline-flex items-center rounded-md border">
-          <button type="button" aria-label="-" className="px-3 py-2" onClick={() => setQty((q) => Math.max(1, q - 1))}>
+        <div dir="ltr" className="inline-flex h-11 items-center rounded-lg border">
+          <button type="button" aria-label="-" className="grid size-11 place-items-center rounded-s-lg transition-colors hover:bg-muted" onClick={() => setQty((q) => Math.max(1, q - 1))}>
             <Minus className="size-4" />
           </button>
-          <span className="min-w-8 text-center tabular-nums">{qty}</span>
-          <button type="button" aria-label="+" className="px-3 py-2" onClick={() => setQty((q) => Math.min(maxQty, q + 1))}>
+          <span className="min-w-9 text-center tabular-nums">{qty}</span>
+          <button type="button" aria-label="+" className="grid size-11 place-items-center rounded-e-lg transition-colors hover:bg-muted" onClick={() => setQty((q) => Math.min(maxQty, q + 1))}>
             <Plus className="size-4" />
           </button>
         </div>
@@ -109,7 +109,7 @@ export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) 
         </span>
       </div>
 
-      <Button type="submit" size="lg" disabled={!variant || !available || pending} className="w-full">
+      <Button type="submit" size="xl" disabled={!variant || !available || pending} className="w-full">
         {available ? t("addToCart") : t("outOfStock")}
       </Button>
       {state.error === "invalid" && <p className="text-sm text-destructive">{tc("couponInvalid")}</p>}

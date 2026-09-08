@@ -29,8 +29,8 @@ export function CouponForm({ storeSlug, appliedCode }: { storeSlug: string; appl
     <form action={action} className="flex flex-col gap-2">
       <input type="hidden" name="storeSlug" value={storeSlug} />
       <div className="flex gap-2">
-        <LatinInput kind="code" name="code" placeholder={t("couponCode")} aria-label={t("couponCode")} required />
-        <Button type="submit" variant="outline" disabled={pending}>
+        <LatinInput kind="code" name="code" placeholder={t("couponCode")} aria-label={t("couponCode")} className="placeholder:normal-case placeholder:tracking-normal" required />
+        <Button type="submit" variant="outline" size="xl" disabled={pending} className="shrink-0">
           {t("applyCoupon")}
         </Button>
       </div>

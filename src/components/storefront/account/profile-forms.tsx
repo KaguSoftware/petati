@@ -36,7 +36,7 @@ export function ProfileForm({ fullName, email, phone }: ProfileProps) {
       </div>
       {state.ok && <p className="text-sm text-muted-foreground">{t("saved")}</p>}
       {(state.error === "invalid" || state.error === "auth") && <p className="text-sm text-destructive">{tc("error")}</p>}
-      <Button type="submit" disabled={pending} className="self-start">{tc("save")}</Button>
+      <Button type="submit" size="lg" disabled={pending} className="self-start">{tc("save")}</Button>
     </form>
   );
 }
@@ -53,7 +53,7 @@ export function PasswordForm() {
       </div>
       {state.ok && <p className="text-sm text-muted-foreground">{t("saved")}</p>}
       {state.error && <p className="text-sm text-destructive">{state.error}</p>}
-      <Button type="submit" disabled={pending} className="self-start">{tc("save")}</Button>
+      <Button type="submit" size="lg" disabled={pending} className="self-start">{tc("save")}</Button>
     </form>
   );
 }

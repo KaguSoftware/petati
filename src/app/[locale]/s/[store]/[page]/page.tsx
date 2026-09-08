@@ -16,7 +16,7 @@ export default async function ContentPage({ params }: PageProps<"/[locale]/s/[st
   const pages = (store.settings.pages ?? {}) as Record<string, Record<string, string>>;
   const body = pages[page]?.[locale] ?? pages[page]?.[fallback] ?? "";
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10">
+    <main className="mx-auto w-full max-w-3xl px-gutter py-10">
       <h1 className="mb-6 text-3xl font-semibold tracking-tight">{t(page as (typeof PAGES)[number])}</h1>
       <div className="whitespace-pre-line text-muted-foreground">{body || "—"}</div>
     </main>

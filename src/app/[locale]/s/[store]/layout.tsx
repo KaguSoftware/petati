@@ -1,7 +1,8 @@
-import { themeToCssVars } from "@/lib/theme/types";
+import { NAVBAR_VARS, themeToCssVars } from "@/lib/theme/types";
 import { storeContext } from "@/lib/tenant/context";
 import { StoreProvider } from "@/components/storefront/store-provider";
 import { StoreChrome } from "@/components/storefront/store-chrome";
+import { cn } from "@/lib/utils";
 
 /**
  * Storefront root. Resolves the tenant from the (rewritten) path, injects the store's colour
@@ -15,8 +16,8 @@ export default async function StoreLayout({ children, params }: LayoutProps<"/[l
   return (
     <div
       data-storefront
-      className="@container flex min-h-screen flex-col bg-background font-sans text-foreground"
-      style={themeToCssVars(store.theme) as React.CSSProperties}
+      className={cn("@container flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[store.theme.sections.navbar])}
+      style={themeToCssVars(store.theme, locale) as React.CSSProperties}
     >
       <StoreProvider
         value={{
