@@ -163,6 +163,17 @@ body[data-overlayscrollbars-initialize]::-webkit-scrollbar {
   --os-handle-perpendicular-size-active: 100%;
 }
 
+/* Body-mode bars skip the library's direction detection; mirror them ourselves under RTL. */
+html[dir="rtl"] > body > .os-scrollbar-vertical,
+html[dir="rtl"] > body > .os-scrollbar-vertical .os-scrollbar-handle {
+  right: auto;
+  left: 0;
+}
+html[dir="rtl"] > body > .os-scrollbar-vertical .os-scrollbar-handle::before {
+  right: calc((var(--os-padding-perpendicular) + var(--os-handle-interactive-area-offset)) * -1);
+  left: calc(var(--os-padding-perpendicular) * -1);
+}
+
 /* ---- Staggered reveal for drawer links (Base UI sets data-starting-style on the popup) ---- */
 @utility stagger-in {
   transition:

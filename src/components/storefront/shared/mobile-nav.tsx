@@ -36,6 +36,7 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
   const renderLink = (item: NavItem, index: number) => (
     <SheetClose
       key={item.href}
+      nativeButton={false}
       render={<Link href={item.href} />}
       className={drawerLink}
       style={{ "--stagger": index } as CSSProperties}
@@ -50,9 +51,9 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
         render={<Button variant="ghost" size="icon-lg" className="group/burger md:hidden" aria-label={open ? labels.closeMenu : labels.menu} />}
       >
         <span aria-hidden className="flex flex-col items-center justify-center gap-[5px]">
-          <span className={`${bar} group-data-popup-open/burger:translate-y-[7px] group-data-popup-open/burger:rotate-45`} />
-          <span className={`${bar} group-data-popup-open/burger:scale-x-0 group-data-popup-open/burger:opacity-0`} />
-          <span className={`${bar} group-data-popup-open/burger:-translate-y-[7px] group-data-popup-open/burger:-rotate-45`} />
+          <span className={`${bar} group-data-[popup-open]/burger:translate-y-[7px] group-data-[popup-open]/burger:rotate-45`} />
+          <span className={`${bar} group-data-[popup-open]/burger:scale-x-0 group-data-[popup-open]/burger:opacity-0`} />
+          <span className={`${bar} group-data-[popup-open]/burger:-translate-y-[7px] group-data-[popup-open]/burger:-rotate-45`} />
         </span>
       </SheetTrigger>
 

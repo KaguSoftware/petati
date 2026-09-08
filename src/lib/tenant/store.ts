@@ -7,6 +7,9 @@ import { parseTheme, type StoreTheme } from "@/lib/theme/types";
 
 export type Store = Omit<StoreRow, "theme"> & { theme: StoreTheme };
 
+/** Cache profile for lookups that found nothing: seconds, not hours. */
+const MISS_LIFE = { stale: 5, revalidate: 10, expire: 60 } as const;
+
 export function storeCacheTag(slug: string) {
   return `store:${slug.toLowerCase()}`;
 }
@@ -28,6 +31,8 @@ export async function getStoreBySlug(slug: string): Promise<Store | null> {
     .eq("slug", slug.toLowerCase())
     .maybeSingle<StoreRow>();
   if (error) throw error;
+  // A miss must not be pinned for hours (a store created a moment later would stay invisible).
+  if (!data) cacheLife(MISS_LIFE);
   return data ? hydrate(data) : null;
 }
 
@@ -44,6 +49,7 @@ export async function getStoreSlugByHostname(hostname: string): Promise<string |
     .eq("hostname", hostname.toLowerCase())
     .maybeSingle<{ stores: { slug: string } }>();
   if (error) throw error;
+  if (!data) cacheLife(MISS_LIFE);
   return data?.stores.slug ?? null;
 }
 
