@@ -40,11 +40,14 @@ async function OrdersList({ locale, searchParams }: { locale: string; searchPara
   // Fast path: no search/date/page/sort → load page 1 of EVERY status bucket in one wave and
   // switch tabs client-side (instant). Any other filter falls back to server-driven paging.
   if (isPlainList(sp, ["status"])) {
-    const [counts, ta, tc] = await Promise.all([orderStatusCounts(ctx.store.id), getTranslations("admin"), getTranslations("common")]);
+    // Counts and every bucket in ONE wave (an empty bucket is a cheap indexed query).
+    const [counts, ta, tc, ...pages] = await Promise.all([
+      orderStatusCounts(ctx.store.id),
+      getTranslations("admin"),
+      getTranslations("common"),
+      ...BUCKETS.map((b) => listOrders(ctx.store.id, { ...list, status: b === "all" ? undefined : b, from, to })),
+    ]);
     const labels = { prev: tc("previous"), next: tc("next") };
-    const pages = await Promise.all(
-      BUCKETS.map((b) => (counts[b] ? listOrders(ctx.store.id, { ...list, status: b === "all" ? undefined : b, from, to }) : Promise.resolve({ rows: [], total: 0 }))),
-    );
     const panels = BUCKETS.map((b, i) => {
       const query = { status: b === "all" ? undefined : b };
       return {

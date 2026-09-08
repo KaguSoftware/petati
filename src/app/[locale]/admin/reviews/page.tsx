@@ -33,14 +33,17 @@ async function ReviewsList({ locale, searchParams }: { locale: string; searchPar
   const status = pickParam(sp, "status", REVIEW_STATUSES) ?? "pending";
   const { page } = parseListParams(sp, { sorts: ["created_at"] as const });
   const listOpts = { locale: ctx.locale, fallback: ctx.store.default_locale };
-  const [counts, t, ta] = await Promise.all([reviewCounts(ctx.store.id), getTranslations("common"), getTranslations("admin")]);
+  const plain = isPlainList(sp, ["status"]);
+  // Fast path: counts + page 1 of all three moderation buckets in ONE wave; tabs switch client-side.
+  const [counts, t, ta, ...pages] = await Promise.all([
+    reviewCounts(ctx.store.id),
+    getTranslations("common"),
+    getTranslations("admin"),
+    ...(plain ? REVIEW_STATUSES.map((s) => listReviews(ctx.store.id, { status: s, page: 1, ...listOpts })) : []),
+  ]);
   const labels = { prev: t("previous"), next: t("next") };
 
-  // Fast path: page 1 of all three moderation buckets in one wave; tabs switch client-side.
-  if (isPlainList(sp, ["status"])) {
-    const pages = await Promise.all(
-      REVIEW_STATUSES.map((s) => (counts[s] ? listReviews(ctx.store.id, { status: s, page: 1, ...listOpts }) : Promise.resolve({ rows: [], total: 0, pageSize: 25 }))),
-    );
+  if (plain) {
     const panels = REVIEW_STATUSES.map((s, i) => ({
       value: s,
       label: ta(`status.review.${s}`),

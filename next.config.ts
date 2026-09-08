@@ -10,7 +10,9 @@ const nextConfig: NextConfig = {
     serverActions: { bodySizeLimit: "3mb" },
     // Keep visited admin pages warm in the client router cache so sidebar/back navigations are
     // instant; server actions call refresh()/updateTag() so mutations still show up immediately.
-    staleTimes: { dynamic: 30, static: 180 },
+    // static also bounds how long a fully prefetched sidebar page is reused: 60s keeps admin
+    // lists fresh enough while sidebar clicks stay instant.
+    staleTimes: { dynamic: 30, static: 60 },
   },
   images: {
     remotePatterns: [

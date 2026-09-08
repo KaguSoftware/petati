@@ -56,22 +56,19 @@ async function ProductsList({ locale, searchParams }: { locale: string; searchPa
   const fallback = ctx.store.default_locale;
   const canWrite = can(ctx.role, "products.write");
   const tableProps = { storeId: ctx.store.id, locale: ctx.locale, currency: ctx.store.currency, lowStockThreshold: ctx.store.low_stock_threshold, canWrite, sort: { sort: list.sort, dir: list.dir } };
-  const [counts, categories, t, ta] = await Promise.all([
+  const plain = isPlainList(sp, ["status"]);
+  // Fast path: nothing but `status` in the URL → counts + page 1 of every bucket in ONE wave, tabs
+  // switch client-side. Search/category/page/sort fall back to server-driven paging.
+  const [counts, categories, t, ta, ...pages] = await Promise.all([
     productStatusCounts(ctx.store.id),
     listCategoryOptions(ctx.store.id, ctx.locale, fallback),
     getTranslations("common"),
     getTranslations("admin"),
+    ...(plain ? BUCKETS.map((b) => listProducts(ctx.store.id, { ...list, status: b === "all" ? undefined : b, locale: ctx.locale, fallback })) : []),
   ]);
   const labels = { prev: t("previous"), next: t("next") };
 
-  // Fast path: nothing but `status` in the URL → page 1 of every bucket in one wave, tabs switch
-  // client-side. Search/category/page/sort fall back to server-driven paging.
-  if (isPlainList(sp, ["status"])) {
-    const pages = await Promise.all(
-      BUCKETS.map((b) =>
-        counts[b] ? listProducts(ctx.store.id, { ...list, status: b === "all" ? undefined : b, locale: ctx.locale, fallback }) : Promise.resolve({ rows: [], total: 0 }),
-      ),
-    );
+  if (plain) {
     const panels = BUCKETS.map((b, i) => {
       const query = { status: b === "all" ? undefined : b };
       return {

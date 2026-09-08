@@ -53,8 +53,12 @@ export async function getStoreSlugByHostname(hostname: string): Promise<string |
   return data?.stores.slug ?? null;
 }
 
-/** All stores (admin store switcher). Not cached: small table, owner-only. */
+/** All stores (admin context + switcher). Cached under the "stores" tag, which every store mutation updates. */
 export async function listStores(): Promise<Store[]> {
+  "use cache";
+  cacheTag("stores");
+  cacheLife("hours");
+
   const db = createSupabaseAdminClient();
   const { data, error } = await db
     .from("stores")

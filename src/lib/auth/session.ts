@@ -13,21 +13,24 @@ export interface SessionUser {
   profile: ProfileRow;
 }
 
-/** Current signed-in user (cookie session) or null. Memoised per request. */
+/**
+ * Current signed-in user (cookie session) or null. Memoised per request.
+ * The token is verified locally (`getClaims`, ES256 against the cached JWKS) — no auth-server
+ * round trip — so a page costs one database query here (the profile row).
+ */
 export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims;
+  if (!claims?.sub) return null;
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
-    .eq("id", user.id)
+    .eq("id", claims.sub)
     .maybeSingle<ProfileRow>();
   if (!profile) return null;
-  return { id: user.id, email: user.email ?? null, profile };
+  return { id: claims.sub, email: typeof claims.email === "string" ? claims.email : null, profile };
 });
 
 /** Effective role of the current user on a store, or null if they are not staff there. */

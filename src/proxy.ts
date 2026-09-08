@@ -85,8 +85,8 @@ async function refreshSession(request: NextRequest, response: NextResponse) {
       },
     },
   });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  // getClaims() verifies the access token locally against the project's cached JWKS (ES256), so
+  // the common case costs no network; an expired token is refreshed through the cookie adapter.
+  const { data } = await supabase.auth.getClaims();
+  return data?.claims ? { id: data.claims.sub } : null;
 }

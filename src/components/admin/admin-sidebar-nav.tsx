@@ -26,6 +26,9 @@ export function AdminSidebarNav({ items, onNavigate, className }: Props) {
           <Link
             key={item.key}
             href={item.href}
+            // Full prefetch (page + data) so a click paints from the client cache; the router
+            // re-prefetches on hover once the copy is older than staleTimes.static.
+            prefetch={true}
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
             className={cn(
