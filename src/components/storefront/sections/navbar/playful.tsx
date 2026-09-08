@@ -48,15 +48,15 @@ export function NavbarPlayful({ storeName, logoUrl, categories, labels, cartSlot
               {labels.brands}
             </Link>
             {categoryLinks.map((l, i) => (
-              <Link key={l.href} href={l.href} className={cn(navLink, i >= 3 ? "hidden" : i >= 2 ? "hidden @wide:inline-flex" : "hidden @desktop:inline-flex")}>
+              <Link key={l.href} href={l.href} className={cn(navLink, i >= 2 ? "hidden" : i >= 1 ? "hidden @wide:inline-flex" : "hidden @desktop:inline-flex")}>
                 {l.label}
               </Link>
             ))}
           </div>
         </nav>
         <div className="ms-auto flex items-center gap-0.5 @tablet:gap-1">
-          <SearchForm placeholder={labels.search} className="hidden w-40 @tablet:block @wide:w-52 @tablet:me-1" />
-          <div className="hidden @desktop:block">{localeSlot}</div>
+          <SearchForm placeholder={labels.search} className="hidden w-48 @tablet:block @wide:w-52 @tablet:me-1" />
+          <div className="hidden @wide:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>

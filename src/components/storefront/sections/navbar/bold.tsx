@@ -36,7 +36,7 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
               </>
             }
           />
-          <SearchForm placeholder={labels.search} className="hidden w-48 @tablet:block @desktop:w-64 [&_input]:rounded-none [&_input]:border-2 [&_input]:border-foreground [&_input]:bg-background" />
+          <SearchForm placeholder={labels.search} className="hidden w-56 @tablet:block @desktop:w-64 [&_input]:rounded-none [&_input]:border-2 [&_input]:border-foreground [&_input]:bg-background" />
         </div>
         <div className="justify-self-center">{brand}</div>
         <div className="flex items-center justify-end gap-0.5 @tablet:gap-1">

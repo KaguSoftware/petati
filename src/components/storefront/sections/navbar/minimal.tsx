@@ -5,6 +5,8 @@ import { SearchForm } from "@/components/storefront/shared/search-form";
 import { NavScrollState } from "@/components/storefront/shared/nav-scroll-state";
 import { StoreLogo } from "@/components/storefront/shared/store-logo";
 import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import type { NavbarProps } from "../types";
 
 const navLink =
@@ -52,15 +54,18 @@ export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot
             {labels.brands}
           </Link>
           {categoryLinks.map((l, i) => (
-            <Link key={l.href} href={l.href} className={cn(navLink, i >= 3 ? "hidden" : i >= 2 ? "hidden @wide:inline-flex" : "hidden @desktop:inline-flex")}>
+            <Link key={l.href} href={l.href} className={cn(navLink, i >= 2 ? "hidden" : i >= 1 ? "hidden @wide:inline-flex" : "hidden @desktop:inline-flex")}>
               {l.label}
             </Link>
           ))}
         </nav>
 
         <div className="flex items-center justify-end gap-0.5 @tablet:gap-1">
-          <SearchForm placeholder={labels.search} className="hidden w-40 @tablet:block @desktop:w-44 @wide:w-56 @tablet:me-1" />
-          <div className="hidden @desktop:block">{localeSlot}</div>
+          <Link href="/shop" aria-label={labels.search} className={cn(buttonVariants({ variant: "ghost", size: "icon-lg" }), "hidden @tablet:inline-flex @desktop:hidden")}>
+            <Search className="size-5" />
+          </Link>
+          <SearchForm placeholder={labels.search} className="hidden w-48 @desktop:block @wide:w-52 @desktop:me-1" />
+          <div className="hidden @wide:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>

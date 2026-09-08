@@ -69,7 +69,7 @@ export function NavbarEditorial({ storeName, logoUrl, categories, labels, cartSl
           <Link href="/shop" aria-label={labels.search} className={cn(buttonVariants({ variant: "ghost", size: "icon-lg" }), "hidden @tablet:inline-flex @wide:hidden")}>
             <Search className="size-5" />
           </Link>
-          <SearchForm placeholder={labels.search} className="hidden w-44 @wide:block @wide:me-1 [&_input]:rounded-none [&_input]:border-0 [&_input]:border-b [&_input]:border-foreground/30 [&_input]:bg-transparent" />
+          <SearchForm placeholder={labels.search} className="hidden w-52 @wide:block @wide:me-1 [&_input]:rounded-none [&_input]:border-0 [&_input]:border-b [&_input]:border-foreground/30 [&_input]:bg-transparent" />
           <div className="hidden @tablet:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}

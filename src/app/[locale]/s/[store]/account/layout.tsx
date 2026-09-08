@@ -29,8 +29,8 @@ export default async function AccountLayout({ children, params }: LayoutProps<"/
   return (
     <main className="mx-auto w-full max-w-6xl px-gutter pt-6 pb-16 md:pt-10 md:pb-24">
       <h1 className="mb-5 text-3xl font-semibold tracking-tight md:mb-8 md:text-4xl">{t("title")}</h1>
-      <div className="grid gap-6 md:grid-cols-[16rem_minmax(0,1fr)] md:gap-10">
-        <aside className="flex flex-col gap-4 md:sticky md:top-24 md:self-start">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[16rem_minmax(0,1fr)] md:gap-10">
+        <aside className="flex min-w-0 flex-col gap-4 md:sticky md:top-24 md:self-start">
           <div className="hidden items-center gap-3 rounded-xl border p-3 md:flex">
             <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-full bg-primary text-base font-semibold text-primary-foreground">
               {initial}
