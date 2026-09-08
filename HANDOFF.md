@@ -31,9 +31,9 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
 - Next.js 16.3.4 (App Router, `cacheComponents: true`, Turbopack, `src/` dir), React 19, TypeScript.
 - Tailwind v4 + shadcn/ui (`base-nova` style, `rtl: true` in `components.json`).
 - next-intl 4 with `messages/{en,tr,fa}.json`, `[locale]` prefix always.
-- Supabase (Postgres, Auth, Storage) via `@supabase/ssr`. Local stack through Supabase CLI (npm devDependency) on Docker Desktop. Works on the second dev machine (2026-09-08); the first machine still has no Docker.
+- Supabase (Postgres, Auth, Storage) via `@supabase/ssr`. **The app runs against the linked cloud project `zsuxkiqswaaxgpibwstb`** (eu-central-1, the client's account) since 2026-09-08; `.env.local` holds its URL + legacy anon/service_role JWTs (`npx supabase projects api-keys --project-ref zsuxkiqswaaxgpibwstb -o json`). The local Docker stack (machine 2 only) is used for `db reset` + pgTAP. Migrations reach the cloud with `npx supabase db push` (CLI already linked + authenticated).
 - Resend + react-email for transactional mail (optional in dev, logs to console without a key).
-- Vercel for hosting. Vercel CLI not installed yet.
+- Vercel hosting at https://petati.vercel.app (auto-deploys from `main`). The Vercel CLI is not logged in on any dev machine, so env vars are set in the Vercel dashboard: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ROOT_DOMAIN=petati.vercel.app`, `DEFAULT_STORE_SLUG=default`, `FEATURE_MULTI_STORE=false`, `NEXT_PUBLIC_APP_URL=https://petati.vercel.app`, `EMAIL_FROM_FALLBACK`, optional `RESEND_API_KEY`.
 - Dev OS: Windows 11. Machine 1: Node 22.14, npm 11 (no Docker). Machine 2: Node 24.15, npm 12, Docker Desktop 29 (works).
 - No secrets in this file. Env template: `.env.example`.
 
@@ -49,32 +49,14 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
 - Next.js 16 differs from older training data: read `node_modules/next/dist/docs/` before using an
   API you are unsure about (see `AGENTS.md`). Middleware is `src/proxy.ts`.
 
-## Current status (2026-09-08)
-Done (build + typecheck + lint pass; migrations, seed, pgTAP and the storefront verified against the local Supabase stack on 2026-09-08):
-- Step 1: repo, deps, shadcn (RTL on), next-intl with `messages/{en,tr,fa}.json`, `.env.example`.
-- Step 2: four migrations (platform, catalog, commerce, finance) with RLS on every table, SQL
-  helpers, stock-movement + rating triggers, finance views, seed (4 demo users, 1 store, 5
-  categories, 20 products with variants, coupons, shipping rates), pgTAP tests. Applied cleanly on
-  first run (2026-09-08); `npx supabase test db` passes 11/11.
-- Step 3: `src/proxy.ts` (tenant + locale + session refresh + admin guard), cached store lookup,
-  theme JSON parsing → CSS vars, permission matrix, session helpers, auth pages
-  (sign-in / sign-up / forgot-password, Google OAuth, callback route), admin shell with
-  role-filtered nav and flag-gated store switcher, locale switcher, storefront placeholder page.
-- Step 4: storefront theme A ("minimal") end to end: cached catalog queries, cart (cookie token,
-  server actions), coupons, checkout with live totals and the `manual` payment provider, order
-  creation (customer upsert, items snapshot, stock movements, coupon redemption, confirmation email),
-  order page, account area (orders, addresses, wishlist, profile/password), reviews (pending →
-  moderated), newsletter opt-in, content pages. Twelve section variants under
-  `src/components/storefront/sections/*/minimal.tsx` behind the registry.
-- Dev QA harness: `/{locale}/preview/{variant}` renders every section with fixture data and no
-  database (`src/lib/theme/fixtures.ts`). Screenshot-checked at 390px and 1280px in EN and FA with
-  Playwright (Edge channel): no horizontal overflow, RTL mirrors correctly, Vazirmatn renders.
-- Friendly dev error screen (`src/app/[locale]/error.tsx`) explains when Supabase is unreachable.
-Verified live (2026-09-08): `supabase start` + `db reset`, pgTAP green, storefront home / category /
-product / cart / sign-in render for en, tr, fa with no Cache Components warnings, password sign-in works.
-In progress:
-- Step 5: admin panel modules.
-Not started: themes B–D, deploy config.
+## Current status (2026-09-08, evening)
+Done (build, typecheck, lint, 25 pgTAP tests green; every flow below verified with Playwright against the cloud project):
+- Steps 1–4 as before (repo, schema, tenant proxy/auth, storefront theme A).
+- **UI foundation**: every control is custom (Base UI shadcn Select/Checkbox/RadioGroup/Combobox/NumberField…; no native select/checkbox/radio/number/date/color anywhere); OverlayScrollbars on the document and scroll containers (no layout shift, RTL-mirrored); `DirectionProvider` mounted; Latin-only inputs (`LatinInput`) stay LTR under `fa`; navbar redesign with logo slot, pill nav (3 categories, 5 at xl, rest via Shop/drawer) and an animated hamburger drawer.
+- **Phone onboarding**: `profiles.phone` (E.164, unique) + `phone_country`; `PhoneField` (country Combobox + LTR number, `libphonenumber-js` server-side); required at sign-up and enforced by a one-time `/complete-profile` screen (account, checkout, admin, sign-in, OAuth callback).
+- **Step 5 admin — all modules built**: dashboard, orders (lifecycle + emails + refunds), products (translations, options/variants, images, categories), inventory (adjustments = stock movements, log), customers (`v_customer_stats`), coupons, reviews, finance (overview, margins, expenses), design (theme editor + live preview + branding upload), settings (general/commerce/pages/shipping), staff (invite/role/remove). Shell: Suspense frame (`instant = false`), mobile Sheet nav, DropdownMenu user menu, breadcrumbs, shared `StatusTabs`/DataTable/toolbar/dialog components under `src/components/admin/shared/`.
+- **Multi-store (hidden)**: `/admin/stores` list + 7-step create wizard + domain actions, gated by `FEATURE_MULTI_STORE` AND platform owner (`requireMultiStore`). On locally (`.env.local`) so `testuser@gmail.com` (platform owner on the cloud project, password `12345678`) can use it; keep it off in Vercel.
+In progress: nothing. Not started: themes B–D, iyzico, rich text editor, CSV export, DNS verification.
 
 ## File map (key files)
 - `next.config.ts` — cacheComponents on, next-intl plugin, image hosts.
@@ -99,16 +81,22 @@ Not started: themes B–D, deploy config.
 - `src/components/storefront/shared/*` — interactive pieces shared by all variants (add-to-cart, cart controls, forms).
 - `src/i18n/{config,routing,navigation,request}.ts` — locales, RTL helper, next-intl wiring.
 - `messages/{en,tr,fa}.json` — all UI strings, namespaced.
-- `supabase/` — CLI config, migrations, seed, pgTAP tests.
+- `src/lib/admin/{context,guard,validate,list-params,constants,types}.ts` — admin plumbing: `requireAdminPage`, `adminMutation`, form parsing (`uuidField` is lenient on purpose), list params.
+- `src/lib/admin/<module>/{queries,actions}.ts` + `src/components/admin/<module>/` + `src/app/[locale]/admin/<module>/` — one folder per module (orders is the reference).
+- `src/lib/admin/stores/*` — hidden multi-store: `guard.ts` (`requireMultiStore`), schema, actions, domain actions; wizard under `src/components/admin/stores/`.
+- `src/components/forms/{latin-input,country-select,phone-field}.tsx`, `src/lib/phone/{countries,normalize}.ts` — LTR inputs, country picker, phone validation.
+- `src/components/scroll/document-scrollbars.tsx`, `src/components/ui/overlay-scroll.tsx` — overlay scrollbars.
+- `supabase/` — CLI config, migrations, `seeds/01_store.sql` (env-agnostic; was pushed to the cloud) + `seeds/02_dev_users.sql` (LOCAL ONLY demo users), pgTAP tests (`rls`, `rls_enabled`, `customer_stats`, `stores_policy`).
 
 ## Roadmap / next steps
 1. ~~Repo + tooling + handoff~~ (done 2026-09-07)
 2. ~~Database schema, RLS, seed~~ (written 2026-09-07, verified live 2026-09-08)
 3. ~~Tenant proxy, i18n layouts, Supabase auth, permission matrix, admin route guard~~ (done 2026-09-07)
 4. ~~Storefront theme A end to end~~ (done 2026-09-07, verified against the local DB 2026-09-08)
-5. **← ACTIVE** Admin panel (all modules; store creation hidden behind flag)
-6. Themes B, C, D
-7. Deploy readiness (vercel.ts, wildcard domain, `supabase link`/`db push` to client project)
+5. ~~Admin panel (all modules; store creation hidden behind flag)~~ (done 2026-09-08)
+6. **← NEXT** Themes B, C, D (section variants `bold`/`editorial`/`playful`; the design editor and wizard already list them as "coming soon")
+7. Deploy readiness: Vercel env vars (see Stack), wildcard domain for subdomains, Resend key, Google OAuth credentials in the Supabase dashboard, SMTP for staff invites
+8. Client logo + brand colours (Design page), iyzico when credentials arrive
 
 ## Deliberately partial — grows later (scope ledger)
 | Area | What shipped now | Intended full shape | Grows in |
@@ -117,7 +105,11 @@ Not started: themes B–D, deploy config.
 | Payments | `manual` provider (order = pending_payment, admin marks paid) | iyzico checkout + webhooks + refunds | When client supplies iyzico credentials |
 | Themes | `minimal` only; registry falls back to it for any other variant | Four variants per section | Step 6 |
 | Content pages | privacy/terms/about read plain text from `store.settings.pages` | Rich text editor in admin | Step 5 |
-| Admin | Shell + dashboard placeholder | All modules | Step 5 |
+| Admin | All modules live | Rich text for pages/descriptions, CSV export, SQL aggregates for counts | As needed |
+| Phone | Unique E.164 per account; emoji flags (letter pairs on Windows) | SVG flags; OTP login | Later |
+| Staff invites | Supabase built-in SMTP only mails project members → falls back to creating the user silently | Real SMTP/Resend for invites | Deploy readiness |
+| Design fonts | Saved in theme JSON, storefront still picks font by locale | Load theme fonts | Themes B–D |
+| Store domains | Rows created, `verified_at` never set | DNS verification job | When multi-store is paid |
 
 ## Gotchas / open issues
 - Machine 1 has no Docker Desktop / WSL (needs an elevated shell: `wsl --install`, reboot,
@@ -146,20 +138,26 @@ Not started: themes B–D, deploy config.
 - next-intl `localePrefix: "always"`; the bare root is redirected by proxy to the store's default locale.
 - Path-mode URLs `/en/s/<slug>/…` pass through the proxy but storefront links do not preserve the prefix. Preview other stores with `<slug>.localhost:3000` instead.
 - shadcn `form` component was not added (needs react-hook-form); add it when building admin forms.
-- Owner has not yet provided the client's Supabase project; local only for now.
+- Cloud project is live (see Stack). Never push `seeds/02_dev_users.sql` to it; to seed only the store file, temporarily set `[db.seed] sql_paths` to `["./seeds/01_store.sql"]` and run `npx supabase db push --include-seed`, then restore.
+- `getStoreBySlug` caches misses for seconds now (`MISS_LIFE`), but the dev cache lives in `.next/dev`: if the storefront shows stale data after direct DB edits, restart `next dev`.
+- Zod 4: `z.uuid()` rejects our fixture ids (version nibble 0) — use `uuidField` from `src/lib/admin/validate.ts`; `z.record(z.enum(locales), …)` is exhaustive — use `z.partialRecord`.
+- next-intl: message strings containing `<…>` must be ICU-quoted (`'<'…'>'`).
+- React 19 resets uncontrolled inputs after a form action; key forms/cards on their saved data or control them.
+- `useActionState` actions triggered outside a form must run inside `startTransition`.
+- Base UI Dialog/Select trigger = `render={<Button/>}`; a Close rendering a `<Link>` needs `nativeButton={false}`.
+- OverlayScrollbars body mode skips direction detection: `globals.css` mirrors the document bar under `[dir=rtl]`; hidden Base UI inputs get `margin-left:0` under RTL to avoid a 1px scroll.
+- Two `color-field` components exist (`components/admin/color-field.tsx` used by the wizard, `components/admin/design/color-field.tsx` used by the design editor) — consolidate when touching either.
+- QA scripts live in `node_modules/.qa/*.mjs` (untracked): sign in as testuser, exercise each module with Playwright (Edge channel).
 
 ## Running it
 ```
 npm install
 npx supabase start               # Docker Desktop must be running; see port-clash gotcha
 npx supabase db reset            # applies migrations + seed.sql
-npx supabase status              # copy URL / anon / service_role into .env.local
-cp .env.example .env.local
+npx supabase status              # local keys (only if you want to run against Docker instead of the cloud)
+cp .env.example .env.local        # then paste the cloud keys (see Stack) or the local ones
 npm run dev                      # http://localhost:3000
 npm run lint && npx tsc --noEmit && npm run build
 npx supabase test db             # pgTAP: RLS on every table + role matrix
 ```
-Local accounts (password `password123`): owner@petati.local (platform owner), manager@petati.local,
-staff@petati.local, customer@petati.local. Extra platform-owner login for manual testing:
-`testuser@gmail.com` / `12345678`, created by hand in the local DB on 2026-09-08 (not in `seed.sql`,
-so re-create it after `npx supabase db reset` using the seed's insert pattern).
+Accounts: on the **cloud** project only `testuser@gmail.com` / `12345678` (platform owner, phone set). Locally (Docker) the demo users from `seeds/02_dev_users.sql` (password `password123`): owner@petati.local, manager@petati.local, staff@petati.local, customer@petati.local — all with seeded phones.
