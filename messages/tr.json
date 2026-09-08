@@ -244,7 +244,14 @@
       "errors": {
         "forbidden": "Bunu yapmaya yetkiniz yok.",
         "failed": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
-        "notFound": "Bulunamadı."
+        "notFound": "Bulunamadı.",
+        "invalid": "Lütfen işaretli alanları kontrol edin."
+      },
+      "presets": {
+        "last7": "Son 7 gün",
+        "last30": "Son 30 gün",
+        "thisMonth": "Bu ay",
+        "lastMonth": "Geçen ay"
       }
     },
     "roles": {
@@ -303,6 +310,85 @@
       "store": {
         "active": "Aktif",
         "inactive": "Pasif"
+      }
+    },
+    "dashboard": {
+      "subtitle": "Son 30 güne genel bakış.",
+      "revenue30d": "Net gelir (30g)",
+      "margin30d": "Brüt kâr (30g)",
+      "afterCogs": "Ürün maliyeti sonrası",
+      "ordersInPeriod": "{count} sipariş",
+      "pendingPayment": "Ödeme bekleyen",
+      "pendingReviews": "Onay bekleyen yorum",
+      "lowStock": "Stok az",
+      "recentOrders": "Son siparişler",
+      "viewAll": "Tümünü gör",
+      "salesByDay": "Güne göre ödenen gelir",
+      "noSales": "Bu dönemde henüz satış yok.",
+      "stockHealthy": "Takip edilen tüm varyantlar düşük stok eşiğinin üzerinde."
+    },
+    "orders": {
+      "number": "Sipariş",
+      "customer": "Müşteri",
+      "placedAt": "Tarih",
+      "total": "Toplam",
+      "payment": "Ödeme",
+      "items": "Ürünler",
+      "shippingAddress": "Teslimat adresi",
+      "billingAddress": "Fatura adresi",
+      "provider": "Sağlayıcı",
+      "paymentRef": "Referans",
+      "refunded": "İade edildi",
+      "searchPlaceholder": "Sipariş numarası veya e-posta ile ara…",
+      "actions": {
+        "markPaid": "Ödendi olarak işaretle",
+        "startProcessing": "Hazırlamaya başla",
+        "ship": "Kargolandı olarak işaretle",
+        "markDelivered": "Teslim edildi olarak işaretle",
+        "cancel": "Siparişi iptal et",
+        "refund": "İade"
+      },
+      "markPaid": {
+        "description": "Ödemenin ulaştığını onaylayın (havale, kapıda ödeme…). Müşteri bilgilendirilir.",
+        "reference": "Ödeme referansı",
+        "referencePlaceholder": "Havale no, fiş numarası…"
+      },
+      "ship": {
+        "title": "Kargo",
+        "description": "Takip bilgilerini ekleyin; müşteriye e-posta ile gönderilir.",
+        "trackingNumber": "Takip numarası",
+        "trackingUrl": "Takip bağlantısı"
+      },
+      "refund": {
+        "title": "İade kaydet",
+        "amount": "Tutar",
+        "reason": "Sebep",
+        "max": "En fazla {amount} daha iade edilebilir."
+      },
+      "cancel": {
+        "title": "Bu sipariş iptal edilsin mi?",
+        "description": "Ayrılan stok envantere geri döner ve müşteri bilgilendirilir."
+      },
+      "note": {
+        "internal": "Dahili not",
+        "customer": "Müşteri notu",
+        "placeholder": "Yalnızca ekip görür"
+      },
+      "timeline": {
+        "title": "Zaman çizelgesi",
+        "placed": "Sipariş verildi",
+        "status_changed": "Durum {from} → {to}",
+        "payment": "Ödeme alındı",
+        "paymentRef": "Ödeme alındı · ref {ref}",
+        "shipment": "Kargolandı",
+        "shipmentTracking": "Kargolandı · takip {number}",
+        "refund": "{amount} iade edildi",
+        "note": "Dahili not güncellendi"
+      },
+      "errors": {
+        "transition": "Mevcut durumdan bu değişiklik yapılamaz.",
+        "noPayment": "Bu siparişe bağlı ödeme yok.",
+        "refundTooLarge": "Tutar iade edilebilecek miktarı aşıyor."
       }
     }
   },

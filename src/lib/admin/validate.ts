@@ -37,30 +37,28 @@ export const multi = <S extends z.ZodType>(item: S) =>
   z.preprocess((v) => (v == null || v === "" ? [] : Array.isArray(v) ? v : [v]), z.array(item));
 
 /** Decimal string typed by a human ("12.50") → integer minor units for `currency`. */
-export const moneyField = (currency: string, { min = 0, optional = false } = {}) =>
-  z.preprocess(
-    (v) => {
-      if (typeof v !== "string") return v;
-      const cleaned = v.trim().replace(/\s/g, "").replace(",", ".");
-      if (cleaned === "") return optional ? null : undefined;
-      const n = Number(cleaned);
-      return Number.isFinite(n) ? toMinor(n, currency) : NaN;
-    },
-    optional ? z.number().int().min(min).nullable() : z.number().int().min(min),
-  );
+const parseMoney = (currency: string) => (v: unknown) => {
+  if (typeof v !== "string") return v;
+  const cleaned = v.trim().replace(/\s/g, "").replace(",", ".");
+  if (cleaned === "") return null;
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? toMinor(n, currency) : NaN;
+};
+export const moneyField = (currency: string, { min = 0 } = {}) =>
+  z.preprocess((v) => parseMoney(currency)(v) ?? undefined, z.number().int().min(min));
+export const optionalMoneyField = (currency: string, { min = 0 } = {}) =>
+  z.preprocess(parseMoney(currency), z.number().int().min(min).nullable());
 
-/** Integer typed by a human; "" → null when optional. */
-export const intField = ({ min = 0, max = 1_000_000_000, optional = false } = {}) =>
-  z.preprocess(
-    (v) => {
-      if (typeof v !== "string") return v;
-      const t = v.trim();
-      if (t === "") return optional ? null : undefined;
-      const n = Number(t);
-      return Number.isFinite(n) ? Math.trunc(n) : NaN;
-    },
-    optional ? z.number().int().min(min).max(max).nullable() : z.number().int().min(min).max(max),
-  );
+/** Integer typed by a human. */
+const parseInt_ = (v: unknown) => {
+  if (typeof v !== "string") return v;
+  const t = v.trim();
+  if (t === "") return null;
+  const n = Number(t);
+  return Number.isFinite(n) ? Math.trunc(n) : NaN;
+};
+export const intField = ({ min = 0, max = 1_000_000_000 } = {}) => z.preprocess((v) => parseInt_(v) ?? undefined, z.number().int().min(min).max(max));
+export const optionalIntField = ({ min = 0, max = 1_000_000_000 } = {}) => z.preprocess(parseInt_, z.number().int().min(min).max(max).nullable());
 
 /** Checkbox / switch: present ("on" | "true") → true, absent → false. */
 export const boolField = z.preprocess((v) => v === "on" || v === "true" || v === true, z.boolean());
@@ -76,11 +74,9 @@ export const jsonField = <S extends z.ZodType>(schema: S) =>
     }
   }, schema);
 
-export const uuidField = z.uuid();
+/** Lenient UUID: Zod 4's z.uuid() rejects ids whose version nibble is not 1-8 (our seeded fixtures). */
+export const uuidField = z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "invalid");
 
-/** ISO date "YYYY-MM-DD" or "" → null. */
-export const dateField = ({ optional = false } = {}) =>
-  z.preprocess(
-    (v) => (typeof v === "string" && v.trim() === "" ? (optional ? null : undefined) : v),
-    optional ? z.iso.date().nullable() : z.iso.date(),
-  );
+/** ISO date "YYYY-MM-DD". */
+export const dateField = z.preprocess((v) => (typeof v === "string" && v.trim() === "" ? undefined : v), z.iso.date());
+export const optionalDateField = z.preprocess((v) => (typeof v === "string" && v.trim() === "" ? null : v), z.iso.date().nullable());

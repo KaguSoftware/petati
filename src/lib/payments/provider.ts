@@ -29,4 +29,6 @@ export interface PaymentProviderAdapter {
   /** Verify signature and translate the gateway callback. Throw on invalid signature. */
   handleWebhook(request: Request): Promise<WebhookResult>;
   refund(payment: PaymentRow, amountMinor: number): Promise<{ providerRef: string | null }>;
+  /** Admin marked the order as paid offline (bank transfer, cash). Gateways should throw. */
+  markPaid(payment: PaymentRow, reference?: string | null): Promise<{ providerRef: string | null }>;
 }

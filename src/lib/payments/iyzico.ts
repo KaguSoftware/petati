@@ -17,4 +17,7 @@ export const iyzicoProvider: PaymentProviderAdapter = {
   async refund() {
     throw new Error("iyzico provider not configured");
   },
+  async markPaid() {
+    throw new Error("iyzico payments are confirmed by webhook, not manually");
+  },
 };

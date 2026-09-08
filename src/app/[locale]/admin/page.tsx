@@ -1,18 +1,19 @@
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { EmptyState } from "@/components/admin/shared/empty-state";
+import { KpiGrid, LowStockList, RecentOrders, SalesBars } from "@/components/admin/dashboard/dashboard-widgets";
 import { PageHeader } from "@/components/admin/shared/page-header";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { requireAdminPage } from "@/lib/admin/context";
+import { getDashboard } from "@/lib/admin/dashboard/queries";
+import { can } from "@/lib/auth/permissions";
 
-// SCOPE(admin): dashboard KPIs land with the orders module. GROWS LATER → sales, orders, low stock widgets.
 export default async function AdminDashboard({ params }: PageProps<"/[locale]/admin">) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("admin");
   return (
     <>
-      <PageHeader title={t("nav.dashboard")} />
+      <PageHeader title={t("nav.dashboard")} description={t("dashboard.subtitle")} />
       <Suspense fallback={<TableSkeleton />}>
         <Content locale={locale} />
       </Suspense>
@@ -21,7 +22,21 @@ export default async function AdminDashboard({ params }: PageProps<"/[locale]/ad
 }
 
 async function Content({ locale }: { locale: string }) {
-  await requireAdminPage(locale, "orders.read");
-  const t = await getTranslations("admin.common");
-  return <EmptyState title={t("comingSoon")} description={t("comingSoonHint")} />;
+  const ctx = await requireAdminPage(locale, "orders.read");
+  const data = await getDashboard(ctx.store.id, {
+    currency: ctx.store.currency,
+    locale: ctx.locale,
+    fallback: ctx.store.default_locale,
+    finance: can(ctx.role, "finance.read"),
+  });
+  return (
+    <>
+      <KpiGrid data={data} locale={ctx.locale} />
+      <SalesBars data={data} locale={ctx.locale} />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <RecentOrders data={data} locale={ctx.locale} />
+        <LowStockList data={data} />
+      </div>
+    </>
+  );
 }

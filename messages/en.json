@@ -244,7 +244,14 @@
       "errors": {
         "forbidden": "You do not have permission to do that.",
         "failed": "Something went wrong. Please try again.",
-        "notFound": "Not found."
+        "notFound": "Not found.",
+        "invalid": "Please check the highlighted fields."
+      },
+      "presets": {
+        "last7": "Last 7 days",
+        "last30": "Last 30 days",
+        "thisMonth": "This month",
+        "lastMonth": "Last month"
       }
     },
     "roles": {
@@ -303,6 +310,85 @@
       "store": {
         "active": "Active",
         "inactive": "Inactive"
+      }
+    },
+    "dashboard": {
+      "subtitle": "Last 30 days at a glance.",
+      "revenue30d": "Net revenue (30d)",
+      "margin30d": "Gross margin (30d)",
+      "afterCogs": "After cost of goods",
+      "ordersInPeriod": "{count} orders",
+      "pendingPayment": "Awaiting payment",
+      "pendingReviews": "Reviews to moderate",
+      "lowStock": "Low stock",
+      "recentOrders": "Recent orders",
+      "viewAll": "View all",
+      "salesByDay": "Paid revenue by day",
+      "noSales": "No sales in this period yet.",
+      "stockHealthy": "All tracked variants are above the low-stock threshold."
+    },
+    "orders": {
+      "number": "Order",
+      "customer": "Customer",
+      "placedAt": "Placed",
+      "total": "Total",
+      "payment": "Payment",
+      "items": "Items",
+      "shippingAddress": "Shipping address",
+      "billingAddress": "Billing address",
+      "provider": "Provider",
+      "paymentRef": "Reference",
+      "refunded": "Refunded",
+      "searchPlaceholder": "Search by order number or email…",
+      "actions": {
+        "markPaid": "Mark as paid",
+        "startProcessing": "Start processing",
+        "ship": "Mark as shipped",
+        "markDelivered": "Mark as delivered",
+        "cancel": "Cancel order",
+        "refund": "Refund"
+      },
+      "markPaid": {
+        "description": "Confirm that the payment arrived (bank transfer, cash on delivery…). The customer will be notified.",
+        "reference": "Payment reference",
+        "referencePlaceholder": "Transfer id, receipt number…"
+      },
+      "ship": {
+        "title": "Shipment",
+        "description": "Add the tracking details; the customer receives them by email.",
+        "trackingNumber": "Tracking number",
+        "trackingUrl": "Tracking link"
+      },
+      "refund": {
+        "title": "Record a refund",
+        "amount": "Amount",
+        "reason": "Reason",
+        "max": "Up to {amount} can still be refunded."
+      },
+      "cancel": {
+        "title": "Cancel this order?",
+        "description": "Reserved stock goes back to inventory and the customer is notified."
+      },
+      "note": {
+        "internal": "Internal note",
+        "customer": "Customer note",
+        "placeholder": "Visible to staff only"
+      },
+      "timeline": {
+        "title": "Timeline",
+        "placed": "Order placed",
+        "status_changed": "Status changed from {from} to {to}",
+        "payment": "Payment received",
+        "paymentRef": "Payment received · ref {ref}",
+        "shipment": "Shipped",
+        "shipmentTracking": "Shipped · tracking {number}",
+        "refund": "Refund of {amount}",
+        "note": "Internal note updated"
+      },
+      "errors": {
+        "transition": "That change is not allowed from the current status.",
+        "noPayment": "No payment is attached to this order.",
+        "refundTooLarge": "The amount exceeds what can still be refunded."
       }
     }
   },

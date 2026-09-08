@@ -15,4 +15,7 @@ export const manualProvider: PaymentProviderAdapter = {
   async refund() {
     return { providerRef: null };
   },
+  async markPaid(_payment, reference) {
+    return { providerRef: reference?.trim() || null };
+  },
 };

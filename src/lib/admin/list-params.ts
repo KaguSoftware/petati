@@ -9,8 +9,7 @@ export interface ListParams<Sort extends string> {
   sort: Sort;
   dir: "asc" | "desc";
   /** Supabase `.range()` bounds. */
-  from: number;
-  to: number;
+  range: { from: number; to: number };
 }
 
 function first(v: string | string[] | undefined): string | undefined {
@@ -29,7 +28,7 @@ export function parseListParams<Sort extends string>(
   const sort = (opts.sorts as readonly string[]).includes(rawSort ?? "") ? (rawSort as Sort) : (opts.defaultSort ?? opts.sorts[0]);
   const rawDir = first(sp.dir);
   const dir = rawDir === "asc" || rawDir === "desc" ? rawDir : (opts.defaultDir ?? "desc");
-  return { q: (first(sp.q) ?? "").trim().slice(0, 100), page, pageSize, sort, dir, from: (page - 1) * pageSize, to: page * pageSize - 1 };
+  return { q: (first(sp.q) ?? "").trim().slice(0, 100), page, pageSize, sort, dir, range: { from: (page - 1) * pageSize, to: page * pageSize - 1 } };
 }
 
 /** One named filter value from searchParams, constrained to an allow-list. */

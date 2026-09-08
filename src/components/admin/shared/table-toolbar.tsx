@@ -11,14 +11,14 @@ import { cn } from "@/lib/utils";
 interface Props {
   /** Search box placeholder; omit to hide the search box. */
   searchPlaceholder?: string;
-  /** Filter controls (Selects, Tabs) rendered after the search box. */
+  /** Filter controls (Selects, Tabs, date pickers) rendered after the search box. */
   children?: ReactNode;
   /** Right-aligned actions (e.g. "New product"). */
   actions?: ReactNode;
   className?: string;
 }
 
-/** Writes `q` to the URL (debounced) and resets `page`. Filters are plain children that use `useListNavigation`. */
+/** Writes `q` to the URL (debounced) and resets `page`. Filter children use `useListNavigation`. */
 export function TableToolbar({ searchPlaceholder, children, actions, className }: Props) {
   const t = useTranslations("admin.common");
   const params = useSearchParams();
@@ -26,7 +26,12 @@ export function TableToolbar({ searchPlaceholder, children, actions, className }
   const [value, setValue] = useState(params.get("q") ?? "");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
 
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
@@ -55,18 +60,20 @@ export function TableToolbar({ searchPlaceholder, children, actions, className }
   );
 }
 
-/** Helper for filter controls: set/remove a search param and jump back to page 1. */
+/** Helper for filter controls: set/remove search params and jump back to page 1. */
 export function useListNavigation() {
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  function setParam(key: string, value: string | null) {
+  function setParams(patch: Record<string, string | null>) {
     const next = new URLSearchParams(params.toString());
-    if (value === null || value === "") next.delete(key);
-    else next.set(key, value);
+    for (const [key, value] of Object.entries(patch)) {
+      if (value === null || value === "") next.delete(key);
+      else next.set(key, value);
+    }
     next.delete("page");
     const qs = next.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname);
   }
-  return { params, setParam };
+  return { params, setParams, setParam: (key: string, value: string | null) => setParams({ [key]: value }) };
 }

@@ -1,10 +1,10 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { z } from "zod";
 import { ForbiddenError, getRoleForStore } from "@/lib/auth/session";
 import { features } from "@/lib/env";
 import { ADMIN_STORE_COOKIE } from "./constants";
+import { uuidField } from "./validate";
 
 /**
  * Remember which store the admin is working on. Validated against the user's access.
@@ -12,7 +12,7 @@ import { ADMIN_STORE_COOKIE } from "./constants";
  */
 export async function switchAdminStoreAction(storeId: string) {
   if (!features.multiStore()) throw new ForbiddenError("store.create");
-  const id = z.uuid().parse(storeId);
+  const id = uuidField.parse(storeId);
   const role = await getRoleForStore(id);
   if (!role) throw new ForbiddenError("store.settings");
   const cookieStore = await cookies();

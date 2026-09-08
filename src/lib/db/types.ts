@@ -370,3 +370,34 @@ export interface ExpenseCategoryRow {
   name: string;
   sort_order: number;
 }
+
+export interface RefundRow {
+  id: string;
+  payment_id: string;
+  order_id: string;
+  amount: number;
+  reason: string | null;
+  actor_id: string | null;
+  provider_ref: string | null;
+  created_at: string;
+}
+
+export type OrderEventType = "placed" | "status_changed" | "note" | "payment" | "shipment" | "refund";
+
+export interface OrderEventRow {
+  id: string;
+  order_id: string;
+  actor_id: string | null;
+  type: OrderEventType | string;
+  data: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface CouponRedemptionRow {
+  id: string;
+  coupon_id: string;
+  order_id: string;
+  customer_id: string | null;
+  amount: number;
+  created_at: string;
+}
