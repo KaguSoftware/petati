@@ -1,42 +1,56 @@
 import { Link } from "@/i18n/navigation";
 import type { FooterProps } from "../types";
 
-const heading = "text-xs uppercase tracking-[0.2em] text-muted-foreground";
-const link = "text-sm text-foreground/80 transition-colors hover:text-primary";
+const link = "text-xs uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground";
 
+/** Everything centred: the wordmark, a dot-separated line of links, the contact line, hairlines between. */
 export function FooterEditorial({ storeName, tagline, categories, contactEmail, contactPhone, labels, localeSlot, year }: FooterProps) {
+  const items = [
+    ...categories.map((c) => ({ href: `/c/${c.slug}`, label: c.name })),
+    { href: "/privacy", label: labels.privacy },
+    { href: "/terms", label: labels.terms },
+  ];
   return (
     <footer className="border-t border-foreground/15 bg-background">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 @tablet:grid-cols-4 @tablet:gap-8">
-        <div className="flex flex-col gap-3">
-          <p className="font-serif text-3xl font-medium tracking-tight @tablet:text-4xl">{storeName}</p>
-          {tagline && <p className="max-w-xs font-serif text-sm italic text-muted-foreground">{tagline}</p>}
+      <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 px-4 py-14 text-center @tablet:py-20">
+        <div className="flex flex-col items-center gap-3">
+          <p className="font-serif text-4xl font-medium tracking-tight @tablet:text-5xl">{storeName}</p>
+          {tagline && <p className="max-w-md font-serif text-base italic text-muted-foreground">{tagline}</p>}
         </div>
-        <div className="flex flex-col gap-3">
-          <p className={heading}>{labels.categories}</p>
-          {categories.map((c) => (
-            <Link key={c.slug} href={`/c/${c.slug}`} className={link}>
-              {c.name}
-            </Link>
+        <nav aria-label={labels.categories} className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
+          {items.map((item, i) => (
+            <span key={item.href} className="flex items-center gap-2">
+              {i > 0 && (
+                <span aria-hidden className="text-muted-foreground/60">
+                  ·
+                </span>
+              )}
+              <Link href={item.href} className={link}>
+                {item.label}
+              </Link>
+            </span>
           ))}
-        </div>
-        <div className="flex flex-col gap-3">
-          <p className={heading}>{labels.contact}</p>
-          {contactEmail && <a href={`mailto:${contactEmail}`} className={link}>{contactEmail}</a>}
-          {contactPhone && <a href={`tel:${contactPhone}`} className={link} dir="ltr">{contactPhone}</a>}
-        </div>
-        <div className="flex flex-col gap-3">
-          <p className={heading}>{labels.about}</p>
-          <Link href="/privacy" className={link}>{labels.privacy}</Link>
-          <Link href="/terms" className={link}>{labels.terms}</Link>
-        </div>
-      </div>
-      <div className="border-t border-foreground/15">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+        </nav>
+        {(contactEmail || contactPhone) && (
+          <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-y border-foreground/15 px-6 py-3 text-sm text-muted-foreground">
+            <span className="text-xs uppercase tracking-[0.18em]">{labels.contact}</span>
+            {contactEmail && (
+              <a href={`mailto:${contactEmail}`} className="hover:text-foreground">
+                {contactEmail}
+              </a>
+            )}
+            {contactPhone && (
+              <a href={`tel:${contactPhone}`} className="hover:text-foreground" dir="ltr">
+                {contactPhone}
+              </a>
+            )}
+          </p>
+        )}
+        <div className="flex flex-col items-center gap-3 text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+          {localeSlot}
           <span>
             © {year} {storeName}. {labels.rights}
           </span>
-          {localeSlot}
         </div>
       </div>
     </footer>

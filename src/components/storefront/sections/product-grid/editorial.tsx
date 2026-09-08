@@ -2,8 +2,10 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { renderSection } from "@/lib/theme/registry";
 import { getTranslations } from "next-intl/server";
+import { cn } from "@/lib/utils";
 import type { ProductGridProps } from "../types";
 
+/** Feature first: the opening product takes a 2×2 cell on desktop, the rest fill in around it. */
 export async function ProductGridEditorial({ title, products, currency, locale, cardVariant, emptyLabel, wishlistSlots, viewAllHref, viewAllLabel }: ProductGridProps) {
   const t = await getTranslations("product");
   const labels = { new: t("new"), outOfStock: t("outOfStock") };
@@ -13,10 +15,7 @@ export async function ProductGridEditorial({ title, products, currency, locale, 
         <div className="mb-10 flex items-end justify-between gap-6 border-b border-foreground/15 pb-4">
           {title && <h2 className="font-serif text-3xl font-medium tracking-tight @tablet:text-4xl">{title}</h2>}
           {viewAllHref && (
-            <Link
-              href={viewAllHref}
-              className="inline-flex shrink-0 items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
-            >
+            <Link href={viewAllHref} className="inline-flex shrink-0 items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground">
               {viewAllLabel}
               <ArrowRight aria-hidden className="size-3.5 rtl:rotate-180" />
             </Link>
@@ -26,9 +25,9 @@ export async function ProductGridEditorial({ title, products, currency, locale, 
       {products.length === 0 ? (
         <p className="py-12 text-center font-serif text-lg italic text-muted-foreground">{emptyLabel}</p>
       ) : (
-        <ul className="grid grid-cols-2 gap-x-6 gap-y-12 @tablet:grid-cols-3 @desktop:grid-cols-4">
-          {products.map((p) => (
-            <li key={p.id}>
+        <ul className="grid grid-cols-2 gap-x-6 gap-y-10 @tablet:grid-cols-3 @desktop:grid-cols-4">
+          {products.map((p, i) => (
+            <li key={p.id} className={cn(i === 0 && "col-span-2 @tablet:row-span-2 [&_h3]:text-2xl [&_img]:object-cover")}>
               {renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}
             </li>
           ))}

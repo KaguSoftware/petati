@@ -1,10 +1,17 @@
 import type { AnnouncementBarProps } from "../types";
 
+/** Ticker: a start-aligned line between hairlines, marked with an accent square. */
 export function AnnouncementBarEditorial({ text }: AnnouncementBarProps) {
   if (!text) return null;
   return (
-    <div className="border-y border-foreground/15 bg-background px-4 py-2 text-center text-xs uppercase tracking-[0.2em] text-muted-foreground">
-      {text}
+    <div className="border-y border-foreground/15 bg-background">
+      <p className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <span aria-hidden className="size-2 shrink-0 bg-accent" />
+        <span className="truncate">{text}</span>
+        <span aria-hidden className="ms-auto hidden font-mono text-[10px] tracking-[0.2em] @tablet:inline">
+          —
+        </span>
+      </p>
     </div>
   );
 }

@@ -5,14 +5,15 @@ import type { CategoryBannerProps } from "../types";
 
 const tiles = ["bg-primary/10", "bg-accent/20", "bg-muted"];
 
+/** A single row of round photos that scrolls sideways (snap), each on a tinted tile. */
 export function CategoryBannerPlayful({ title, categories }: CategoryBannerProps) {
   if (categories.length === 0) return null;
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10">
-      <h2 className="mb-6 text-2xl font-bold tracking-tight @tablet:text-3xl">{title}</h2>
-      <ul className="grid grid-cols-2 gap-4 @phablet:grid-cols-3 @desktop:grid-cols-5">
+    <section className="mx-auto max-w-7xl px-4 py-10 @tablet:py-14">
+      <h2 className="mb-5 text-2xl font-bold tracking-tight @tablet:text-3xl">{title}</h2>
+      <ul className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pt-2 pb-5 contain-inline-size [scrollbar-width:thin]">
         {categories.map((c, i) => (
-          <li key={c.id}>
+          <li key={c.id} className="w-36 shrink-0 snap-start @tablet:w-44 @desktop:w-48">
             <Link
               href={`/c/${c.slug}`}
               className={cn(
@@ -20,8 +21,8 @@ export function CategoryBannerPlayful({ title, categories }: CategoryBannerProps
                 tiles[i % tiles.length],
               )}
             >
-              <ProductImage src={c.imageUrl} alt={c.name} className="aspect-square w-full rounded-full ring-4 ring-background" sizes="20vw" />
-              <span className="rounded-full bg-background px-3 py-1 text-center text-sm font-semibold shadow-sm">{c.name}</span>
+              <ProductImage src={c.imageUrl} alt={c.name} className="aspect-square w-full rounded-full ring-4 ring-background" sizes="12rem" />
+              <span className="max-w-full truncate rounded-full bg-background px-3 py-1 text-center text-sm font-semibold shadow-sm">{c.name}</span>
             </Link>
           </li>
         ))}

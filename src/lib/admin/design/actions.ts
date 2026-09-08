@@ -24,7 +24,6 @@ export async function saveThemeAction(_prev: ActionState, formData: FormData): P
   const parsed = parseForm(z.object({ storeId: uuidField, theme: jsonField(themePatchSchema), hero: jsonField(heroPatchSchema).optional() }), formData);
   if (!parsed.data) return { error: "invalid", fieldErrors: parsed.fieldErrors };
   const { storeId, theme: patch, hero: heroPatch } = parsed.data;
-  if (heroPatch && !ownMediaUrl(storeId, heroPatch.imageUrl)) return { error: "invalid", fieldErrors: { hero: "invalid" } };
   try {
     const { db } = await adminMutation(storeId, "store.design");
     const { data: store } = await db
@@ -42,7 +41,12 @@ export async function saveThemeAction(_prev: ActionState, formData: FormData): P
       announcement: patch.announcement ?? current.announcement,
     });
     const settings = store.settings ?? {};
-    const update = heroPatch ? { theme: next, settings: { ...settings, ...heroToSettings(mergeHero(heroFromSettings(settings), heroPatch)) } } : { theme: next };
+    const currentHero = heroFromSettings(settings);
+    // A NEW image must live in this store's media folder; a seeded/scripted URL that is already stored may stay.
+    if (heroPatch?.imageUrl && heroPatch.imageUrl !== currentHero.imageUrl && !ownMediaUrl(storeId, heroPatch.imageUrl)) {
+      return { error: "invalid", fieldErrors: { hero: "invalid" } };
+    }
+    const update = heroPatch ? { theme: next, settings: { ...settings, ...heroToSettings(mergeHero(currentHero, heroPatch)) } } : { theme: next };
     const { error } = await db.from("stores").update(update).eq("id", storeId);
     if (error) throw error;
     updateTag(storeCacheTag(store.slug));

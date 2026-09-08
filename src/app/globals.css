@@ -215,3 +215,16 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
     transition: none;
   }
 }
+
+/* ---- Announcement marquee (bold layout): two identical tracks, the first scrolls out of view ---- */
+@utility animate-marquee {
+  animation: marquee 28s linear infinite;
+  [dir="rtl"] & {
+    animation-direction: reverse;
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}

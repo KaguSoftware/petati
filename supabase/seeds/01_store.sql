@@ -6,10 +6,16 @@ set client_min_messages to warning;
 
 -- ---------- store ----------
 insert into public.stores (id, slug, name, tagline, currency, default_locale, enabled_locales, contact_email,
-                           email_from, tax_rate_bp, low_stock_threshold, created_by, theme)
+                           email_from, tax_rate_bp, low_stock_threshold, created_by, settings, theme)
 values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything your pet loves',
         'TRY', 'en', '{en,tr,fa}', 'hello@petati.local', 'Petati <noreply@petati.local>', 2000, 5,
         null,  -- created_by; the dev-users seed links the demo owner locally
+        -- Home hero (Design page → Hero). The seed photo is a placeholder; a real store uploads to store-media/<id>/hero/.
+        '{
+          "hero_title": {"en": "Everything your pet loves", "tr": "Evcil dostunuzun sevdiği her şey", "fa": "هر چیزی که حیوان خانگی شما دوست دارد"},
+          "hero_subtitle": {"en": "Toys, food, beds and accessories, delivered to your door.", "tr": "Oyuncak, mama, yatak ve aksesuarlar kapınıza gelsin.", "fa": "اسباب‌بازی، غذا، تخت و لوازم جانبی، تحویل درب منزل."},
+          "hero_image": "https://picsum.photos/seed/petati-hero/2400/1000"
+        }'::jsonb,
         '{
           "sections": {
             "announcementBar": "minimal", "navbar": "minimal", "hero": "minimal", "categoryBanner": "minimal",
