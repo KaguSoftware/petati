@@ -28,6 +28,8 @@ interface Props {
   locale: string;
   currency: string;
   email: string | null;
+  /** E.164 from the profile when signed in; guests type their own. */
+  phone?: string | null;
   addresses: AddressRow[];
   shippingOptions: ShippingOption[];
   defaultCountry: string;
@@ -45,7 +47,7 @@ function Field({ name, label, error, children }: { name: string; label: string; 
   );
 }
 
-export function CheckoutForm({ storeSlug, locale, currency, email, addresses, shippingOptions, defaultCountry, onShippingChange }: Props) {
+export function CheckoutForm({ storeSlug, locale, currency, email, phone, addresses, shippingOptions, defaultCountry, onShippingChange }: Props) {
   const t = useTranslations("checkout");
   const tc = useTranslations("cart");
   const [state, action, pending] = useActionState(placeOrderAction, {} as CheckoutState);
@@ -65,7 +67,7 @@ export function CheckoutForm({ storeSlug, locale, currency, email, addresses, sh
           <LatinInput kind="email" id="email" name="email" defaultValue={email ?? ""} required autoComplete="email" />
         </Field>
         <Field name="phone" label={t("phone")} error={fe.phone}>
-          <LatinInput kind="tel" id="phone" name="phone" defaultValue={addr?.phone ?? ""} autoComplete="tel" />
+          <LatinInput kind="tel" id="phone" name="phone" defaultValue={phone ?? addr?.phone ?? ""} autoComplete="tel" />
         </Field>
       </section>
 

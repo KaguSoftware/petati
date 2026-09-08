@@ -53,7 +53,7 @@ export async function proxy(request: NextRequest) {
   response.headers.set("x-locale", locale);
 
   const hasAuthCookie = request.cookies.getAll().some((c) => c.name.startsWith("sb-"));
-  const needsAuth = rest === "/admin" || rest.startsWith("/admin/") || rest.startsWith("/account");
+  const needsAuth = rest === "/admin" || rest.startsWith("/admin/") || rest.startsWith("/account") || rest.startsWith("/complete-profile");
   if (hasAuthCookie || needsAuth) {
     const user = await refreshSession(request, response);
     if (needsAuth && !user) {

@@ -129,7 +129,8 @@
     "email": "E-posta",
     "password": "Şifre",
     "newPassword": "Yeni şifre",
-    "saved": "Kaydedildi."
+    "saved": "Kaydedildi.",
+    "phone": "Telefon"
   },
   "auth": {
     "signIn": "Giriş yap",
@@ -141,7 +142,18 @@
     "continueWithGoogle": "Google ile devam et",
     "noAccount": "Hesabınız yok mu?",
     "haveAccount": "Zaten hesabınız var mı?",
-    "checkEmail": "Onay bağlantısı için e-postanızı kontrol edin."
+    "checkEmail": "Onay bağlantısı için e-postanızı kontrol edin.",
+    "phone": "Telefon numarası",
+    "phoneCountry": "Ülke kodu",
+    "phoneHint": "Teslimat bilgilendirmeleri için kullanılır.",
+    "completeProfileTitle": "Profilinizi tamamlayın",
+    "completeProfileIntro": "Devam etmek için bir telefon numarası ekleyin.",
+    "continue": "Devam et",
+    "errors": {
+      "phoneInvalid": "Seçilen ülke için geçerli bir telefon numarası girin.",
+      "phoneTaken": "Bu telefon numarası zaten kullanılıyor.",
+      "oauth": "Google ile giriş başarısız. Tekrar deneyin."
+    }
   },
   "orderStatus": {
     "pending_payment": "Ödeme bekleniyor",

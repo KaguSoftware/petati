@@ -1,7 +1,7 @@
 -- Run with: npx supabase test db   (needs the local stack running)
 begin;
 create schema if not exists tests;
-select plan(10);
+select plan(12);
 
 -- helpers to impersonate users (user lookup runs as definer so it works from the anon role)
 create or replace function tests.user_id(p_email text) returns uuid language sql security definer set search_path = auth, pg_temp as $$
@@ -44,6 +44,14 @@ select ok((select count(*) from public.expense_categories) > 0, 'manager can rea
 select tests.authenticate_as('owner@petati.local');
 select is(public.store_role_for('10000000-0000-0000-0000-000000000001'), 'owner', 'owner role resolves');
 select ok(public.is_owner(), 'owner flag set');
+
+-- phone constraints (owner session; RLS self-update)
+select throws_ok(
+  $$ update public.profiles set phone = 'abc' where id = '00000000-0000-0000-0000-000000000001' $$,
+  '23514', null, 'phone must be E.164');
+select throws_ok(
+  $$ update public.profiles set phone = '+905550000002' where id = '00000000-0000-0000-0000-000000000001' $$,
+  '23505', null, 'phone must be unique');
 
 select * from finish();
 rollback;

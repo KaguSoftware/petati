@@ -1,12 +1,12 @@
 import { getTranslations } from "next-intl/server";
-import { requireUser } from "@/lib/auth/session";
+import { requireCompleteProfile } from "@/lib/auth/session";
 import { signOutAction } from "@/lib/auth/actions";
 import { AccountNav } from "@/components/storefront/account/account-nav";
 import { Button } from "@/components/ui/button";
 
 export default async function AccountLayout({ children, params }: LayoutProps<"/[locale]/s/[store]/account">) {
   const { locale } = await params;
-  await requireUser(locale, `/${locale}/account`);
+  await requireCompleteProfile(locale, `/${locale}/account`);
   const [t, tn] = await Promise.all([getTranslations("account"), getTranslations("nav")]);
   return (
     <main className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 md:grid-cols-[220px_1fr]">

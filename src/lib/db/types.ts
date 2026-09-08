@@ -18,6 +18,9 @@ export interface ProfileRow {
   avatar_url: string | null;
   platform_role: PlatformRole;
   preferred_locale: Locale | null;
+  /** E.164; null until the user completes their profile. */
+  phone: string | null;
+  phone_country: string | null;
 }
 
 export interface StoreRow {

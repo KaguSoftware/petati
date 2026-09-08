@@ -20,19 +20,19 @@ values
   ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'owner@petati.local', crypt('password123', gen_salt('bf')), now(),
    '', '', '', '', '', '', '', '',
-   '{"provider":"email","providers":["email"]}', '{"full_name":"Olivia Owner"}', now(), now()),
+   '{"provider":"email","providers":["email"]}', '{"full_name":"Olivia Owner","phone":"+905550000001","phone_country":"TR"}', now(), now()),
   ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'manager@petati.local', crypt('password123', gen_salt('bf')), now(),
    '', '', '', '', '', '', '', '',
-   '{"provider":"email","providers":["email"]}', '{"full_name":"Mehmet Manager"}', now(), now()),
+   '{"provider":"email","providers":["email"]}', '{"full_name":"Mehmet Manager","phone":"+905550000002","phone_country":"TR"}', now(), now()),
   ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'staff@petati.local', crypt('password123', gen_salt('bf')), now(),
    '', '', '', '', '', '', '', '',
-   '{"provider":"email","providers":["email"]}', '{"full_name":"Sara Staff"}', now(), now()),
+   '{"provider":"email","providers":["email"]}', '{"full_name":"Sara Staff","phone":"+905550000003","phone_country":"TR"}', now(), now()),
   ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'customer@petati.local', crypt('password123', gen_salt('bf')), now(),
    '', '', '', '', '', '', '', '',
-   '{"provider":"email","providers":["email"]}', '{"full_name":"Cem Customer"}', now(), now());
+   '{"provider":"email","providers":["email"]}', '{"full_name":"Cem Customer","phone":"+905550000004","phone_country":"TR"}', now(), now());
 
 insert into auth.identities (id, user_id, provider_id, provider, identity_data, last_sign_in_at, created_at, updated_at)
 select gen_random_uuid(), u.id, u.id::text, 'email',

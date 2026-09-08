@@ -1,13 +1,20 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
+import { normalizePhone, phoneFields } from "@/lib/phone/normalize";
+import { getSessionUser } from "./session";
 
 export interface AuthState {
+  /** "invalid" (generic), an `auth.errors.*` key, or a raw provider message. */
   error?: string;
+  /** `auth.*` message key. */
   message?: string;
+  fieldErrors?: Record<string, string>;
 }
 
 const credentials = z.object({
@@ -17,10 +24,23 @@ const credentials = z.object({
   locale: z.string().min(2).max(2),
 });
 
-/** Only allow same-site relative redirects. */
+/** Only allow same-site relative redirects; never bounce back into the completion screen. */
 function safeNext(next: string | undefined, locale: string): string {
-  if (next && next.startsWith("/") && !next.startsWith("//")) return next;
+  if (next && next.startsWith("/") && !next.startsWith("//") && !/^\/[a-z]{2}\/complete-profile/.test(next)) return next;
   return `/${locale}`;
+}
+
+function completeProfilePath(locale: string, next: string) {
+  return `/${locale}/complete-profile?next=${encodeURIComponent(next)}`;
+}
+
+/** Is `phone` already attached to another profile? Read-only existence check, generic error. */
+async function phoneTaken(e164: string, excludeUserId?: string): Promise<boolean> {
+  const db = createSupabaseAdminClient();
+  let q = db.from("profiles").select("id").eq("phone", e164).limit(1);
+  if (excludeUserId) q = q.neq("id", excludeUserId);
+  const { data } = await q.maybeSingle<{ id: string }>();
+  return !!data;
 }
 
 export async function signInAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
@@ -29,30 +49,74 @@ export async function signInAction(_prev: AuthState, formData: FormData): Promis
   const { email, password, next, locale } = parsed.data;
 
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: error.message };
-  redirect(safeNext(next, locale));
+
+  const target = safeNext(next, locale);
+  const { data: profile } = await supabase.from("profiles").select("phone").eq("id", data.user.id).maybeSingle<{ phone: string | null }>();
+  if (!profile?.phone) redirect(completeProfilePath(locale, target));
+  redirect(target);
 }
 
 export async function signUpAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const parsed = credentials
-    .extend({ full_name: z.string().min(1).max(120) })
+    .extend({ full_name: z.string().trim().min(1).max(120), ...phoneFields })
     .safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { error: "invalid" };
-  const { email, password, full_name, next, locale } = parsed.data;
+  if (!parsed.success) {
+    const fieldErrors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) fieldErrors[String(issue.path[0])] = issue.message;
+    return { error: "invalid", fieldErrors };
+  }
+  const { email, password, full_name, next, locale, phone, phone_country } = parsed.data;
+
+  const normalized = normalizePhone(phone, phone_country);
+  if (!normalized) return { error: "phoneInvalid", fieldErrors: { phone: "phoneInvalid" } };
+  if (await phoneTaken(normalized.e164)) return { error: "phoneTaken", fieldErrors: { phone: "phoneTaken" } };
 
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { full_name },
+      // The DB trigger copies phone/phone_country into profiles, even before the first session.
+      data: { full_name, phone: normalized.e164, phone_country: normalized.country },
       emailRedirectTo: `${env.appUrl()}/auth/callback?next=${encodeURIComponent(safeNext(next, locale))}`,
     },
   });
   if (error) return { error: error.message };
   if (data.session) redirect(safeNext(next, locale));
   return { message: "checkEmail" };
+}
+
+/** One-time screen for users without a phone (Google sign-ins, legacy accounts). */
+export async function completeProfileAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
+  const parsed = z
+    .object({
+      locale: z.string().min(2).max(2),
+      next: z.string().optional(),
+      full_name: z.string().trim().max(120).optional(),
+      ...phoneFields,
+    })
+    .safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: "invalid" };
+  const { locale, next, full_name, phone, phone_country } = parsed.data;
+
+  const user = await getSessionUser();
+  if (!user) return { error: "auth" };
+
+  const normalized = normalizePhone(phone, phone_country);
+  if (!normalized) return { error: "phoneInvalid", fieldErrors: { phone: "phoneInvalid" } };
+  if (await phoneTaken(normalized.e164, user.id)) return { error: "phoneTaken", fieldErrors: { phone: "phoneTaken" } };
+
+  // Cookie client: RLS self-update policy, no service role needed.
+  const supabase = await createSupabaseServerClient();
+  const patch: Record<string, string> = { phone: normalized.e164, phone_country: normalized.country };
+  if (full_name && !user.profile.full_name) patch.full_name = full_name;
+  const { error } = await supabase.from("profiles").update(patch).eq("id", user.id);
+  if (error) return { error: error.code === "23505" ? "phoneTaken" : "invalid" };
+
+  revalidatePath("/", "layout");
+  redirect(safeNext(next, locale));
 }
 
 export async function signOutAction(locale: string) {

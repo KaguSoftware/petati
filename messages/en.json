@@ -129,7 +129,8 @@
     "email": "Email",
     "password": "Password",
     "newPassword": "New password",
-    "saved": "Saved."
+    "saved": "Saved.",
+    "phone": "Phone"
   },
   "auth": {
     "signIn": "Sign in",
@@ -141,7 +142,18 @@
     "continueWithGoogle": "Continue with Google",
     "noAccount": "Don't have an account?",
     "haveAccount": "Already have an account?",
-    "checkEmail": "Check your email for a confirmation link."
+    "checkEmail": "Check your email for a confirmation link.",
+    "phone": "Phone number",
+    "phoneCountry": "Country code",
+    "phoneHint": "Used for delivery updates.",
+    "completeProfileTitle": "Complete your profile",
+    "completeProfileIntro": "Add a phone number to continue.",
+    "continue": "Continue",
+    "errors": {
+      "phoneInvalid": "Enter a valid phone number for the selected country.",
+      "phoneTaken": "This phone number is already in use.",
+      "oauth": "Google sign-in failed. Please try again."
+    }
   },
   "orderStatus": {
     "pending_payment": "Pending payment",

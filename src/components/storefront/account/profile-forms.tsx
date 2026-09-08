@@ -6,10 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LatinInput } from "@/components/forms/latin-input";
+import { PhoneField } from "@/components/forms/phone-field";
 import { updatePasswordAction, updateProfileAction, type SimpleState } from "@/lib/account/actions";
 
-export function ProfileForm({ fullName, email }: { fullName: string; email: string }) {
+interface ProfileProps {
+  fullName: string;
+  email: string;
+  phone: { country: string; national: string };
+}
+
+export function ProfileForm({ fullName, email, phone }: ProfileProps) {
   const t = useTranslations("account");
+  const ta = useTranslations("auth");
   const tc = useTranslations("common");
   const [state, action, pending] = useActionState(updateProfileAction, {} as SimpleState);
   return (
@@ -22,8 +30,12 @@ export function ProfileForm({ fullName, email }: { fullName: string; email: stri
         <Label htmlFor="profile-email">{t("email")}</Label>
         <LatinInput kind="email" id="profile-email" value={email} disabled />
       </div>
+      <div className="grid gap-1.5">
+        <Label htmlFor="phone-number">{t("phone")}</Label>
+        <PhoneField defaultCountry={phone.country} defaultNumber={phone.national} error={state.error && state.error !== "invalid" && state.error !== "auth" ? ta(`errors.${state.error}`) : undefined} />
+      </div>
       {state.ok && <p className="text-sm text-muted-foreground">{t("saved")}</p>}
-      {state.error && <p className="text-sm text-destructive">{tc("error")}</p>}
+      {(state.error === "invalid" || state.error === "auth") && <p className="text-sm text-destructive">{tc("error")}</p>}
       <Button type="submit" disabled={pending} className="self-start">{tc("save")}</Button>
     </form>
   );

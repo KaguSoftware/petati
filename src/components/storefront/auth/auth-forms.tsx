@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LatinInput } from "@/components/forms/latin-input";
+import { PhoneField } from "@/components/forms/phone-field";
 import { Link } from "@/i18n/navigation";
 import {
   requestPasswordResetAction,
@@ -14,15 +15,17 @@ import {
   signUpAction,
   type AuthState,
 } from "@/lib/auth/actions";
+import { defaultCountryForLocale } from "@/lib/phone/countries";
 
 const initial: AuthState = {};
 
 function Feedback({ state }: { state: AuthState }) {
   const t = useTranslations();
   if (state.error) {
+    const text = state.error === "invalid" ? t("common.error") : t.has(`auth.errors.${state.error}`) ? t(`auth.errors.${state.error}`) : state.error;
     return (
       <p role="alert" className="text-sm text-destructive">
-        {state.error === "invalid" ? t("common.error") : state.error}
+        {text}
       </p>
     );
   }
@@ -76,6 +79,7 @@ export function SignInForm({ locale, next }: { locale: string; next?: string }) 
 export function SignUpForm({ locale, next }: { locale: string; next?: string }) {
   const t = useTranslations();
   const [state, action, pending] = useActionState(signUpAction, initial);
+  const phoneError = state.fieldErrors?.phone;
 
   return (
     <div className="flex flex-col gap-6">
@@ -91,10 +95,15 @@ export function SignUpForm({ locale, next }: { locale: string; next?: string }) 
           <LatinInput kind="email" id="email" name="email" autoComplete="email" required />
         </div>
         <div className="grid gap-2">
+          <Label htmlFor="phone-number">{t("auth.phone")}</Label>
+          <PhoneField defaultCountry={defaultCountryForLocale(locale)} error={phoneError ? t(`auth.errors.${phoneError}`) : undefined} />
+          <p className="text-xs text-muted-foreground">{t("auth.phoneHint")}</p>
+        </div>
+        <div className="grid gap-2">
           <Label htmlFor="password">{t("auth.password")}</Label>
           <LatinInput kind="password" id="password" name="password" autoComplete="new-password" required minLength={8} />
         </div>
-        <Feedback state={state} />
+        {!phoneError && <Feedback state={state} />}
         <Button type="submit" disabled={pending}>
           {t("auth.signUp")}
         </Button>

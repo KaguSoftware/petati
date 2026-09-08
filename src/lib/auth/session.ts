@@ -75,6 +75,16 @@ export async function requirePermission(storeId: string, permission: Permission)
   return { user, role: role! };
 }
 
+/**
+ * Page-level guard for areas that need a complete profile: sign-in when anonymous, then the
+ * one-time phone screen when the profile has no phone yet.
+ */
+export async function requireCompleteProfile(locale: string, nextPath: string) {
+  const user = await requireUser(locale, nextPath);
+  if (!user.profile.phone) redirect(`/${locale}/complete-profile?next=${encodeURIComponent(nextPath)}`);
+  return user;
+}
+
 /** Page-level guard: redirect to sign-in when anonymous. */
 export async function requireUser(locale: string, nextPath: string) {
   const user = await getSessionUser();

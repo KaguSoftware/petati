@@ -2,6 +2,7 @@
 
 import { revalidatePath, updateTag } from "next/cache";
 import { z } from "zod";
+import { normalizePhone, phoneFields } from "@/lib/phone/normalize";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSessionUser } from "@/lib/auth/session";
@@ -172,11 +173,17 @@ export async function updatePasswordAction(_prev: SimpleState, formData: FormDat
 }
 
 export async function updateProfileAction(_prev: SimpleState, formData: FormData): Promise<SimpleState> {
-  const parsed = z.object({ full_name: z.string().trim().min(1).max(120) }).safeParse(Object.fromEntries(formData));
+  const parsed = z.object({ full_name: z.string().trim().min(1).max(120), ...phoneFields }).safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: "invalid" };
   const user = await getSessionUser();
   if (!user) return { error: "auth" };
-  await createSupabaseAdminClient().from("profiles").update({ full_name: parsed.data.full_name }).eq("id", user.id);
+  const normalized = normalizePhone(parsed.data.phone, parsed.data.phone_country);
+  if (!normalized) return { error: "phoneInvalid" };
+  const { error } = await createSupabaseAdminClient()
+    .from("profiles")
+    .update({ full_name: parsed.data.full_name, phone: normalized.e164, phone_country: normalized.country })
+    .eq("id", user.id);
+  if (error) return { error: error.code === "23505" ? "phoneTaken" : "invalid" };
   revalidatePath("/", "layout");
   return { ok: true };
 }

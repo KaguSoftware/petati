@@ -9,6 +9,7 @@ interface Props {
   locale: string;
   currency: string;
   email: string | null;
+  phone?: string | null;
   addresses: AddressRow[];
   shippingOptions: ShippingOption[];
   defaultCountry: string;

@@ -4,7 +4,7 @@ import { cache } from "react";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getAdminStoreIds, getRoleForStore, requireUser, type SessionUser } from "@/lib/auth/session";
+import { getAdminStoreIds, getRoleForStore, requireCompleteProfile, type SessionUser } from "@/lib/auth/session";
 import { can, type Permission } from "@/lib/auth/permissions";
 import type { EffectiveRole } from "@/lib/db/types";
 import { features } from "@/lib/env";
@@ -36,7 +36,7 @@ export interface NoStoreContext {
  */
 export const adminContext = cache(async (localeParam: string): Promise<AdminContext | NoStoreContext> => {
   const locale: Locale = isLocale(localeParam) ? localeParam : "en";
-  const user = await requireUser(locale, `/${locale}/admin`);
+  const user = await requireCompleteProfile(locale, `/${locale}/admin`);
 
   const [accessible, allStores] = await Promise.all([getAdminStoreIds(), listStores()]);
   const stores = accessible === "all" ? allStores : allStores.filter((s) => accessible.includes(s.id));

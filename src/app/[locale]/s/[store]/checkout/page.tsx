@@ -24,6 +24,7 @@ async function CheckoutContent({ ctx }: { ctx: StoreContext }) {
   const { store, locale, fallback } = ctx;
   const [t, cart, rates, user] = await Promise.all([getTranslations("checkout"), getCart(store, locale), getShippingRates(store.id), getSessionUser()]);
   if (cart.lines.length === 0) redirect(`/${locale}/cart`);
+  if (user && !user.profile.phone) redirect(`/${locale}/complete-profile?next=${encodeURIComponent(`/${locale}/checkout`)}`);
   const addresses = user ? await getMyAddresses(store.id) : [];
 
   const shippingOptions = rates.map((r) => ({
@@ -45,6 +46,7 @@ async function CheckoutContent({ ctx }: { ctx: StoreContext }) {
             locale={locale}
             currency={store.currency}
             email={user?.email ?? null}
+            phone={user?.profile.phone ?? null}
             addresses={addresses}
             shippingOptions={shippingOptions}
             defaultCountry={(store.settings.default_country as string | undefined) ?? "TR"}
