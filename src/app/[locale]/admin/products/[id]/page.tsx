@@ -1,0 +1,93 @@
+import { ExternalLink } from "lucide-react";
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ProductForm } from "@/components/admin/products/product-form";
+import { ProductImages } from "@/components/admin/products/product-images";
+import { VariantsEditor } from "@/components/admin/products/variants-editor";
+import { PageHeader } from "@/components/admin/shared/page-header";
+import { StatusBadge } from "@/components/admin/shared/status-badge";
+import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
+import { buttonVariants } from "@/components/ui/button";
+import { requireAdminPage } from "@/lib/admin/context";
+import { getProductForEdit, listCategoryOptions } from "@/lib/admin/products/queries";
+import { can } from "@/lib/auth/permissions";
+import { pickJson, pickTranslation } from "@/lib/catalog/types";
+
+type Props = PageProps<"/[locale]/admin/products/[id]">;
+
+/** `[id]` has no static params, so the params read itself is runtime data: keep it under Suspense. */
+export default function ProductPage({ params }: Props) {
+  return (
+    <Suspense fallback={<TableSkeleton rows={4} />}>
+      <Content params={params} />
+    </Suspense>
+  );
+}
+
+async function Content({ params }: { params: Props["params"] }) {
+  const { locale, id } = await params;
+  setRequestLocale(locale);
+  const ctx = await requireAdminPage(locale, "products.read");
+  const fallback = ctx.store.default_locale;
+  const [data, categories, t] = await Promise.all([getProductForEdit(ctx.store.id, id), listCategoryOptions(ctx.store.id, ctx.locale, fallback), getTranslations("admin")]);
+  if (!data) notFound();
+  const canWrite = can(ctx.role, "products.write");
+  const name = pickTranslation(data.translations, ctx.locale, fallback)?.name ?? data.product.slug;
+  const valueLabel = new Map<string, string>();
+  for (const o of data.options) for (const v of o.values) valueLabel.set(v.id, pickJson(v.value, ctx.locale, fallback));
+  const variantOptions = data.variants.map((v) => {
+    const parts = v.optionValueIds.map((vid) => valueLabel.get(vid)).filter(Boolean);
+    return { value: v.id, label: parts.length ? parts.join(" · ") : (v.sku ?? t("products.variant.defaultLabel")) };
+  });
+
+  return (
+    <>
+      <PageHeader
+        back={{ href: "/admin/products", label: t("nav.products") }}
+        title={
+          <span className="flex flex-wrap items-center gap-3">
+            <span className="truncate">{name}</span>
+            <StatusBadge kind="product" value={data.product.status} className="text-sm" />
+          </span>
+        }
+        description={<span dir="ltr">/{data.product.slug}</span>}
+        actions={
+          data.product.status === "active" ? (
+            <a href={`/${ctx.locale}/p/${data.product.slug}`} target="_blank" rel="noreferrer" className={buttonVariants({ variant: "outline" })}>
+              <ExternalLink data-icon="inline-start" />
+              {t("products.actions.viewStorefront")}
+            </a>
+          ) : null
+        }
+      />
+      <fieldset disabled={!canWrite} className="contents">
+        <ProductForm storeId={ctx.store.id} locale={ctx.locale} defaultLocale={fallback} enabledLocales={ctx.store.enabled_locales} product={data} categories={categories} />
+      </fieldset>
+      {canWrite && (
+        <>
+          <VariantsEditor
+            storeId={ctx.store.id}
+            productId={data.product.id}
+            currency={ctx.store.currency}
+            locale={ctx.locale}
+            defaultLocale={fallback}
+            enabledLocales={ctx.store.enabled_locales}
+            lowStockThreshold={ctx.store.low_stock_threshold}
+            options={data.options}
+            variants={data.variants}
+          />
+          <ProductImages
+            storeId={ctx.store.id}
+            productId={data.product.id}
+            locale={ctx.locale}
+            defaultLocale={fallback}
+            enabledLocales={ctx.store.enabled_locales}
+            images={data.images}
+            variantOptions={variantOptions}
+          />
+        </>
+      )}
+    </>
+  );
+}

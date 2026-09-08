@@ -390,6 +390,630 @@
         "noPayment": "Bu siparişe bağlı ödeme yok.",
         "refundTooLarge": "Tutar iade edilebilecek miktarı aşıyor."
       }
+    },
+    "discountType": {
+      "percent": "Yüzde",
+      "fixed": "Sabit tutar",
+      "free_shipping": "Ücretsiz kargo"
+    },
+    "customers": {
+      "name": "Müşteri",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "orders": "Siparişler",
+      "spent": "Harcama",
+      "marketing": "Pazarlama",
+      "marketingYes": "Abone",
+      "marketingNo": "Abone değil",
+      "joined": "Kayıt",
+      "lastOrder": "Son sipariş",
+      "never": "Hiç",
+      "searchPlaceholder": "Ad veya e-posta ile ara…",
+      "filterMarketing": "Pazarlama",
+      "filterAll": "Tüm müşteriler",
+      "filterSubscribed": "Yalnızca aboneler",
+      "filterUnsubscribed": "Abone olmayanlar",
+      "guest": "Misafir",
+      "account": "Hesabı var",
+      "details": "Bilgiler",
+      "fullName": "Ad soyad",
+      "acceptsMarketing": "Pazarlama e-postalarını kabul ediyor",
+      "notes": "Dahili notlar",
+      "notesPlaceholder": "Yalnızca personel görür",
+      "addresses": "Adresler",
+      "noAddresses": "Kayıtlı adres yok.",
+      "default": "Varsayılan",
+      "ordersTitle": "Siparişler",
+      "noOrders": "Henüz sipariş yok.",
+      "readOnly": "Bu müşteriyi görüntüleyebilir ancak düzenleyemezsiniz.",
+      "scope": "Müşteri silme ve birleştirme henüz kullanılamıyor."
+    },
+    "coupons": {
+      "code": "Kod",
+      "type": "Tür",
+      "value": "Değer",
+      "minSubtotal": "Min. ara toplam",
+      "uses": "Kullanım",
+      "unlimited": "∞",
+      "window": "Geçerlilik",
+      "always": "Her zaman",
+      "from": "{date} itibarıyla",
+      "until": "{date} tarihine kadar",
+      "between": "{from} – {to}",
+      "active": "Aktif",
+      "new": "Yeni kupon",
+      "edit": "Kuponu düzenle",
+      "usage": "Kullanım",
+      "delete": "Kuponu sil",
+      "deleteConfirm": "{code} kuponu silinsin mi?",
+      "deleteDescription": "Bu işlem geri alınamaz. Kullanılmış kuponlar silinemez.",
+      "searchPlaceholder": "Kod ile ara…",
+      "percentValue": "% {value}",
+      "form": {
+        "code": "Kod",
+        "codeHint": "3–30 karakter: harf, rakam, - ve _. Müşteriler bunu ödeme sırasında yazar.",
+        "type": "İndirim türü",
+        "percent": "Yüzde indirim",
+        "amount": "Tutar indirimi",
+        "freeShipping": "Bu kupon uygulandığında kargo ücretsizdir.",
+        "minSubtotal": "Minimum ara toplam",
+        "minSubtotalHint": "Sınır yoksa boş bırakın.",
+        "maxUses": "Toplam kullanım",
+        "maxUsesHint": "Sınırsız için boş bırakın.",
+        "maxUsesPerCustomer": "Müşteri başına kullanım",
+        "startsAt": "Başlangıç",
+        "endsAt": "Bitiş",
+        "isActive": "Aktif",
+        "isActiveHint": "Pasif kuponlar ödeme sırasında reddedilir."
+      },
+      "usagePage": {
+        "title": "Kupon kullanımı",
+        "summary": "{count, plural, =0 {Henüz kullanım yok} one {# kullanım} other {# kullanım}}",
+        "order": "Sipariş",
+        "customer": "Müşteri",
+        "amount": "İndirim",
+        "date": "Tarih",
+        "empty": "Bu kupon henüz kullanılmadı.",
+        "totalDiscount": "Verilen toplam indirim"
+      },
+      "errors": {
+        "hasUses": "Bu kupon kullanıldığı için silinemez. Bunun yerine pasife alın.",
+        "codeFormat": "3–30 harf, rakam, - veya _ kullanın.",
+        "dateOrder": "Bitiş tarihi başlangıçtan sonra olmalı.",
+        "percentRange": "1 ile 100 arasında bir yüzde girin."
+      }
+    },
+    "reviews": {
+      "product": "Ürün",
+      "review": "Değerlendirme",
+      "author": "Yazar",
+      "anonymous": "Anonim",
+      "verified": "Doğrulanmış satın alma",
+      "rating": "Puan",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "delete": "Değerlendirmeyi sil",
+      "deleteConfirm": "Bu değerlendirme silinsin mi?",
+      "deleteDescription": "Değerlendirme kalıcı olarak silinir ve ürün puanı yeniden hesaplanır.",
+      "empty": "{status} değerlendirme yok.",
+      "emptyHint": "Müşterilerin mağazada gönderdiği değerlendirmeler moderasyon için burada görünür.",
+      "noTitle": "(başlıksız)",
+      "approvedToast": "Değerlendirme onaylandı",
+      "rejectedToast": "Değerlendirme reddedildi"
+    },
+    "finance": {
+      "subtitle": "Seçili dönem için satışlar, maliyetler ve giderler.",
+      "expensesSubtitle": "Mağazanın harcamalarını kaydedin ve fişleri tek yerde tutun.",
+      "period": "{period} gösteriliyor",
+      "manageExpenses": "Giderleri yönet",
+      "addExpense": "Gider ekle",
+      "editExpense": "Gideri düzenle",
+      "deleteExpense": "Bu gider silinsin mi?",
+      "deleteExpenseHint": "Kayıt raporlardan kaldırılır. Yüklenen fiş dosyası depoda kalır.",
+      "kpi": {
+        "gross": "Brüt satış",
+        "paidGross": "Ödenen gelir",
+        "paidHint": "Ödemesi alınan siparişler",
+        "refunds": "İadeler",
+        "cogs": "Ürün maliyeti",
+        "cogsHint": "Varyant birim maliyetlerinden",
+        "expenses": "Giderler",
+        "expensesHint": "{count, plural, =1 {1 kayıt} other {# kayıt}}",
+        "net": "Net",
+        "netHint": "Ödenen − iadeler − maliyet − giderler",
+        "margin": "Net marj",
+        "marginHint": "Ödenen gelire oranla net",
+        "noPaid": "Bu dönemde ödenen gelir yok",
+        "orders": "{count, plural, =1 {1 sipariş} other {# sipariş}}"
+      },
+      "dailySales": {
+        "title": "Günlük satışlar",
+        "day": "Gün",
+        "orders": "Sipariş",
+        "gross": "Brüt",
+        "paidGross": "Ödenen",
+        "refunds": "İade",
+        "cogs": "Maliyet",
+        "empty": "Bu dönemde sipariş yok."
+      },
+      "margins": {
+        "title": "Marja göre en iyi ürünler",
+        "allTime": "Tüm zamanlar; tarih aralığı uygulanmaz.",
+        "product": "Ürün",
+        "units": "Adet",
+        "revenue": "Gelir",
+        "cogs": "Maliyet",
+        "margin": "Marj",
+        "marginPct": "Marj %",
+        "empty": "Henüz ödenmiş sipariş yok."
+      },
+      "byCategory": {
+        "title": "Kategoriye göre giderler",
+        "uncategorized": "Kategorisiz",
+        "total": "Toplam gider",
+        "empty": "Bu dönemde kayıtlı gider yok.",
+        "count": "{count, plural, =1 {1 kayıt} other {# kayıt}}"
+      },
+      "table": {
+        "date": "Tarih",
+        "category": "Kategori",
+        "vendor": "Tedarikçi",
+        "note": "Not",
+        "amount": "Tutar",
+        "receipt": "Fiş",
+        "viewReceipt": "Fişi görüntüle",
+        "actions": "İşlemler",
+        "empty": "Henüz gider yok",
+        "emptyHint": "İlk giderinizi ekleyin veya tarih aralığını genişletin.",
+        "allCategories": "Tüm kategoriler",
+        "filterCategory": "Kategoriye göre filtrele",
+        "searchPlaceholder": "Tedarikçi veya not ara…"
+      },
+      "form": {
+        "description": "Tutarlar mağaza para birimindedir ve harcandığı güne sayılır.",
+        "amount": "Tutar",
+        "date": "Tarih",
+        "category": "Kategori",
+        "noCategory": "Kategori yok",
+        "vendor": "Tedarikçi",
+        "vendorPlaceholder": "Tedarikçi, kargo, platform…",
+        "note": "Not",
+        "notePlaceholder": "Bu ne içindi?",
+        "receipt": "Fiş",
+        "receiptHint": "Görsel veya PDF, en fazla 10 MB.",
+        "uploadReceipt": "Fiş yükle",
+        "replaceReceipt": "Fişi değiştir",
+        "uploading": "Yükleniyor…"
+      },
+      "categories": {
+        "title": "Kategoriler",
+        "hint": "Giderleri özet için gruplayın. Kategori silinince giderleri kalır.",
+        "add": "Kategori ekle",
+        "edit": "Kategoriyi yeniden adlandır",
+        "name": "Ad",
+        "sortOrder": "Sıra",
+        "delete": "“{name}” silinsin mi?",
+        "deleteHint": "Giderleri kategorisiz olur.",
+        "empty": "Henüz kategori yok."
+      },
+      "errors": {
+        "uploadFailed": "Fiş yüklenemedi.",
+        "tooLarge": "Dosya 10 MB'tan büyük."
+      }
+    },
+    "products": {
+      "new": "Yeni ürün",
+      "newHint": "Önce ayrıntıları kaydedin; varyantlar ve görseller hemen ardından açılır.",
+      "name": "Ad",
+      "slug": "URL kısa adı",
+      "slugHint": "Küçük harf, rakam ve tire. Ürün adresinde kullanılır.",
+      "brand": "Marka",
+      "tags": "Etiketler",
+      "tagsHint": "Virgülle ayırın. “new” etiketi Yeni rozetini gösterir.",
+      "featured": "Öne çıkan",
+      "categories": "Kategoriler",
+      "noCategories": "Henüz kategori yok. Şuradan yönetin:",
+      "price": "Fiyat",
+      "stock": "Stok",
+      "variants": "Varyantlar",
+      "variantsCount": "· {count, plural, =1 {1 varyant} other {# varyant}}",
+      "untracked": "Takip edilmiyor",
+      "updated": "Güncellendi",
+      "searchPlaceholder": "Ürün adına göre ara…",
+      "allCategories": "Tüm kategoriler",
+      "filterCategory": "Kategoriye göre filtrele",
+      "details": "Ayrıntılar",
+      "seo": "Arama motoru görünümü",
+      "seoTitle": "SEO başlığı",
+      "seoDescription": "SEO açıklaması",
+      "shortDescription": "Kısa açıklama",
+      "description": "Açıklama",
+      "emptyHint": "İlk ürününüzü oluşturun veya filtreleri değiştirin.",
+      "actions": {
+        "viewStorefront": "Mağazada görüntüle",
+        "activate": "Aktif yap",
+        "draft": "Taslağa al",
+        "archive": "Arşivle"
+      },
+      "delete": {
+        "title": "Bu ürün silinsin mi?",
+        "description": "Varyantlar, görseller ve stok geçmişi kalıcı olarak silinir. Sipariş edilmiş ürünler yalnızca arşivlenebilir."
+      },
+      "errors": {
+        "hasOrders": "Bu ürün siparişlerde yer aldığı için silinemez. Bunun yerine arşivleyin.",
+        "tooManyVariants": "Çok fazla varyant oluşacak (sınır 200). Seçenek değerlerini azaltın.",
+        "variantHasOrders": "Bu varyant siparişlerde yer aldığı için silinemez. Bunun yerine pasife alın.",
+        "variantInCarts": "Bu varyant bir müşterinin sepetinde. Silmek yerine pasife alın."
+      },
+      "fieldErrors": {
+        "slugFormat": "Yalnızca küçük harf, rakam ve tire.",
+        "optionNameRequired": "Her seçeneğin varsayılan dilde bir adı olmalı.",
+        "optionValuesRequired": "Her seçeneğin en az bir değeri olmalı.",
+        "optionValueRequired": "Her değerin varsayılan dilde bir etiketi olmalı."
+      },
+      "options": {
+        "title": "Seçenekler",
+        "hint": "Beden, renk… Seçenekleri kaydedin, ardından varyant kombinasyonlarını oluşturun.",
+        "name": "Seçenek",
+        "namePlaceholder": "örn. Beden",
+        "values": "Değerler",
+        "value": "Değer",
+        "swatch": "Renk örneği",
+        "addValue": "Değer ekle",
+        "add": "Seçenek ekle",
+        "save": "Seçenekleri kaydet",
+        "generate": "Varyantları oluştur",
+        "saveFirst": "Önce seçenekleri kaydedin.",
+        "none": "Seçenek yok: ürünün tek varyantı var."
+      },
+      "variant": {
+        "defaultLabel": "Varsayılan varyant",
+        "newVariant": "Yeni varyant",
+        "add": "Varyant ekle",
+        "empty": "Henüz varyant yok. Ürünün satılabilmesi için bir tane ekleyin.",
+        "emptyGenerate": "Henüz varyant yok. Yukarıdaki seçeneklerden oluşturun.",
+        "default": "Varsayılan",
+        "sku": "SKU",
+        "barcode": "Barkod",
+        "price": "Fiyat",
+        "compareAt": "Karşılaştırma fiyatı",
+        "cost": "Maliyet",
+        "weight": "Ağırlık (g)",
+        "initialStock": "Başlangıç stoku",
+        "trackInventory": "Stok takibi",
+        "allowBackorder": "Ön siparişe izin ver",
+        "isDefault": "Varsayılan varyant",
+        "isActive": "Aktif",
+        "delete": {
+          "title": "Bu varyant silinsin mi?",
+          "description": "Stok geçmişi silinir. Sipariş edilmiş veya sepetteki varyantlar silinemez."
+        },
+        "errors": {
+          "variantHasOrders": "Bu varyant siparişlerde yer aldığı için silinemez. Bunun yerine pasife alın.",
+          "variantInCarts": "Bu varyant bir müşterinin sepetinde. Silmek yerine pasife alın."
+        }
+      },
+      "images": {
+        "title": "Görseller",
+        "hint": "İlk görsel kapaktır. 5 MB'a kadar PNG, JPG veya WebP.",
+        "empty": "Henüz görsel yok.",
+        "added": "Görsel eklendi",
+        "primary": "Kapak",
+        "noAlt": "Alternatif metin yok",
+        "moveUp": "Öne al",
+        "moveDown": "Arkaya al",
+        "editAlt": "Görsel ayrıntılarını düzenle",
+        "altHint": "Alternatif metin, görseli ekran okuyucular ve arama motorları için tanımlar.",
+        "alt": "Alternatif metin",
+        "variant": "Şu varyant için göster",
+        "anyVariant": "Tüm varyantlar",
+        "delete": {
+          "title": "Bu görsel silinsin mi?",
+          "description": "Dosya depolamadan da kaldırılır."
+        }
+      },
+      "upload": {
+        "button": "Görsel yükle",
+        "uploading": "Yükleniyor {done}/{total}…",
+        "errors": {
+          "type": "{name} bir görsel değil.",
+          "size": "{name} 5 MB'tan büyük.",
+          "failed": "{name} yüklenemedi."
+        }
+      }
+    },
+    "categories": {
+      "title": "Kategoriler",
+      "hint": "Ürünleri gezinme için gruplayın. Alt kategoriler üst kategorinin altında görünür.",
+      "new": "Yeni kategori",
+      "edit": "Kategoriyi düzenle",
+      "dialogHint": "Ad, mağazanın varsayılan dilinde zorunludur.",
+      "name": "Ad",
+      "description": "Açıklama",
+      "slug": "URL kısa adı",
+      "parent": "Üst kategori",
+      "noParent": "Üst kategori yok (en üst düzey)",
+      "sortOrder": "Sıralama",
+      "image": "Görsel",
+      "replaceImage": "Görseli değiştir",
+      "active": "Mağazada görünür",
+      "products": "Ürünler",
+      "empty": "Henüz kategori yok",
+      "emptyHint": "Kataloğu düzenlemek için kategoriler oluşturun.",
+      "delete": {
+        "title": "Bu kategori silinsin mi?",
+        "description": "{count, plural, =0 {Bağlı ürün yok.} =1 {1 ürün bu kategoriyi kaybeder.} other {# ürün bu kategoriyi kaybeder.}} Alt kategoriler en üst düzeye taşınır."
+      }
+    },
+    "inventory": {
+      "subtitle": "Varyant başına stok. Düzeltmeler hareket olarak kaydedilir.",
+      "product": "Ürün",
+      "sku": "SKU",
+      "stock": "Stokta",
+      "threshold": "Eşik",
+      "untracked": "Takip edilmiyor",
+      "tracking": "Takip",
+      "backorder": "Ön sipariş",
+      "history": "Hareket geçmişi",
+      "adjust": "Stoku düzelt",
+      "adjustTitle": "Stoku düzelt",
+      "mode": {
+        "delta": "Ekle veya çıkar",
+        "deltaHint": "Göreli değişim, örn. +10 alındı veya −2 hasarlı.",
+        "set": "Tam sayıyı belirle",
+        "setHint": "Fiziksel sayımdan sonra. Fark kaydedilir."
+      },
+      "delta": "Değişim",
+      "newQuantity": "Yeni miktar",
+      "reason": "Neden",
+      "note": "Not",
+      "notePlaceholder": "İsteğe bağlı, örn. tedarikçi fatura numarası",
+      "preview": "{from} → {to}",
+      "apply": "Uygula",
+      "searchPlaceholder": "Ürün adı veya SKU ile ara…",
+      "lowOnly": "Yalnızca düşük stok",
+      "lowBanner": "{count} takipli varyant {threshold} eşiğinde veya altında.",
+      "viewLow": "Düşük stoku göster",
+      "allGood": "Stok durumu iyi",
+      "allGoodHint": "Hiçbir takipli varyant düşük stok eşiğinde veya altında değil.",
+      "showAll": "Tüm stoku göster",
+      "movementsHint": "Stoktaki her değişiklik, en yeniden başlayarak.",
+      "allReasons": "Tüm nedenler",
+      "filteredBy": "Filtre",
+      "clearFilter": "Filtreyi temizle",
+      "actor": "Yapan",
+      "order": "Sipariş",
+      "system": "Sistem",
+      "noMovements": "Henüz hareket yok",
+      "noMovementsHint": "Satışlar, iadeler ve manuel düzeltmeler burada görünür.",
+      "fieldErrors": {
+        "zeroDelta": "Miktar değişmeyecek."
+      }
+    },
+    "stockReason": {
+      "initial": "Başlangıç stoku",
+      "purchase": "Satın alma",
+      "sale": "Satış",
+      "return": "İade",
+      "adjustment": "Düzeltme",
+      "damaged": "Hasarlı",
+      "correction": "Sayım düzeltmesi"
+    },
+    "design": {
+      "description": "Renkler, biçim, duyuru ve her mağaza bölümünün yerleşimi.",
+      "pickColor": "Renk seç",
+      "branding": {
+        "logo": "Logo",
+        "logoHint": "En fazla 2 MB PNG, JPG, WebP veya SVG. Mağaza başlığında gösterilir.",
+        "favicon": "Site simgesi",
+        "faviconHint": "En fazla 512 KB kare PNG veya ICO. Tarayıcı sekmesinde gösterilir.",
+        "tooLarge": "Dosya çok büyük (en fazla {max} KB).",
+        "uploadFailed": "Yükleme başarısız. Lütfen tekrar deneyin.",
+        "replace": "Değiştir"
+      },
+      "colors": {
+        "title": "Renkler",
+        "description": "Altı haneli hex değerleri. Ön plan renkleri ilgili arka plan üzerindeki metin için kullanılır.",
+        "primary": "Ana renk",
+        "primaryForeground": "Ana metin",
+        "accent": "Vurgu",
+        "accentForeground": "Vurgu metni",
+        "background": "Arka plan",
+        "foreground": "Metin",
+        "muted": "Soluk arka plan",
+        "mutedForeground": "Soluk metin"
+      },
+      "shape": {
+        "title": "Biçim ve yazı",
+        "description": "Düğme, kart ve giriş alanları için köşe yuvarlaklığı; başlık ve gövde yazı tipleri.",
+        "radius": "Köşe yuvarlaklığı",
+        "radiusPresets": {
+          "none": "Köşeli",
+          "small": "Hafif",
+          "medium": "Yuvarlak",
+          "large": "Hap"
+        },
+        "font": {
+          "heading": "Başlık yazı tipi",
+          "body": "Gövde yazı tipi"
+        },
+        "fontNote": "Yazı tipi seçimleri şimdi kaydedilir ve ileriki bir sürümde mağazaya uygulanır."
+      },
+      "announcement": {
+        "title": "Duyuru çubuğu",
+        "description": "Gezinmenin üstünde gösterilen kısa bir satır. Gizlemek için boş bırakın.",
+        "placeholder": "500 ₺ üzeri siparişlerde kargo bedava"
+      },
+      "sections": {
+        "title": "Bölüm yerleşimleri",
+        "description": "Mağazanın her parçası için bir tasarım seçin. Yeni yerleşimler yolda.",
+        "keys": {
+          "announcementBar": "Duyuru çubuğu",
+          "navbar": "Gezinme çubuğu",
+          "hero": "Ana görsel",
+          "categoryBanner": "Kategori bandı",
+          "productGrid": "Ürün ızgarası",
+          "productCard": "Ürün kartı",
+          "productPage": "Ürün sayfası",
+          "cartDrawer": "Sepet",
+          "checkout": "Ödeme",
+          "reviews": "Yorumlar",
+          "newsletter": "Bülten",
+          "footer": "Alt bilgi"
+        }
+      },
+      "variants": {
+        "minimal": "Sade",
+        "bold": "Cesur",
+        "editorial": "Editoryal",
+        "playful": "Eğlenceli"
+      },
+      "preview": {
+        "title": "Canlı önizleme",
+        "openStorefront": "Mağazayı aç",
+        "harness": "Bölüm test sayfası",
+        "navShop": "Mağaza",
+        "navAbout": "Hakkında",
+        "heroTitle": "Evcil dostunuzun sevdiği her şey",
+        "heroText": "Mutlu dostlar için seçilmiş oyuncaklar, yataklar, mamalıklar ve ödüller.",
+        "primaryButton": "Alışverişe başla",
+        "outlineButton": "Daha fazla",
+        "badge": "Yeni",
+        "productName": "Halat çekiştirme oyuncağı",
+        "productPrice": "249,00 ₺"
+      },
+      "unsaved": "Kaydedilmemiş değişiklikler var.",
+      "allSaved": "Tüm değişiklikler kaydedildi.",
+      "reset": "Değişiklikleri geri al"
+    },
+    "settings": {
+      "description": "Mağaza kimliği, ticaret kuralları, içerik sayfaları ve kargo.",
+      "nav": {
+        "label": "Ayar bölümleri",
+        "general": "Genel",
+        "commerce": "Ticaret",
+        "pages": "Sayfalar",
+        "shipping": "Kargo"
+      },
+      "general": {
+        "identity": "Kimlik",
+        "identityHint": "Mağazanın müşterilere nasıl göründüğü.",
+        "name": "Mağaza adı",
+        "tagline": "Slogan",
+        "taglineHint": "Ana sayfa başlığının altında ve alt bilgide gösterilir.",
+        "contact": "İletişim",
+        "contactHint": "Alt bilgide gösterilir ve müşteri e-postalarında kullanılır.",
+        "contactEmail": "İletişim e-postası",
+        "contactPhone": "İletişim telefonu",
+        "emailFrom": "E-posta gönderen",
+        "emailFromHint": "“Ad '<'adres'>'” veya yalnızca adres yazın. Alan adı e-posta sağlayıcınızda doğrulanmış olmalıdır.",
+        "localisation": "Dil ve saat",
+        "localisationHint": "Varsayılan dil, dil öneki olmayan bağlantılarda kullanılır.",
+        "timezone": "Saat dilimi",
+        "defaultLocale": "Varsayılan dil",
+        "enabledLocales": "Kullanılabilir diller",
+        "enabledLocalesHint": "Müşteriler bu diller arasında geçiş yapabilir. Varsayılan dil kapatılamaz.",
+        "default": "varsayılan"
+      },
+      "commerce": {
+        "pricing": "Fiyat ve vergi",
+        "pricingHint": "Tüm ürün ve siparişlere uygulanır.",
+        "currency": "Para birimi",
+        "currencyHint": "Para birimini değiştirmek mevcut fiyatları dönüştürmez.",
+        "taxRate": "Vergi oranı (%)",
+        "taxRateHint": "Ödeme adımında uygulanır; örn. %20 KDV için 20.",
+        "pricesIncludeTax": "Fiyatlara vergi dahil",
+        "pricesIncludeTaxHint": "Açıkken vergi fiyatın parçası olarak gösterilir, ödeme adımında eklenmez.",
+        "inventory": "Stok",
+        "inventoryHint": "Stok uyarıları ve eşikleri.",
+        "lowStock": "Düşük stok eşiği",
+        "lowStockHint": "Bu miktarda veya altındaki varyantlar düşük stok olarak işaretlenir."
+      },
+      "pages": {
+        "title": "İçerik sayfaları",
+        "description": "Yasal ve hakkında sayfaları için dil başına düz metin. Boş satırlar yeni paragraf başlatır.",
+        "keys": {
+          "privacy": "Gizlilik politikası",
+          "terms": "Hizmet şartları",
+          "about": "Hakkımızda"
+        },
+        "placeholder": "Sayfa içeriğini yazın…"
+      },
+      "shipping": {
+        "hint": "Kargo ülkesi eşleştiğinde ödeme adımında sunulur. Her yerde geçerli olması için ülkeleri boş bırakın.",
+        "add": "Ücret ekle",
+        "name": "Ad",
+        "rate": "Ücret",
+        "freeOver": "Ücretsiz eşiği",
+        "freeOverHint": "Bu ara toplamdan itibaren kargo ücretsizdir. Hiç ücretsiz olmaması için boş bırakın.",
+        "countries": "Ülkeler",
+        "countriesHint": "Her yerde sunmak için boş bırakın.",
+        "countriesPlaceholder": "Tüm ülkeler",
+        "allCountries": "Tüm ülkeler",
+        "days": "Teslimat günü",
+        "minDays": "En az gün",
+        "maxDays": "En çok gün",
+        "sortOrder": "Sıralama",
+        "deleteTitle": "Kargo ücreti silinsin mi?",
+        "deleteDescription": "“{name}” artık ödeme adımında sunulmayacak. Mevcut siparişler etkilenmez.",
+        "emptyTitle": "Henüz kargo ücreti yok",
+        "emptyHint": "En az bir etkin ücret olmadan müşteriler ödeme yapamaz.",
+        "editTitle": "Kargo ücretini düzenle",
+        "newTitle": "Yeni kargo ücreti",
+        "formHint": "Mağazanızın sunduğu her dilde ücrete bir ad verin."
+      },
+      "payments": {
+        "title": "Ödemeler",
+        "description": "Müşterilerin siparişleri nasıl ödediği.",
+        "manual": "Manuel ödeme",
+        "manualHint": "Siparişler çevrimdışı ödemeyi (havale, nakit) bekler ve siz ödendi olarak işaretlersiniz.",
+        "active": "Etkin",
+        "iyzicoHint": "iyzico ile kart ödemeleri kimlik bilgileri tanımlandığında kullanılabilir olacak.",
+        "comingSoon": "Yakında"
+      },
+      "domains": {
+        "title": "Alan adları",
+        "description": "Bu mağaza {slug} adresinde yayınlanır. Özel alan adları mağaza listesinden yönetilir.",
+        "manage": "Alan adlarını yönet"
+      },
+      "fieldErrors": {
+        "defaultLocaleMustBeEnabled": "Varsayılan dil, kullanılabilir dillerden biri olmalıdır.",
+        "maxBeforeMin": "En çok gün, en az günden küçük olamaz."
+      }
+    },
+    "staff": {
+      "description": "Bu yönetim paneline giriş yapabilen kişiler ve yetkileri.",
+      "member": "Üye",
+      "role": "Rol",
+      "joined": "Katıldı",
+      "noName": "Henüz ad yok",
+      "you": "siz",
+      "remove": "Kaldır",
+      "removeTitle": "Ekipten kaldırılsın mı?",
+      "removeDescription": "{name} bu mağazanın yönetimine erişimini hemen kaybedecek.",
+      "emptyTitle": "Henüz ekip üyesi yok",
+      "emptyHint": "İş arkadaşlarınızı e-posta ile davet edin. Yöneticiler mağazadaki her şeyi değiştirebilir; personel sipariş ve stokla ilgilenir.",
+      "invite": {
+        "button": "Davet et",
+        "title": "Ekip üyesi davet et",
+        "description": "Zaten hesabı varsa hemen erişim alır; yoksa bir davet e-postası gönderilir.",
+        "email": "E-posta",
+        "role": "Rol",
+        "roleHint": "Yöneticiler mağazadaki her şeyi değiştirebilir; personel yalnızca sipariş ve stokla ilgilenir.",
+        "submit": "Davet gönder",
+        "sending": "Gönderiliyor…",
+        "sent": "Ekip üyesi eklendi"
+      },
+      "owners": {
+        "title": "Platform sahipleri",
+        "description": "Sahipler tüm mağazalara tam erişime sahiptir ve buradan yönetilemez."
+      },
+      "errors": {
+        "alreadyMember": "Bu kişi zaten ekipte.",
+        "inviteFailed": "Davet e-postası gönderilemedi. Adresi kontrol edip tekrar deneyin.",
+        "isOwner": "Bu kişi bir platform sahibi ve zaten erişimi var.",
+        "self": "Kendi üyeliğinizi değiştiremezsiniz."
+      }
     }
   },
   "shop": {
@@ -410,5 +1034,243 @@
     "shippingTo": "Teslimat adresi",
     "contact": "İletişim",
     "tracking": "Kargo takip"
+  },
+  "stores": {
+    "title": "Mağazalar",
+    "subtitle": "Bu platformda çalışan tüm vitrinler.",
+    "create": "Mağaza oluştur",
+    "empty": "Henüz mağaza yok",
+    "emptyHint": "Başlamak için ilk mağazanızı oluşturun.",
+    "created": "“{slug}” mağazası hazır",
+    "defaultStore": "Varsayılan",
+    "columns": {
+      "store": "Mağaza",
+      "slug": "Kısa ad",
+      "domain": "Alan adı",
+      "currency": "Para birimi",
+      "locales": "Diller",
+      "status": "Durum",
+      "created": "Oluşturulma"
+    },
+    "actions": {
+      "menu": "Mağaza işlemleri",
+      "openAdmin": "Yönetimi aç",
+      "openStorefront": "Vitrini aç",
+      "activate": "Etkinleştir",
+      "deactivate": "Devre dışı bırak",
+      "domains": "Alan adları",
+      "delete": "Mağazayı sil"
+    },
+    "activate": {
+      "title": "{name} etkinleştirilsin mi?",
+      "description": "Alışveriş yapanlar vitrine yeniden erişebilecek."
+    },
+    "deactivate": {
+      "title": "{name} devre dışı bırakılsın mı?",
+      "description": "Vitrin alışveriş yapanlar için kapanır. Yönetim erişimi değişmez."
+    },
+    "delete": {
+      "title": "{name} silinsin mi?",
+      "description": "Mağaza; tüm ürünleri, siparişleri, müşterileri ve dosyalarıyla kalıcı olarak silinir. Bu işlem geri alınamaz.",
+      "confirmLabel": "Onaylamak için kısa adı yazın",
+      "confirm": "Mağazayı sil"
+    },
+    "domains": {
+      "title": "{name} alan adları",
+      "description": "Bu mağazaya yönlenen özel alan adları. Alt alan adı her zaman çalışır.",
+      "hostname": "Alan adı",
+      "placeholder": "magaza.ornek.com",
+      "add": "Alan adı ekle",
+      "primary": "Birincil",
+      "setPrimary": "Birincil yap",
+      "remove": "Kaldır",
+      "none": "Henüz özel alan adı yok.",
+      "verified": "Doğrulandı",
+      "unverified": "DNS bekleniyor",
+      "makePrimary": "Birincil alan adı olarak kullan",
+      "dns": "{hostname} için {target} adresine bir CNAME kaydı ekleyin."
+    },
+    "errors": {
+      "defaultStore": "Varsayılan mağaza bu şekilde değiştirilemez.",
+      "slugMismatch": "Yazdığınız kısa ad eşleşmiyor.",
+      "logoUpload": "Logo yüklenemedi. Hiçbir şey oluşturulmadı — lütfen tekrar deneyin."
+    },
+    "fieldErrors": {
+      "required": "Zorunlu",
+      "invalid": "Geçersiz değer",
+      "tooShort": "Çok kısa",
+      "tooLong": "Çok uzun",
+      "reserved": "Bu ad ayrılmış",
+      "taken": "Zaten kullanımda",
+      "atLeastOne": "En az bir dil seçin",
+      "includesDefault": "Etkin diller varsayılan dili içermeli",
+      "rootDomain": "Platform alan adı altındaki adresler için alt alan adını kullanın",
+      "logoTooLarge": "Logo en fazla 2 MB olmalı",
+      "logoType": "PNG, JPEG, WebP veya SVG dosyası kullanın"
+    },
+    "wizard": {
+      "title": "Mağaza oluştur",
+      "subtitle": "Birkaç adımda yeni bir vitrin kurun. Son adıma kadar hiçbir şey kaydedilmez.",
+      "back": "Geri",
+      "next": "Devam",
+      "submit": "Mağazayı oluştur",
+      "submitting": "Oluşturuluyor…",
+      "edit": "Düzenle",
+      "stepOf": "Adım {step} / {total}",
+      "errorBanner": "Bazı alanlar düzeltilmeli.",
+      "genericError": "Mağaza oluşturulamadı.",
+      "previewLinks": "Varyantları önizle (yalnızca geliştirme)"
+    },
+    "steps": {
+      "basics": "Temel bilgiler",
+      "localesMoney": "Dil ve para",
+      "branding": "Marka",
+      "design": "Tasarım",
+      "contact": "İletişim",
+      "domain": "Alan adı",
+      "review": "Özet"
+    },
+    "basics": {
+      "name": "Mağaza adı",
+      "namePlaceholder": "örn. Pati Pet Shop",
+      "slug": "Kısa ad",
+      "slugHint": "Küçük harf, rakam ve tire. Alt alan adı olur.",
+      "slugPreview": "Vitrin adresi",
+      "slugChecking": "Kontrol ediliyor…",
+      "slugAvailable": "Uygun",
+      "slugTaken": "Zaten alınmış",
+      "slugReserved": "Ayrılmış",
+      "slugInvalid": "Geçerli bir kısa ad değil",
+      "tagline": "Slogan",
+      "taglinePlaceholder": "Adın altında gösterilen kısa bir satır"
+    },
+    "localesMoney": {
+      "defaultLocale": "Varsayılan dil",
+      "enabledLocales": "Etkin diller",
+      "enabledLocalesHint": "Varsayılan dil her zaman etkindir.",
+      "currency": "Para birimi",
+      "taxRate": "Vergi oranı (%)",
+      "taxRateHint": "Ödeme sırasında uygulanır. Baz puan olarak saklanır.",
+      "pricesIncludeTax": "Fiyatlar vergi dahil",
+      "pricesIncludeTaxHint": "Açıkken vergi, gösterilen fiyatın bir parçasıdır.",
+      "lowStock": "Düşük stok eşiği",
+      "lowStockHint": "Bu miktara eşit veya altındaki varyantlar envanterde işaretlenir."
+    },
+    "branding": {
+      "logo": "Logo",
+      "logoHint": "En fazla 2 MB PNG, JPEG, WebP veya SVG.",
+      "chooseFile": "Dosya seç",
+      "removeLogo": "Kaldır",
+      "dropHere": "Bir görseli buraya bırakın veya",
+      "colors": "Renkler",
+      "colorNames": {
+        "primary": "Ana renk",
+        "primaryForeground": "Ana renk üzerindeki metin",
+        "accent": "Vurgu",
+        "accentForeground": "Vurgu üzerindeki metin",
+        "background": "Arka plan",
+        "foreground": "Metin",
+        "muted": "Soluk yüzey",
+        "mutedForeground": "Soluk metin"
+      },
+      "radius": "Köşe yuvarlaklığı",
+      "radiusNames": {
+        "none": "Keskin",
+        "small": "Hafif",
+        "medium": "Yuvarlak",
+        "large": "Hap"
+      },
+      "preview": "Canlı önizleme",
+      "previewHeading": "Evcil dostunuzun sevdiği her şey",
+      "previewBody": "Koltuğunu köpeğiyle paylaşanların seçtiği oyuncaklar, ödüller ve yataklar.",
+      "previewPrimary": "Alışverişe başla",
+      "previewOutline": "Daha fazla",
+      "previewCardTitle": "Halat çekiştirme oyuncağı",
+      "previewCardBody": "Dayanıklı pamuk, makinede yıkanabilir.",
+      "previewBadge": "Yeni"
+    },
+    "design": {
+      "preset": "Tasarım dili",
+      "presetHint": "Tüm bölümlere uygulanır. Aşağıda tek tek bölümleri değiştirebilirsiniz.",
+      "comingSoon": "Yakında",
+      "sections": "Bölüm bazında geçersiz kılma",
+      "sectionsHint": "Bugün yalnızca minimal varyant mevcut; diğerleri bir sonraki tema sürümüyle gelecek.",
+      "announcement": "Duyuru çubuğu",
+      "announcementHint": "Vitrinin en üstünde, dil başına isteğe bağlı kısa bir mesaj. Gizlemek için boş bırakın.",
+      "announcementPlaceholder": "500 TL üzeri ücretsiz kargo",
+      "variants": {
+        "minimal": {
+          "name": "Minimal",
+          "description": "Bol beyaz alanlı sakin ve ferah düzenler."
+        },
+        "bold": {
+          "name": "Cesur",
+          "description": "Büyük yazı, güçlü renk blokları."
+        },
+        "editorial": {
+          "name": "Editoryal",
+          "description": "Dergi tarzı ızgaralar ve serif başlıklar."
+        },
+        "playful": {
+          "name": "Eğlenceli",
+          "description": "Yuvarlak şekiller, çıkartmalar ve hareket."
+        }
+      },
+      "sectionNames": {
+        "announcementBar": "Duyuru çubuğu",
+        "navbar": "Gezinme çubuğu",
+        "hero": "Ana görsel",
+        "categoryBanner": "Kategori afişi",
+        "productGrid": "Ürün ızgarası",
+        "productCard": "Ürün kartı",
+        "productPage": "Ürün sayfası",
+        "cartDrawer": "Sepet",
+        "checkout": "Ödeme",
+        "reviews": "Yorumlar",
+        "newsletter": "Bülten",
+        "footer": "Alt bilgi"
+      }
+    },
+    "contact": {
+      "email": "İletişim e-postası",
+      "emailHint": "Alt bilgide gösterilir ve yanıtlar için kullanılır.",
+      "phone": "İletişim telefonu",
+      "emailFrom": "İşlem e-postaları gönderici adresi",
+      "emailFromHint": "“Mağaza adı '<noreply@ornek.com>'” veya yalın bir adres. Platform varsayılanı için boş bırakın."
+    },
+    "domain": {
+      "subdomain": "Alt alan adı",
+      "subdomainHint": "Her zaman kullanılabilir; kısa addan otomatik oluşturulur.",
+      "custom": "Özel alan adı (isteğe bağlı)",
+      "customHint": "Size ait bir alan adı, örneğin magaza.ornek.com.",
+      "customPlaceholder": "magaza.ornek.com",
+      "checking": "Kontrol ediliyor…",
+      "available": "Uygun",
+      "taken": "Zaten başka bir mağazaya bağlı",
+      "invalid": "Geçerli bir alan adı değil",
+      "rootDomain": "Platform alan adı altındaki adresler için alt alan adını kullanın",
+      "dnsTitle": "DNS ayarı",
+      "dnsHint": "Bu kaydı DNS sağlayıcınızda oluşturun. Alan adı yayıldığında çözümlenmeye başlar; doğrulama şimdilik elle işaretlenir.",
+      "dnsType": "Tür",
+      "dnsName": "Ad",
+      "dnsValue": "Değer"
+    },
+    "review": {
+      "intro": "Mağazayı oluşturmadan önce her şeyi kontrol edin.",
+      "notSet": "Ayarlanmadı",
+      "logoSet": "Logo yüklendi",
+      "logoNone": "Logo yok",
+      "allSections": "Tüm bölümler: {variant}",
+      "mixed": "Bölüme göre özel",
+      "pricesIncludeTax": "Fiyatlar vergi dahil",
+      "pricesExcludeTax": "Fiyatlar vergi hariç",
+      "lowStock": "Düşük stok: {n}",
+      "subdomainOnly": "Yalnızca alt alan adı"
+    },
+    "color": {
+      "pick": "Renk seç",
+      "palette": "Palet",
+      "hex": "Hex değeri"
+    }
   }
 }

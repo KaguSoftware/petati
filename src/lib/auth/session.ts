@@ -91,3 +91,14 @@ export async function requireUser(locale: string, nextPath: string) {
   if (!user) redirect(`/${locale}/sign-in?next=${encodeURIComponent(nextPath)}`);
   return user;
 }
+
+/**
+ * Platform-level guard (no store scope): only a platform owner holds `permission`.
+ * SCOPE(multi-store, unpaid): used by the hidden store-creation module.
+ */
+export async function requirePlatformPermission(permission: Permission) {
+  const user = await getSessionUser();
+  const role: EffectiveRole | null = user?.profile.platform_role === "owner" ? "owner" : null;
+  if (!user || !can(role, permission)) throw new ForbiddenError(permission);
+  return { user, role: role! };
+}

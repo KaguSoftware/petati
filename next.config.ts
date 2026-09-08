@@ -5,6 +5,8 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  // Store logo upload in the create-store wizard (2 MB file + multipart overhead).
+  experimental: { serverActions: { bodySizeLimit: "3mb" } },
   images: {
     remotePatterns: [
       { protocol: "http", hostname: "127.0.0.1" },

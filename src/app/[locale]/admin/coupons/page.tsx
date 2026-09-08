@@ -1,12 +1,19 @@
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { EmptyState } from "@/components/admin/shared/empty-state";
+import { NewCouponButton } from "@/components/admin/coupons/coupon-dialog";
+import { CouponsTable } from "@/components/admin/coupons/coupons-table";
+import { CouponsToolbar } from "@/components/admin/coupons/coupons-toolbar";
 import { PageHeader } from "@/components/admin/shared/page-header";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
+import { Pagination } from "@/components/shared/pagination";
 import { requireAdminPage } from "@/lib/admin/context";
+import { listCoupons } from "@/lib/admin/coupons/queries";
+import { COUPON_SORTS } from "@/lib/admin/coupons/types";
+import { currentQuery, parseListParams, type SearchParams } from "@/lib/admin/list-params";
 
-// SCOPE(admin): placeholder until the coupons module lands in this build. GROWS LATER → full module.
-export default async function CouponsPage({ params }: PageProps<"/[locale]/admin/coupons">) {
+type Props = PageProps<"/[locale]/admin/coupons">;
+
+export default async function CouponsPage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("admin");
@@ -14,14 +21,33 @@ export default async function CouponsPage({ params }: PageProps<"/[locale]/admin
     <>
       <PageHeader title={t("nav.coupons")} />
       <Suspense fallback={<TableSkeleton />}>
-        <Content locale={locale} />
+        <CouponsList locale={locale} searchParams={searchParams} />
       </Suspense>
     </>
   );
 }
 
-async function Content({ locale }: { locale: string }) {
-  await requireAdminPage(locale, "coupons.manage");
-  const t = await getTranslations("admin.common");
-  return <EmptyState title={t("comingSoon")} description={t("comingSoonHint")} />;
+async function CouponsList({ locale, searchParams }: { locale: string; searchParams: Props["searchParams"] }) {
+  const ctx = await requireAdminPage(locale, "coupons.manage");
+  const sp = (await searchParams) as SearchParams;
+  const list = parseListParams(sp, { sorts: COUPON_SORTS, defaultSort: "created_at" });
+  const [{ rows, total }, t] = await Promise.all([listCoupons(ctx.store.id, list), getTranslations("common")]);
+  const now = new Date(); // after the runtime reads above (Cache Components)
+  const query = currentQuery(sp, ["q", "sort", "dir"]);
+  return (
+    <>
+      <CouponsToolbar storeId={ctx.store.id} currency={ctx.store.currency} />
+      <CouponsTable
+        rows={rows}
+        storeId={ctx.store.id}
+        locale={ctx.locale}
+        currency={ctx.store.currency}
+        now={now}
+        sort={{ sort: list.sort, dir: list.dir }}
+        query={query}
+        emptyAction={list.q ? undefined : <NewCouponButton storeId={ctx.store.id} currency={ctx.store.currency} />}
+      />
+      <Pagination page={list.page} pageSize={list.pageSize} total={total} basePath="/admin/coupons" query={query} labels={{ prev: t("previous"), next: t("next") }} />
+    </>
+  );
 }

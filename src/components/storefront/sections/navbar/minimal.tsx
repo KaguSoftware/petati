@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import type { NavbarProps } from "../types";
 
 const navLink =
-  "inline-flex items-center rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground focus-visible:outline-none";
+  "inline-flex shrink-0 items-center rounded-full px-3 py-1.5 text-sm whitespace-nowrap text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground focus-visible:outline-none";
 
 export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot, accountSlot, localeSlot }: NavbarProps) {
   const primary = [
@@ -35,12 +35,12 @@ export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot
           {brand}
         </div>
 
-        <nav aria-label={labels.menu} className="hidden items-center justify-center gap-1 md:flex lg:gap-2">
+        <nav aria-label={labels.menu} className="hidden min-w-0 items-center justify-center gap-1 overflow-hidden md:flex lg:gap-2">
           <Link href="/shop" className={navLink}>
             {labels.shop}
           </Link>
           {categoryLinks.map((l, i) => (
-            <Link key={l.href} href={l.href} className={cn(navLink, i >= 4 && "hidden xl:inline-flex")}>
+            <Link key={l.href} href={l.href} className={cn(navLink, i >= 5 ? "hidden" : i >= 3 ? "hidden xl:inline-flex" : undefined)}>
               {l.label}
             </Link>
           ))}

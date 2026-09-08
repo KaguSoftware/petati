@@ -390,6 +390,630 @@
         "noPayment": "No payment is attached to this order.",
         "refundTooLarge": "The amount exceeds what can still be refunded."
       }
+    },
+    "discountType": {
+      "percent": "Percentage",
+      "fixed": "Fixed amount",
+      "free_shipping": "Free shipping"
+    },
+    "customers": {
+      "name": "Customer",
+      "email": "Email",
+      "phone": "Phone",
+      "orders": "Orders",
+      "spent": "Spent",
+      "marketing": "Marketing",
+      "marketingYes": "Subscribed",
+      "marketingNo": "Not subscribed",
+      "joined": "Joined",
+      "lastOrder": "Last order",
+      "never": "Never",
+      "searchPlaceholder": "Search by name or email…",
+      "filterMarketing": "Marketing",
+      "filterAll": "All customers",
+      "filterSubscribed": "Subscribed only",
+      "filterUnsubscribed": "Not subscribed",
+      "guest": "Guest",
+      "account": "Has account",
+      "details": "Details",
+      "fullName": "Full name",
+      "acceptsMarketing": "Accepts marketing emails",
+      "notes": "Internal notes",
+      "notesPlaceholder": "Visible to staff only",
+      "addresses": "Addresses",
+      "noAddresses": "No saved addresses.",
+      "default": "Default",
+      "ordersTitle": "Orders",
+      "noOrders": "No orders yet.",
+      "readOnly": "You can view this customer but not edit it.",
+      "scope": "Deleting and merging customers is not available yet."
+    },
+    "coupons": {
+      "code": "Code",
+      "type": "Type",
+      "value": "Value",
+      "minSubtotal": "Min. subtotal",
+      "uses": "Uses",
+      "unlimited": "∞",
+      "window": "Valid",
+      "always": "Always",
+      "from": "From {date}",
+      "until": "Until {date}",
+      "between": "{from} – {to}",
+      "active": "Active",
+      "new": "New coupon",
+      "edit": "Edit coupon",
+      "usage": "Usage",
+      "delete": "Delete coupon",
+      "deleteConfirm": "Delete coupon {code}?",
+      "deleteDescription": "This cannot be undone. Coupons that were already redeemed cannot be deleted.",
+      "searchPlaceholder": "Search by code…",
+      "percentValue": "{value} %",
+      "form": {
+        "code": "Code",
+        "codeHint": "3–30 characters: letters, digits, - and _. Customers type this at checkout.",
+        "type": "Discount type",
+        "percent": "Percentage off",
+        "amount": "Amount off",
+        "freeShipping": "Shipping is free when this coupon is applied.",
+        "minSubtotal": "Minimum subtotal",
+        "minSubtotalHint": "Leave empty for no minimum.",
+        "maxUses": "Total uses",
+        "maxUsesHint": "Leave empty for unlimited.",
+        "maxUsesPerCustomer": "Uses per customer",
+        "startsAt": "Starts on",
+        "endsAt": "Ends on",
+        "isActive": "Active",
+        "isActiveHint": "Inactive coupons are rejected at checkout."
+      },
+      "usagePage": {
+        "title": "Coupon usage",
+        "summary": "{count, plural, =0 {No redemptions yet} one {# redemption} other {# redemptions}}",
+        "order": "Order",
+        "customer": "Customer",
+        "amount": "Discount",
+        "date": "Date",
+        "empty": "This coupon has not been used yet.",
+        "totalDiscount": "Total discount given"
+      },
+      "errors": {
+        "hasUses": "This coupon has already been redeemed and cannot be deleted. Deactivate it instead.",
+        "codeFormat": "Use 3–30 letters, digits, - or _.",
+        "dateOrder": "The end date must be after the start date.",
+        "percentRange": "Enter a percentage between 1 and 100."
+      }
+    },
+    "reviews": {
+      "product": "Product",
+      "review": "Review",
+      "author": "Author",
+      "anonymous": "Anonymous",
+      "verified": "Verified purchase",
+      "rating": "Rating",
+      "approve": "Approve",
+      "reject": "Reject",
+      "delete": "Delete review",
+      "deleteConfirm": "Delete this review?",
+      "deleteDescription": "The review is removed permanently and the product rating is recalculated.",
+      "empty": "No {status} reviews.",
+      "emptyHint": "Reviews customers submit on the storefront appear here for moderation.",
+      "noTitle": "(no title)",
+      "approvedToast": "Review approved",
+      "rejectedToast": "Review rejected"
+    },
+    "finance": {
+      "subtitle": "Sales, costs and expenses for the selected period.",
+      "expensesSubtitle": "Record what the store spends and keep receipts in one place.",
+      "period": "Showing {period}",
+      "manageExpenses": "Manage expenses",
+      "addExpense": "Add expense",
+      "editExpense": "Edit expense",
+      "deleteExpense": "Delete this expense?",
+      "deleteExpenseHint": "The record is removed from reports. An uploaded receipt file stays in storage.",
+      "kpi": {
+        "gross": "Gross sales",
+        "paidGross": "Paid revenue",
+        "paidHint": "Orders that were paid",
+        "refunds": "Refunds",
+        "cogs": "Cost of goods",
+        "cogsHint": "From variant unit costs",
+        "expenses": "Expenses",
+        "expensesHint": "{count, plural, =1 {1 entry} other {# entries}}",
+        "net": "Net",
+        "netHint": "Paid − refunds − COGS − expenses",
+        "margin": "Net margin",
+        "marginHint": "Net as a share of paid revenue",
+        "noPaid": "No paid revenue in this period",
+        "orders": "{count, plural, =1 {1 order} other {# orders}}"
+      },
+      "dailySales": {
+        "title": "Sales by day",
+        "day": "Day",
+        "orders": "Orders",
+        "gross": "Gross",
+        "paidGross": "Paid",
+        "refunds": "Refunds",
+        "cogs": "COGS",
+        "empty": "No orders in this period."
+      },
+      "margins": {
+        "title": "Top products by margin",
+        "allTime": "All-time figures; the date range does not apply.",
+        "product": "Product",
+        "units": "Units",
+        "revenue": "Revenue",
+        "cogs": "COGS",
+        "margin": "Margin",
+        "marginPct": "Margin %",
+        "empty": "No paid orders yet."
+      },
+      "byCategory": {
+        "title": "Expenses by category",
+        "uncategorized": "Uncategorised",
+        "total": "Total expenses",
+        "empty": "No expenses recorded in this period.",
+        "count": "{count, plural, =1 {1 entry} other {# entries}}"
+      },
+      "table": {
+        "date": "Date",
+        "category": "Category",
+        "vendor": "Vendor",
+        "note": "Note",
+        "amount": "Amount",
+        "receipt": "Receipt",
+        "viewReceipt": "View receipt",
+        "actions": "Actions",
+        "empty": "No expenses yet",
+        "emptyHint": "Add your first expense or widen the date range.",
+        "allCategories": "All categories",
+        "filterCategory": "Filter by category",
+        "searchPlaceholder": "Search vendor or note…"
+      },
+      "form": {
+        "description": "Amounts are in the store currency and count against the day they were spent.",
+        "amount": "Amount",
+        "date": "Date",
+        "category": "Category",
+        "noCategory": "No category",
+        "vendor": "Vendor",
+        "vendorPlaceholder": "Supplier, courier, platform…",
+        "note": "Note",
+        "notePlaceholder": "What was this for?",
+        "receipt": "Receipt",
+        "receiptHint": "Image or PDF, up to 10 MB.",
+        "uploadReceipt": "Upload receipt",
+        "replaceReceipt": "Replace receipt",
+        "uploading": "Uploading…"
+      },
+      "categories": {
+        "title": "Categories",
+        "hint": "Group expenses for the overview. Deleting a category keeps its expenses.",
+        "add": "Add category",
+        "edit": "Rename category",
+        "name": "Name",
+        "sortOrder": "Order",
+        "delete": "Delete “{name}”?",
+        "deleteHint": "Its expenses become uncategorised.",
+        "empty": "No categories yet."
+      },
+      "errors": {
+        "uploadFailed": "The receipt could not be uploaded.",
+        "tooLarge": "The file is larger than 10 MB."
+      }
+    },
+    "products": {
+      "new": "New product",
+      "newHint": "Save the details first; variants and images unlock right after.",
+      "name": "Name",
+      "slug": "URL slug",
+      "slugHint": "Lowercase letters, digits and dashes. Used in the product URL.",
+      "brand": "Brand",
+      "tags": "Tags",
+      "tagsHint": "Comma separated. The tag “new” shows the New badge.",
+      "featured": "Featured",
+      "categories": "Categories",
+      "noCategories": "No categories yet. Manage them under",
+      "price": "Price",
+      "stock": "Stock",
+      "variants": "Variants",
+      "variantsCount": "· {count, plural, =1 {1 variant} other {# variants}}",
+      "untracked": "Not tracked",
+      "updated": "Updated",
+      "searchPlaceholder": "Search products by name…",
+      "allCategories": "All categories",
+      "filterCategory": "Filter by category",
+      "details": "Details",
+      "seo": "Search engine listing",
+      "seoTitle": "SEO title",
+      "seoDescription": "SEO description",
+      "shortDescription": "Short description",
+      "description": "Description",
+      "emptyHint": "Create your first product or adjust the filters.",
+      "actions": {
+        "viewStorefront": "View on storefront",
+        "activate": "Set active",
+        "draft": "Move to draft",
+        "archive": "Archive"
+      },
+      "delete": {
+        "title": "Delete this product?",
+        "description": "Variants, images and stock history are removed permanently. Products that were ordered can only be archived."
+      },
+      "errors": {
+        "hasOrders": "This product appears in orders, so it cannot be deleted. Archive it instead.",
+        "tooManyVariants": "Too many variants would be created (limit 200). Reduce the option values.",
+        "variantHasOrders": "This variant appears in orders and cannot be deleted. Deactivate it instead.",
+        "variantInCarts": "This variant is in a shopper's cart. Deactivate it instead of deleting."
+      },
+      "fieldErrors": {
+        "slugFormat": "Only lowercase letters, digits and dashes.",
+        "optionNameRequired": "Every option needs a name in the default language.",
+        "optionValuesRequired": "Every option needs at least one value.",
+        "optionValueRequired": "Every value needs a label in the default language."
+      },
+      "options": {
+        "title": "Options",
+        "hint": "Size, colour… Save the options, then generate the variant combinations.",
+        "name": "Option",
+        "namePlaceholder": "e.g. Size",
+        "values": "Values",
+        "value": "Value",
+        "swatch": "Swatch colour",
+        "addValue": "Add value",
+        "add": "Add option",
+        "save": "Save options",
+        "generate": "Generate variants",
+        "saveFirst": "Save the options first.",
+        "none": "No options: the product has a single variant."
+      },
+      "variant": {
+        "defaultLabel": "Default variant",
+        "newVariant": "New variant",
+        "add": "Add variant",
+        "empty": "No variants yet. Add one so the product can be sold.",
+        "emptyGenerate": "No variants yet. Generate them from the options above.",
+        "default": "Default",
+        "sku": "SKU",
+        "barcode": "Barcode",
+        "price": "Price",
+        "compareAt": "Compare-at price",
+        "cost": "Cost price",
+        "weight": "Weight (g)",
+        "initialStock": "Initial stock",
+        "trackInventory": "Track inventory",
+        "allowBackorder": "Allow backorders",
+        "isDefault": "Default variant",
+        "isActive": "Active",
+        "delete": {
+          "title": "Delete this variant?",
+          "description": "Its stock history is removed. Variants that were ordered or sit in carts cannot be deleted."
+        },
+        "errors": {
+          "variantHasOrders": "This variant appears in orders and cannot be deleted. Deactivate it instead.",
+          "variantInCarts": "This variant is in a shopper's cart. Deactivate it instead of deleting."
+        }
+      },
+      "images": {
+        "title": "Images",
+        "hint": "The first image is the cover. PNG, JPG or WebP up to 5 MB.",
+        "empty": "No images yet.",
+        "added": "Image added",
+        "primary": "Cover",
+        "noAlt": "No alt text",
+        "moveUp": "Move earlier",
+        "moveDown": "Move later",
+        "editAlt": "Edit image details",
+        "altHint": "Alt text describes the image for screen readers and search engines.",
+        "alt": "Alt text",
+        "variant": "Shown for variant",
+        "anyVariant": "All variants",
+        "delete": {
+          "title": "Delete this image?",
+          "description": "The file is removed from storage as well."
+        }
+      },
+      "upload": {
+        "button": "Upload image",
+        "uploading": "Uploading {done}/{total}…",
+        "errors": {
+          "type": "{name} is not an image.",
+          "size": "{name} is larger than 5 MB.",
+          "failed": "Could not upload {name}."
+        }
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "hint": "Group products for navigation. Nested categories show under their parent.",
+      "new": "New category",
+      "edit": "Edit category",
+      "dialogHint": "The name is required in the store's default language.",
+      "name": "Name",
+      "description": "Description",
+      "slug": "URL slug",
+      "parent": "Parent",
+      "noParent": "No parent (top level)",
+      "sortOrder": "Sort order",
+      "image": "Image",
+      "replaceImage": "Replace image",
+      "active": "Visible in the storefront",
+      "products": "Products",
+      "empty": "No categories yet",
+      "emptyHint": "Create categories to organise the catalogue.",
+      "delete": {
+        "title": "Delete this category?",
+        "description": "{count, plural, =0 {No products are linked.} =1 {1 product loses this category.} other {# products lose this category.}} Sub-categories move to the top level."
+      }
+    },
+    "inventory": {
+      "subtitle": "Stock per variant. Adjustments are recorded as movements.",
+      "product": "Product",
+      "sku": "SKU",
+      "stock": "In stock",
+      "threshold": "Threshold",
+      "untracked": "Not tracked",
+      "tracking": "Tracking",
+      "backorder": "Backorders",
+      "history": "Movement history",
+      "adjust": "Adjust stock",
+      "adjustTitle": "Adjust stock",
+      "mode": {
+        "delta": "Add or remove",
+        "deltaHint": "Relative change, e.g. +10 received or −2 damaged.",
+        "set": "Set exact count",
+        "setHint": "After a physical count. The difference is recorded."
+      },
+      "delta": "Change",
+      "newQuantity": "New quantity",
+      "reason": "Reason",
+      "note": "Note",
+      "notePlaceholder": "Optional, e.g. supplier invoice number",
+      "preview": "{from} → {to}",
+      "apply": "Apply",
+      "searchPlaceholder": "Search by product name or SKU…",
+      "lowOnly": "Low stock only",
+      "lowBanner": "{count} tracked variants are at or below the threshold of {threshold}.",
+      "viewLow": "Show low stock",
+      "allGood": "Stock looks healthy",
+      "allGoodHint": "No tracked variant is at or below the low-stock threshold.",
+      "showAll": "Show all stock",
+      "movementsHint": "Every change to stock, newest first.",
+      "allReasons": "All reasons",
+      "filteredBy": "Filtered by",
+      "clearFilter": "Clear filter",
+      "actor": "By",
+      "order": "Order",
+      "system": "System",
+      "noMovements": "No movements yet",
+      "noMovementsHint": "Sales, returns and manual adjustments will appear here.",
+      "fieldErrors": {
+        "zeroDelta": "The quantity would not change."
+      }
+    },
+    "stockReason": {
+      "initial": "Initial stock",
+      "purchase": "Purchase",
+      "sale": "Sale",
+      "return": "Return",
+      "adjustment": "Adjustment",
+      "damaged": "Damaged",
+      "correction": "Correction"
+    },
+    "design": {
+      "description": "Colours, shape, announcement and the layout of every storefront section.",
+      "pickColor": "Pick a colour",
+      "branding": {
+        "logo": "Logo",
+        "logoHint": "PNG, JPG, WebP or SVG up to 2 MB. Shown in the storefront header.",
+        "favicon": "Favicon",
+        "faviconHint": "Square PNG or ICO up to 512 KB. Shown in the browser tab.",
+        "tooLarge": "File is too large (max {max} KB).",
+        "uploadFailed": "Upload failed. Please try again.",
+        "replace": "Replace"
+      },
+      "colors": {
+        "title": "Colours",
+        "description": "Six-digit hex values. Foreground colours are used for text on the matching background.",
+        "primary": "Primary",
+        "primaryForeground": "Primary text",
+        "accent": "Accent",
+        "accentForeground": "Accent text",
+        "background": "Background",
+        "foreground": "Text",
+        "muted": "Muted background",
+        "mutedForeground": "Muted text"
+      },
+      "shape": {
+        "title": "Shape & type",
+        "description": "Corner radius for buttons, cards and inputs; fonts for headings and body text.",
+        "radius": "Corner radius",
+        "radiusPresets": {
+          "none": "Square",
+          "small": "Subtle",
+          "medium": "Rounded",
+          "large": "Pill"
+        },
+        "font": {
+          "heading": "Heading font",
+          "body": "Body font"
+        },
+        "fontNote": "Font choices are saved now and will be applied to the storefront in a later release."
+      },
+      "announcement": {
+        "title": "Announcement bar",
+        "description": "A short line shown above the navigation. Leave empty to hide it.",
+        "placeholder": "Free shipping on orders over 500 ₺"
+      },
+      "sections": {
+        "title": "Section layouts",
+        "description": "Pick a design for each part of the storefront. More layouts are on the way.",
+        "keys": {
+          "announcementBar": "Announcement bar",
+          "navbar": "Navigation bar",
+          "hero": "Hero",
+          "categoryBanner": "Category banner",
+          "productGrid": "Product grid",
+          "productCard": "Product card",
+          "productPage": "Product page",
+          "cartDrawer": "Cart",
+          "checkout": "Checkout",
+          "reviews": "Reviews",
+          "newsletter": "Newsletter",
+          "footer": "Footer"
+        }
+      },
+      "variants": {
+        "minimal": "Minimal",
+        "bold": "Bold",
+        "editorial": "Editorial",
+        "playful": "Playful"
+      },
+      "preview": {
+        "title": "Live preview",
+        "openStorefront": "Open storefront",
+        "harness": "Section harness",
+        "navShop": "Shop",
+        "navAbout": "About",
+        "heroTitle": "Everything your pet loves",
+        "heroText": "Toys, beds, bowls and treats picked for happy companions.",
+        "primaryButton": "Shop now",
+        "outlineButton": "Learn more",
+        "badge": "New",
+        "productName": "Rope tug toy",
+        "productPrice": "249,00 ₺"
+      },
+      "unsaved": "You have unsaved changes.",
+      "allSaved": "All changes saved.",
+      "reset": "Discard changes"
+    },
+    "settings": {
+      "description": "Store identity, commerce rules, content pages and shipping.",
+      "nav": {
+        "label": "Settings sections",
+        "general": "General",
+        "commerce": "Commerce",
+        "pages": "Pages",
+        "shipping": "Shipping"
+      },
+      "general": {
+        "identity": "Identity",
+        "identityHint": "How the store presents itself to shoppers.",
+        "name": "Store name",
+        "tagline": "Tagline",
+        "taglineHint": "Shown under the home page title and in the footer.",
+        "contact": "Contact",
+        "contactHint": "Shown in the footer and used for customer emails.",
+        "contactEmail": "Contact email",
+        "contactPhone": "Contact phone",
+        "emailFrom": "Sender for emails",
+        "emailFromHint": "Use “Name '<'address'>'” or a bare address. The domain must be verified with your email provider.",
+        "localisation": "Language & time",
+        "localisationHint": "The default language is used for links without a language prefix.",
+        "timezone": "Time zone",
+        "defaultLocale": "Default language",
+        "enabledLocales": "Available languages",
+        "enabledLocalesHint": "Shoppers can switch between these languages. The default cannot be turned off.",
+        "default": "default"
+      },
+      "commerce": {
+        "pricing": "Pricing & tax",
+        "pricingHint": "Applies to every product and order.",
+        "currency": "Currency",
+        "currencyHint": "Changing the currency does not convert existing prices.",
+        "taxRate": "Tax rate (%)",
+        "taxRateHint": "Applied at checkout, e.g. 20 for 20% VAT.",
+        "pricesIncludeTax": "Prices include tax",
+        "pricesIncludeTaxHint": "When on, the tax is shown as part of the price instead of being added at checkout.",
+        "inventory": "Inventory",
+        "inventoryHint": "Alerts and thresholds for stock.",
+        "lowStock": "Low stock threshold",
+        "lowStockHint": "Variants at or below this quantity are flagged as low stock."
+      },
+      "pages": {
+        "title": "Content pages",
+        "description": "Plain text for the legal and about pages, per language. Blank lines start new paragraphs.",
+        "keys": {
+          "privacy": "Privacy policy",
+          "terms": "Terms of service",
+          "about": "About us"
+        },
+        "placeholder": "Write the page content…"
+      },
+      "shipping": {
+        "hint": "Rates are offered at checkout when the shipping country matches. Leave countries empty to apply everywhere.",
+        "add": "Add rate",
+        "name": "Name",
+        "rate": "Rate",
+        "freeOver": "Free over",
+        "freeOverHint": "Order subtotal from which shipping is free. Leave empty to never be free.",
+        "countries": "Countries",
+        "countriesHint": "Leave empty to offer this rate everywhere.",
+        "countriesPlaceholder": "All countries",
+        "allCountries": "All countries",
+        "days": "Delivery days",
+        "minDays": "Min. days",
+        "maxDays": "Max. days",
+        "sortOrder": "Sort order",
+        "deleteTitle": "Delete shipping rate?",
+        "deleteDescription": "“{name}” will no longer be offered at checkout. Existing orders are not affected.",
+        "emptyTitle": "No shipping rates yet",
+        "emptyHint": "Shoppers cannot check out until at least one active rate exists.",
+        "editTitle": "Edit shipping rate",
+        "newTitle": "New shipping rate",
+        "formHint": "Give the rate a name in each language your store offers."
+      },
+      "payments": {
+        "title": "Payments",
+        "description": "How shoppers pay for their orders.",
+        "manual": "Manual payment",
+        "manualHint": "Orders wait for an offline payment (bank transfer, cash) and you mark them as paid.",
+        "active": "Active",
+        "iyzicoHint": "Card payments via iyzico will be available once credentials are configured.",
+        "comingSoon": "Coming soon"
+      },
+      "domains": {
+        "title": "Domains",
+        "description": "This store is served at {slug}. Custom domains are managed with the store list.",
+        "manage": "Manage domains"
+      },
+      "fieldErrors": {
+        "defaultLocaleMustBeEnabled": "The default language must be one of the available languages.",
+        "maxBeforeMin": "Maximum days must be at least the minimum."
+      }
+    },
+    "staff": {
+      "description": "People who can sign in to this admin and what they may do.",
+      "member": "Member",
+      "role": "Role",
+      "joined": "Joined",
+      "noName": "No name yet",
+      "you": "you",
+      "remove": "Remove",
+      "removeTitle": "Remove from staff?",
+      "removeDescription": "{name} will lose access to this store's admin immediately.",
+      "emptyTitle": "No staff yet",
+      "emptyHint": "Invite colleagues by email. Managers can change everything in the store; staff handle orders and stock.",
+      "invite": {
+        "button": "Invite",
+        "title": "Invite a team member",
+        "description": "If they already have an account they get access right away; otherwise an account is created and they receive an invitation email (or can sign in with Google on that address).",
+        "email": "Email",
+        "role": "Role",
+        "roleHint": "Managers can change everything in the store; staff handle orders and stock only.",
+        "submit": "Send invite",
+        "sending": "Sending…",
+        "sent": "Team member added"
+      },
+      "owners": {
+        "title": "Platform owners",
+        "description": "Owners have full access to every store and cannot be managed here."
+      },
+      "errors": {
+        "alreadyMember": "This person is already on the team.",
+        "inviteFailed": "The invitation email could not be sent. Check the address and try again.",
+        "isOwner": "This person is a platform owner and already has access.",
+        "self": "You cannot change your own membership."
+      }
     }
   },
   "shop": {
@@ -410,5 +1034,243 @@
     "shippingTo": "Shipping to",
     "contact": "Contact",
     "tracking": "Tracking"
+  },
+  "stores": {
+    "title": "Stores",
+    "subtitle": "Every storefront running on this platform.",
+    "create": "Create store",
+    "empty": "No stores yet",
+    "emptyHint": "Create your first store to get going.",
+    "created": "Store “{slug}” is ready",
+    "defaultStore": "Default",
+    "columns": {
+      "store": "Store",
+      "slug": "Slug",
+      "domain": "Domain",
+      "currency": "Currency",
+      "locales": "Languages",
+      "status": "Status",
+      "created": "Created"
+    },
+    "actions": {
+      "menu": "Store actions",
+      "openAdmin": "Open admin",
+      "openStorefront": "Open storefront",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "domains": "Domains",
+      "delete": "Delete store"
+    },
+    "activate": {
+      "title": "Activate {name}?",
+      "description": "Shoppers will be able to reach the storefront again."
+    },
+    "deactivate": {
+      "title": "Deactivate {name}?",
+      "description": "The storefront goes offline for shoppers. Admin access stays as it is."
+    },
+    "delete": {
+      "title": "Delete {name}?",
+      "description": "This permanently removes the store with all its products, orders, customers and files. This cannot be undone.",
+      "confirmLabel": "Type the slug to confirm",
+      "confirm": "Delete store"
+    },
+    "domains": {
+      "title": "Domains for {name}",
+      "description": "Custom hostnames that resolve to this store. The subdomain always works.",
+      "hostname": "Hostname",
+      "placeholder": "shop.example.com",
+      "add": "Add domain",
+      "primary": "Primary",
+      "setPrimary": "Make primary",
+      "remove": "Remove",
+      "none": "No custom domains yet.",
+      "verified": "Verified",
+      "unverified": "Awaiting DNS",
+      "makePrimary": "Use as the primary domain",
+      "dns": "Point a CNAME record for {hostname} to {target}."
+    },
+    "errors": {
+      "defaultStore": "The default store cannot be changed this way.",
+      "slugMismatch": "The slug you typed does not match.",
+      "logoUpload": "The logo could not be uploaded. Nothing was created — please try again."
+    },
+    "fieldErrors": {
+      "required": "Required",
+      "invalid": "Invalid value",
+      "tooShort": "Too short",
+      "tooLong": "Too long",
+      "reserved": "This name is reserved",
+      "taken": "Already in use",
+      "atLeastOne": "Choose at least one language",
+      "includesDefault": "Enabled languages must include the default language",
+      "rootDomain": "Addresses under the platform domain use the subdomain instead",
+      "logoTooLarge": "The logo must be 2 MB or smaller",
+      "logoType": "Use a PNG, JPEG, WebP or SVG file"
+    },
+    "wizard": {
+      "title": "Create store",
+      "subtitle": "Set up a new storefront in a few steps. Nothing is saved until the last step.",
+      "back": "Back",
+      "next": "Continue",
+      "submit": "Create store",
+      "submitting": "Creating…",
+      "edit": "Edit",
+      "stepOf": "Step {step} of {total}",
+      "errorBanner": "Some fields need attention.",
+      "genericError": "The store could not be created.",
+      "previewLinks": "Preview variants (dev only)"
+    },
+    "steps": {
+      "basics": "Basics",
+      "localesMoney": "Languages & money",
+      "branding": "Branding",
+      "design": "Design",
+      "contact": "Contact",
+      "domain": "Domain",
+      "review": "Review"
+    },
+    "basics": {
+      "name": "Store name",
+      "namePlaceholder": "e.g. Pati Pet Shop",
+      "slug": "Slug",
+      "slugHint": "Lowercase letters, digits and dashes. Becomes the subdomain.",
+      "slugPreview": "Storefront address",
+      "slugChecking": "Checking…",
+      "slugAvailable": "Available",
+      "slugTaken": "Already taken",
+      "slugReserved": "Reserved",
+      "slugInvalid": "Not a valid slug",
+      "tagline": "Tagline",
+      "taglinePlaceholder": "A short line shown under the name"
+    },
+    "localesMoney": {
+      "defaultLocale": "Default language",
+      "enabledLocales": "Enabled languages",
+      "enabledLocalesHint": "The default language is always enabled.",
+      "currency": "Currency",
+      "taxRate": "Tax rate (%)",
+      "taxRateHint": "Applied at checkout. Stored in basis points.",
+      "pricesIncludeTax": "Prices include tax",
+      "pricesIncludeTaxHint": "When on, the tax is part of the displayed price.",
+      "lowStock": "Low-stock threshold",
+      "lowStockHint": "Variants at or below this quantity are flagged in inventory."
+    },
+    "branding": {
+      "logo": "Logo",
+      "logoHint": "PNG, JPEG, WebP or SVG up to 2 MB.",
+      "chooseFile": "Choose file",
+      "removeLogo": "Remove",
+      "dropHere": "Drop an image here or",
+      "colors": "Colours",
+      "colorNames": {
+        "primary": "Primary",
+        "primaryForeground": "Text on primary",
+        "accent": "Accent",
+        "accentForeground": "Text on accent",
+        "background": "Background",
+        "foreground": "Text",
+        "muted": "Muted surface",
+        "mutedForeground": "Muted text"
+      },
+      "radius": "Corner radius",
+      "radiusNames": {
+        "none": "Sharp",
+        "small": "Subtle",
+        "medium": "Rounded",
+        "large": "Pill"
+      },
+      "preview": "Live preview",
+      "previewHeading": "Everything your pet loves",
+      "previewBody": "Toys, treats and beds picked by people who share their sofa with a dog.",
+      "previewPrimary": "Shop now",
+      "previewOutline": "Learn more",
+      "previewCardTitle": "Rope tug toy",
+      "previewCardBody": "Durable cotton, machine washable.",
+      "previewBadge": "New"
+    },
+    "design": {
+      "preset": "Design language",
+      "presetHint": "Applies to every section. You can override single sections below.",
+      "comingSoon": "Coming soon",
+      "sections": "Per-section overrides",
+      "sectionsHint": "Only the minimal variant is available today; the others arrive with the next theme release.",
+      "announcement": "Announcement bar",
+      "announcementHint": "Optional short message at the very top of the storefront, per language. Leave empty to hide.",
+      "announcementPlaceholder": "Free delivery over 500 TRY",
+      "variants": {
+        "minimal": {
+          "name": "Minimal",
+          "description": "Calm, airy layouts with lots of white space."
+        },
+        "bold": {
+          "name": "Bold",
+          "description": "Large type, strong colour blocks."
+        },
+        "editorial": {
+          "name": "Editorial",
+          "description": "Magazine-style grids and serif headings."
+        },
+        "playful": {
+          "name": "Playful",
+          "description": "Rounded shapes, stickers and motion."
+        }
+      },
+      "sectionNames": {
+        "announcementBar": "Announcement bar",
+        "navbar": "Navigation bar",
+        "hero": "Hero",
+        "categoryBanner": "Category banner",
+        "productGrid": "Product grid",
+        "productCard": "Product card",
+        "productPage": "Product page",
+        "cartDrawer": "Cart",
+        "checkout": "Checkout",
+        "reviews": "Reviews",
+        "newsletter": "Newsletter",
+        "footer": "Footer"
+      }
+    },
+    "contact": {
+      "email": "Contact email",
+      "emailHint": "Shown in the footer and used for replies.",
+      "phone": "Contact phone",
+      "emailFrom": "Sender for transactional email",
+      "emailFromHint": "“Store name '<noreply@example.com>'” or a bare address. Leave empty to use the platform default."
+    },
+    "domain": {
+      "subdomain": "Subdomain",
+      "subdomainHint": "Always available; created automatically from the slug.",
+      "custom": "Custom domain (optional)",
+      "customHint": "A hostname you own, for example shop.example.com.",
+      "customPlaceholder": "shop.example.com",
+      "checking": "Checking…",
+      "available": "Available",
+      "taken": "Already attached to another store",
+      "invalid": "Not a valid hostname",
+      "rootDomain": "Use the subdomain for addresses under the platform domain",
+      "dnsTitle": "DNS setup",
+      "dnsHint": "Create this record at your DNS provider. The domain starts resolving once it propagates; verification is marked manually for now.",
+      "dnsType": "Type",
+      "dnsName": "Name",
+      "dnsValue": "Value"
+    },
+    "review": {
+      "intro": "Check everything before creating the store.",
+      "notSet": "Not set",
+      "logoSet": "Logo uploaded",
+      "logoNone": "No logo",
+      "allSections": "All sections: {variant}",
+      "mixed": "Custom per section",
+      "pricesIncludeTax": "Prices include tax",
+      "pricesExcludeTax": "Prices exclude tax",
+      "lowStock": "Low stock at {n}",
+      "subdomainOnly": "Subdomain only"
+    },
+    "color": {
+      "pick": "Pick a colour",
+      "palette": "Palette",
+      "hex": "Hex value"
+    }
   }
 }
