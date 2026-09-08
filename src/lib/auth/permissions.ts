@@ -39,7 +39,16 @@ export function can(role: EffectiveRole | null | undefined, permission: Permissi
 }
 
 /** Admin navigation, filtered by permission at render time. */
-export const ADMIN_NAV: { key: string; href: string; permission: Permission; icon: string }[] = [
+export interface AdminNavItem {
+  key: string;
+  href: string;
+  permission: Permission;
+  icon: string;
+  /** Hidden unless the matching feature flag is on (checked server-side). */
+  gate?: "multiStore";
+}
+
+export const ADMIN_NAV: AdminNavItem[] = [
   { key: "dashboard", href: "/admin", permission: "orders.read", icon: "LayoutDashboard" },
   { key: "orders", href: "/admin/orders", permission: "orders.read", icon: "ShoppingBag" },
   { key: "products", href: "/admin/products", permission: "products.read", icon: "Package" },
@@ -51,4 +60,6 @@ export const ADMIN_NAV: { key: string; href: string; permission: Permission; ico
   { key: "design", href: "/admin/design", permission: "store.design", icon: "Palette" },
   { key: "staff", href: "/admin/staff", permission: "staff.manage", icon: "UserCog" },
   { key: "settings", href: "/admin/settings", permission: "store.settings", icon: "Settings" },
+  // SCOPE(multi-store, unpaid): hidden until the flag is on; owner-only by permission.
+  { key: "stores", href: "/admin/stores", permission: "store.create", icon: "Store", gate: "multiStore" },
 ];

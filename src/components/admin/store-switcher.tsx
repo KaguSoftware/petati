@@ -36,7 +36,7 @@ export function StoreSwitcher({
         });
       }}
     >
-      <SelectTrigger size="sm" aria-label={t("switchStore")} className="w-full">
+      <SelectTrigger size="sm" aria-label={t("nav.switchStore")} className="w-full">
         <SelectValue />
       </SelectTrigger>
       <SelectContent alignItemWithTrigger={false}>

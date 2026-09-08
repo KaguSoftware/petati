@@ -166,21 +166,133 @@
   },
   "admin": {
     "title": "Admin",
-    "dashboard": "Dashboard",
-    "orders": "Orders",
-    "products": "Products",
-    "inventory": "Inventory",
-    "customers": "Customers",
-    "coupons": "Coupons",
-    "reviews": "Reviews",
-    "finance": "Finance",
-    "design": "Design",
-    "settings": "Settings",
-    "staff": "Staff",
-    "stores": "Stores",
-    "createStore": "Create store",
-    "switchStore": "Switch store",
-    "forbidden": "You do not have access to this area."
+    "forbidden": "You do not have access to this area.",
+    "nav": {
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "products": "Products",
+      "inventory": "Inventory",
+      "customers": "Customers",
+      "coupons": "Coupons",
+      "reviews": "Reviews",
+      "finance": "Finance",
+      "design": "Design",
+      "staff": "Staff",
+      "settings": "Settings",
+      "stores": "Stores",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu",
+      "userMenu": "Account menu",
+      "profile": "Profile",
+      "signOut": "Sign out",
+      "switchStore": "Switch store",
+      "createStore": "Create store",
+      "storefront": "Open storefront"
+    },
+    "common": {
+      "actions": "Actions",
+      "search": "Search…",
+      "filter": "Filter",
+      "all": "All",
+      "none": "None",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "confirmDelete": "Delete permanently?",
+      "back": "Back",
+      "view": "View",
+      "status": "Status",
+      "date": "Date",
+      "dateRange": "Date range",
+      "from": "From",
+      "to": "To",
+      "page": "Page {page} of {pages}",
+      "noResults": "Nothing here yet",
+      "noResultsHint": "Try a different search or filter.",
+      "sortAsc": "Sort ascending",
+      "sortDesc": "Sort descending",
+      "required": "Required",
+      "invalid": "Invalid value",
+      "unique": "Already in use",
+      "upload": "Upload",
+      "remove": "Remove",
+      "active": "Active",
+      "inactive": "Inactive",
+      "yes": "Yes",
+      "no": "No",
+      "locale": "Language",
+      "translations": "Translations",
+      "comingSoon": "Coming soon",
+      "comingSoonHint": "This module is being built.",
+      "errors": {
+        "forbidden": "You do not have permission to do that.",
+        "failed": "Something went wrong. Please try again.",
+        "notFound": "Not found."
+      }
+    },
+    "roles": {
+      "owner": "Owner",
+      "manager": "Manager",
+      "staff": "Staff"
+    },
+    "crumbs": {
+      "new": "New",
+      "edit": "Edit",
+      "categories": "Categories",
+      "movements": "Stock movements",
+      "expenses": "Expenses",
+      "commerce": "Commerce",
+      "pages": "Pages",
+      "shipping": "Shipping"
+    },
+    "status": {
+      "order": {
+        "pending_payment": "Awaiting payment",
+        "paid": "Paid",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded"
+      },
+      "payment": {
+        "pending": "Pending",
+        "authorized": "Authorized",
+        "paid": "Paid",
+        "failed": "Failed",
+        "refunded": "Refunded",
+        "partially_refunded": "Partially refunded"
+      },
+      "product": {
+        "draft": "Draft",
+        "active": "Active",
+        "archived": "Archived"
+      },
+      "review": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "stock": {
+        "ok": "In stock",
+        "low": "Low stock",
+        "out": "Out of stock"
+      },
+      "coupon": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "expired": "Expired"
+      },
+      "store": {
+        "active": "Active",
+        "inactive": "Inactive"
+      }
+    }
   },
   "shop": {
     "title": "Shop",

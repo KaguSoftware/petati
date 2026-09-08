@@ -40,6 +40,7 @@ export interface StoreRow {
   theme: unknown;
   settings: Record<string, unknown>;
   is_active: boolean;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -50,6 +51,7 @@ export interface StoreDomainRow {
   hostname: string;
   is_primary: boolean;
   verified_at: string | null;
+  created_at: string;
 }
 
 export interface StoreMemberRow {

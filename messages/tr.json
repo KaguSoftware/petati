@@ -166,21 +166,133 @@
   },
   "admin": {
     "title": "Yönetim",
-    "dashboard": "Panel",
-    "orders": "Siparişler",
-    "products": "Ürünler",
-    "inventory": "Stok",
-    "customers": "Müşteriler",
-    "coupons": "Kuponlar",
-    "reviews": "Değerlendirmeler",
-    "finance": "Finans",
-    "design": "Tasarım",
-    "settings": "Ayarlar",
-    "staff": "Personel",
-    "stores": "Mağazalar",
-    "createStore": "Mağaza oluştur",
-    "switchStore": "Mağaza değiştir",
-    "forbidden": "Bu alana erişim yetkiniz yok."
+    "forbidden": "Bu alana erişim yetkiniz yok.",
+    "nav": {
+      "dashboard": "Panel",
+      "orders": "Siparişler",
+      "products": "Ürünler",
+      "inventory": "Stok",
+      "customers": "Müşteriler",
+      "coupons": "Kuponlar",
+      "reviews": "Değerlendirmeler",
+      "finance": "Finans",
+      "design": "Tasarım",
+      "staff": "Personel",
+      "settings": "Ayarlar",
+      "stores": "Mağazalar",
+      "openMenu": "Menüyü aç",
+      "closeMenu": "Menüyü kapat",
+      "userMenu": "Hesap menüsü",
+      "profile": "Profil",
+      "signOut": "Çıkış yap",
+      "switchStore": "Mağaza değiştir",
+      "createStore": "Mağaza oluştur",
+      "storefront": "Mağazayı aç"
+    },
+    "common": {
+      "actions": "İşlemler",
+      "search": "Ara…",
+      "filter": "Filtrele",
+      "all": "Tümü",
+      "none": "Yok",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor…",
+      "saved": "Kaydedildi",
+      "create": "Oluştur",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "cancel": "İptal",
+      "confirm": "Onayla",
+      "confirmDelete": "Kalıcı olarak silinsin mi?",
+      "back": "Geri",
+      "view": "Görüntüle",
+      "status": "Durum",
+      "date": "Tarih",
+      "dateRange": "Tarih aralığı",
+      "from": "Başlangıç",
+      "to": "Bitiş",
+      "page": "Sayfa {page} / {pages}",
+      "noResults": "Henüz bir şey yok",
+      "noResultsHint": "Farklı bir arama veya filtre deneyin.",
+      "sortAsc": "Artan sırala",
+      "sortDesc": "Azalan sırala",
+      "required": "Zorunlu",
+      "invalid": "Geçersiz değer",
+      "unique": "Zaten kullanımda",
+      "upload": "Yükle",
+      "remove": "Kaldır",
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "yes": "Evet",
+      "no": "Hayır",
+      "locale": "Dil",
+      "translations": "Çeviriler",
+      "comingSoon": "Çok yakında",
+      "comingSoonHint": "Bu modül hazırlanıyor.",
+      "errors": {
+        "forbidden": "Bunu yapmaya yetkiniz yok.",
+        "failed": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+        "notFound": "Bulunamadı."
+      }
+    },
+    "roles": {
+      "owner": "Sahip",
+      "manager": "Yönetici",
+      "staff": "Personel"
+    },
+    "crumbs": {
+      "new": "Yeni",
+      "edit": "Düzenle",
+      "categories": "Kategoriler",
+      "movements": "Stok hareketleri",
+      "expenses": "Giderler",
+      "commerce": "Ticaret",
+      "pages": "Sayfalar",
+      "shipping": "Kargo"
+    },
+    "status": {
+      "order": {
+        "pending_payment": "Ödeme bekliyor",
+        "paid": "Ödendi",
+        "processing": "Hazırlanıyor",
+        "shipped": "Kargolandı",
+        "delivered": "Teslim edildi",
+        "cancelled": "İptal edildi",
+        "refunded": "İade edildi"
+      },
+      "payment": {
+        "pending": "Bekliyor",
+        "authorized": "Onaylandı",
+        "paid": "Ödendi",
+        "failed": "Başarısız",
+        "refunded": "İade edildi",
+        "partially_refunded": "Kısmen iade edildi"
+      },
+      "product": {
+        "draft": "Taslak",
+        "active": "Aktif",
+        "archived": "Arşivlendi"
+      },
+      "review": {
+        "pending": "Bekliyor",
+        "approved": "Onaylandı",
+        "rejected": "Reddedildi"
+      },
+      "stock": {
+        "ok": "Stokta",
+        "low": "Stok az",
+        "out": "Tükendi"
+      },
+      "coupon": {
+        "active": "Aktif",
+        "inactive": "Pasif",
+        "expired": "Süresi doldu"
+      },
+      "store": {
+        "active": "Aktif",
+        "inactive": "Pasif"
+      }
+    }
   },
   "shop": {
     "title": "Mağaza",

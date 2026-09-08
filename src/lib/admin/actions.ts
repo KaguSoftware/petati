@@ -2,13 +2,19 @@
 
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { getRoleForStore } from "@/lib/auth/session";
+import { ForbiddenError, getRoleForStore } from "@/lib/auth/session";
+import { features } from "@/lib/env";
+import { ADMIN_STORE_COOKIE } from "./constants";
 
-/** Remember which store the admin is working on. Validated against the user's access. */
+/**
+ * Remember which store the admin is working on. Validated against the user's access.
+ * SCOPE(multi-store, unpaid): only meaningful when FEATURE_MULTI_STORE is on.
+ */
 export async function switchAdminStoreAction(storeId: string) {
-  const id = z.string().uuid().parse(storeId);
+  if (!features.multiStore()) throw new ForbiddenError("store.create");
+  const id = z.uuid().parse(storeId);
   const role = await getRoleForStore(id);
-  if (!role) throw new Error("Forbidden");
+  if (!role) throw new ForbiddenError("store.settings");
   const cookieStore = await cookies();
-  cookieStore.set("admin_store", id, { path: "/", sameSite: "lax", httpOnly: true });
+  cookieStore.set(ADMIN_STORE_COOKIE, id, { path: "/", sameSite: "lax", httpOnly: true });
 }

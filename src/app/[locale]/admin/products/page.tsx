@@ -5,14 +5,14 @@ import { PageHeader } from "@/components/admin/shared/page-header";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { requireAdminPage } from "@/lib/admin/context";
 
-// SCOPE(admin): dashboard KPIs land with the orders module. GROWS LATER → sales, orders, low stock widgets.
-export default async function AdminDashboard({ params }: PageProps<"/[locale]/admin">) {
+// SCOPE(admin): placeholder until the products module lands in this build. GROWS LATER → full module.
+export default async function ProductsPage({ params }: PageProps<"/[locale]/admin/products">) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("admin");
   return (
     <>
-      <PageHeader title={t("nav.dashboard")} />
+      <PageHeader title={t("nav.products")} />
       <Suspense fallback={<TableSkeleton />}>
         <Content locale={locale} />
       </Suspense>
@@ -21,7 +21,7 @@ export default async function AdminDashboard({ params }: PageProps<"/[locale]/ad
 }
 
 async function Content({ locale }: { locale: string }) {
-  await requireAdminPage(locale, "orders.read");
+  await requireAdminPage(locale, "products.read");
   const t = await getTranslations("admin.common");
   return <EmptyState title={t("comingSoon")} description={t("comingSoonHint")} />;
 }

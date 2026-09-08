@@ -57,7 +57,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
           accountSlot: <AccountButtonFallback />,
           cartSlot: <CartButtonFallback />,
         })}
-        <Label text={`${ta("design")} · ${v} · hero`} />
+        <Label text={`${ta("nav.design")} · ${v} · hero`} />
         {renderSection("hero", v, { title: t("heroTitle"), subtitle: t("heroSubtitle"), ctaLabel: t("shopNow"), ctaHref: "/shop", imageUrl: fixtureProducts[0].imageUrl })}
         <Label text="categoryBanner" />
         {renderSection("categoryBanner", v, { title: t("browseCategories"), categories: fixtureCategories })}

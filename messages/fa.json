@@ -166,21 +166,133 @@
   },
   "admin": {
     "title": "مدیریت",
-    "dashboard": "داشبورد",
-    "orders": "سفارش‌ها",
-    "products": "محصولات",
-    "inventory": "موجودی",
-    "customers": "مشتریان",
-    "coupons": "کدهای تخفیف",
-    "reviews": "نظرات",
-    "finance": "مالی",
-    "design": "طراحی",
-    "settings": "تنظیمات",
-    "staff": "کارکنان",
-    "stores": "فروشگاه‌ها",
-    "createStore": "ایجاد فروشگاه",
-    "switchStore": "تغییر فروشگاه",
-    "forbidden": "شما به این بخش دسترسی ندارید."
+    "forbidden": "شما به این بخش دسترسی ندارید.",
+    "nav": {
+      "dashboard": "داشبورد",
+      "orders": "سفارش‌ها",
+      "products": "محصولات",
+      "inventory": "موجودی",
+      "customers": "مشتریان",
+      "coupons": "کدهای تخفیف",
+      "reviews": "نظرات",
+      "finance": "مالی",
+      "design": "طراحی",
+      "staff": "کارکنان",
+      "settings": "تنظیمات",
+      "stores": "فروشگاه‌ها",
+      "openMenu": "باز کردن منو",
+      "closeMenu": "بستن منو",
+      "userMenu": "منوی حساب",
+      "profile": "پروفایل",
+      "signOut": "خروج",
+      "switchStore": "تغییر فروشگاه",
+      "createStore": "ایجاد فروشگاه",
+      "storefront": "مشاهده فروشگاه"
+    },
+    "common": {
+      "actions": "عملیات",
+      "search": "جستجو…",
+      "filter": "فیلتر",
+      "all": "همه",
+      "none": "هیچ",
+      "save": "ذخیره",
+      "saving": "در حال ذخیره…",
+      "saved": "ذخیره شد",
+      "create": "ایجاد",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "confirm": "تأیید",
+      "confirmDelete": "برای همیشه حذف شود؟",
+      "back": "بازگشت",
+      "view": "مشاهده",
+      "status": "وضعیت",
+      "date": "تاریخ",
+      "dateRange": "بازه زمانی",
+      "from": "از",
+      "to": "تا",
+      "page": "صفحه {page} از {pages}",
+      "noResults": "هنوز چیزی اینجا نیست",
+      "noResultsHint": "جستجو یا فیلتر دیگری را امتحان کنید.",
+      "sortAsc": "مرتب‌سازی صعودی",
+      "sortDesc": "مرتب‌سازی نزولی",
+      "required": "الزامی",
+      "invalid": "مقدار نامعتبر",
+      "unique": "قبلاً استفاده شده",
+      "upload": "بارگذاری",
+      "remove": "حذف",
+      "active": "فعال",
+      "inactive": "غیرفعال",
+      "yes": "بله",
+      "no": "خیر",
+      "locale": "زبان",
+      "translations": "ترجمه‌ها",
+      "comingSoon": "به‌زودی",
+      "comingSoonHint": "این بخش در حال ساخت است.",
+      "errors": {
+        "forbidden": "شما مجوز انجام این کار را ندارید.",
+        "failed": "مشکلی پیش آمد. دوباره تلاش کنید.",
+        "notFound": "یافت نشد."
+      }
+    },
+    "roles": {
+      "owner": "مالک",
+      "manager": "مدیر",
+      "staff": "کارمند"
+    },
+    "crumbs": {
+      "new": "جدید",
+      "edit": "ویرایش",
+      "categories": "دسته‌بندی‌ها",
+      "movements": "گردش موجودی",
+      "expenses": "هزینه‌ها",
+      "commerce": "فروش",
+      "pages": "صفحات",
+      "shipping": "ارسال"
+    },
+    "status": {
+      "order": {
+        "pending_payment": "در انتظار پرداخت",
+        "paid": "پرداخت شده",
+        "processing": "در حال آماده‌سازی",
+        "shipped": "ارسال شده",
+        "delivered": "تحویل شده",
+        "cancelled": "لغو شده",
+        "refunded": "بازپرداخت شده"
+      },
+      "payment": {
+        "pending": "در انتظار",
+        "authorized": "تأیید شده",
+        "paid": "پرداخت شده",
+        "failed": "ناموفق",
+        "refunded": "بازپرداخت شده",
+        "partially_refunded": "بازپرداخت جزئی"
+      },
+      "product": {
+        "draft": "پیش‌نویس",
+        "active": "فعال",
+        "archived": "بایگانی"
+      },
+      "review": {
+        "pending": "در انتظار",
+        "approved": "تأیید شده",
+        "rejected": "رد شده"
+      },
+      "stock": {
+        "ok": "موجود",
+        "low": "موجودی کم",
+        "out": "ناموجود"
+      },
+      "coupon": {
+        "active": "فعال",
+        "inactive": "غیرفعال",
+        "expired": "منقضی"
+      },
+      "store": {
+        "active": "فعال",
+        "inactive": "غیرفعال"
+      }
+    }
   },
   "shop": {
     "title": "فروشگاه",

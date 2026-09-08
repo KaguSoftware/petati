@@ -1,81 +1,80 @@
 "use client";
 
-import * as Icons from "lucide-react";
+import { ExternalLink, Store } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/i18n/navigation";
+import { LocaleSwitcher } from "@/components/locale-switcher";
+import { buttonVariants } from "@/components/ui/button";
+import { OverlayScroll } from "@/components/ui/overlay-scroll";
+import { Link } from "@/i18n/navigation";
 import { ADMIN_NAV, can } from "@/lib/auth/permissions";
 import type { EffectiveRole } from "@/lib/db/types";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { signOutAction } from "@/lib/auth/actions";
+import { AdminMobileNav } from "./admin-mobile-nav";
+import { AdminSidebarNav } from "./admin-sidebar-nav";
+import { Breadcrumbs } from "./shared/breadcrumbs";
 import { StoreSwitcher } from "./store-switcher";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { UserMenu } from "./user-menu";
 
-interface Props {
+export interface AdminShellProps {
   locale: string;
-  user: { name: string; email: string };
+  user: { name: string; email: string; avatarUrl: string | null };
   role: EffectiveRole;
   store: { id: string; name: string; slug: string; currency: string };
   /** Non-empty only for owners with FEATURE_MULTI_STORE on. */
   stores: { id: string; name: string }[];
+  /** SCOPE(multi-store, unpaid): shows the switcher, the Stores nav item and the create link. */
+  multiStore: boolean;
   children: React.ReactNode;
 }
 
-export function AdminShell({ locale, user, role, store, stores, children }: Props) {
+export function AdminShell({ locale, user, role, store, stores, multiStore, children }: AdminShellProps) {
   const t = useTranslations("admin");
-  const pathname = usePathname();
-  const nav = ADMIN_NAV.filter((item) => can(role, item.permission));
+  const nav = ADMIN_NAV.filter((item) => can(role, item.permission) && (!item.gate || (item.gate === "multiStore" && multiStore)));
+  const switcher = multiStore && stores.length > 0 ? (
+    <div className="flex flex-col gap-1.5">
+      <StoreSwitcher current={store.id} stores={stores} />
+      <Link href="/admin/stores/new" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "justify-start")}>
+        {t("nav.createStore")}
+      </Link>
+    </div>
+  ) : null;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-background">
       <aside className="hidden w-60 shrink-0 flex-col border-e bg-sidebar text-sidebar-foreground md:flex">
-        <div className="flex h-14 items-center gap-2 border-b px-4 font-semibold">
-          <Icons.Store className="size-5" />
+        <div className="flex h-14 shrink-0 items-center gap-2 border-b px-4 font-semibold">
+          <Store className="size-5 shrink-0" />
           <span className="truncate">{store.name}</span>
         </div>
-        {stores.length > 0 && (
-          <div className="border-b p-2">
-            <StoreSwitcher current={store.id} stores={stores} />
-          </div>
-        )}
-        <nav className="flex flex-1 flex-col gap-1 p-2">
-          {nav.map((item) => {
-            const Icon = (Icons as unknown as Record<string, Icons.LucideIcon>)[item.icon] ?? Icons.Circle;
-            const active = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.key}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
-                  active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "hover:bg-sidebar-accent/60",
-                )}
-              >
-                <Icon className="size-4" />
-                {t(item.key)}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="border-t p-3 text-xs text-muted-foreground">
-          <div className="truncate font-medium text-foreground">{user.name}</div>
-          <div className="truncate">{user.email}</div>
-          <div className="mt-1 uppercase tracking-wide">{role}</div>
+        {switcher && <div className="border-b p-2">{switcher}</div>}
+        <OverlayScroll className="flex-1">
+          <AdminSidebarNav items={nav} className="p-2" />
+        </OverlayScroll>
+        <div className="border-t p-2">
+          <a
+            href={`/${locale}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+          >
+            <ExternalLink className="size-4" />
+            {t("nav.storefront")}
+          </a>
         </div>
       </aside>
+
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 items-center justify-between gap-2 border-b px-4">
-          <div className="text-sm text-muted-foreground md:hidden">{store.name}</div>
-          <div className="ms-auto flex items-center gap-2">
-            <LocaleSwitcher />
-            <form action={signOutAction.bind(null, locale)}>
-              <Button variant="ghost" size="sm" type="submit">
-                <Icons.LogOut className="size-4" />
-              </Button>
-            </form>
+        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-background/85 px-3 backdrop-blur md:px-6">
+          <AdminMobileNav items={nav} storeName={store.name} switcher={switcher} />
+          <Breadcrumbs className="min-w-0 flex-1" />
+          <div className="flex items-center gap-1">
+            <LocaleSwitcher variant="compact" />
+            <UserMenu locale={locale} user={user} role={role} />
           </div>
         </header>
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        <main className="flex-1 p-4 md:p-6">
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">{children}</div>
+        </main>
       </div>
     </div>
   );
