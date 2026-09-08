@@ -3,9 +3,10 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { StoreRow } from "@/lib/db/types";
+import { heroFromSettings, type HeroContent } from "@/lib/theme/hero";
 import { parseTheme, type StoreTheme } from "@/lib/theme/types";
 
-export type Store = Omit<StoreRow, "theme"> & { theme: StoreTheme };
+export type Store = Omit<StoreRow, "theme"> & { theme: StoreTheme; hero: HeroContent };
 
 /** Cache profile for lookups that found nothing: seconds, not hours. */
 const MISS_LIFE = { stale: 5, revalidate: 10, expire: 60 } as const;
@@ -15,7 +16,7 @@ export function storeCacheTag(slug: string) {
 }
 
 function hydrate(row: StoreRow): Store {
-  return { ...row, theme: parseTheme(row.theme) };
+  return { ...row, theme: parseTheme(row.theme), hero: heroFromSettings(row.settings) };
 }
 
 /** Cached store lookup by slug. Invalidate with updateTag(storeCacheTag(slug)) after settings save. */

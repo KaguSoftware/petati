@@ -872,7 +872,7 @@
       },
       "sections": {
         "title": "Bölüm yerleşimleri",
-        "description": "Mağazanın her parçası için bir tasarım seçin. Yeni yerleşimler yolda.",
+        "description": "Vitrinin her bölümü için bir düzen seçin. Her seçenek sizin renklerinizle örnek ürünler kullanılarak çizilir; yandaki ana sayfa önizlemesi seçimlerinizi izler.",
         "keys": {
           "announcementBar": "Duyuru çubuğu",
           "navbar": "Gezinme çubuğu",
@@ -886,7 +886,9 @@
           "reviews": "Yorumlar",
           "newsletter": "Bülten",
           "footer": "Alt bilgi"
-        }
+        },
+        "picker": "Bölüm",
+        "selected": "Seçili"
       },
       "variants": {
         "minimal": "Sade",
@@ -898,19 +900,244 @@
         "title": "Canlı önizleme",
         "openStorefront": "Mağazayı aç",
         "harness": "Bölüm test sayfası",
-        "navShop": "Mağaza",
-        "navAbout": "Hakkında",
-        "heroTitle": "Evcil dostunuzun sevdiği her şey",
-        "heroText": "Mutlu dostlar için seçilmiş oyuncaklar, yataklar, mamalıklar ve ödüller.",
-        "primaryButton": "Alışverişe başla",
-        "outlineButton": "Daha fazla",
-        "badge": "Yeni",
-        "productName": "Halat çekiştirme oyuncağı",
-        "productPrice": "249,00 ₺"
+        "desktop": "Masaüstü",
+        "mobile": "Mobil",
+        "home": "Seçtiğiniz düzenlerle ana sayfa."
       },
       "unsaved": "Kaydedilmemiş değişiklikler var.",
       "allSaved": "Tüm değişiklikler kaydedildi.",
-      "reset": "Değişiklikleri geri al"
+      "reset": "Değişiklikleri geri al",
+      "layouts": {
+        "announcementBar": {
+          "minimal": {
+            "name": "İnce şerit",
+            "description": "Başlığın üstünde ortalanmış tek satır."
+          },
+          "bold": {
+            "name": "Kayan yazı",
+            "description": "Mesaj üstte tekrarlanarak kayar."
+          },
+          "editorial": {
+            "name": "Bant",
+            "description": "İki ince çizgi arasında, küçük etiketli ve başa hizalı satır."
+          },
+          "playful": {
+            "name": "Yüzen hap",
+            "description": "Üst kenarın hemen altında simgeli, yuvarlak bir hap."
+          }
+        },
+        "navbar": {
+          "minimal": {
+            "name": "Klasik",
+            "description": "Logo başta, bağlantılar ortada, simgeler sonda."
+          },
+          "bold": {
+            "name": "Katmanlı",
+            "description": "Üstte büyük ortalanmış logo, altında tam genişlikte kategori çubuğu."
+          },
+          "editorial": {
+            "name": "Bölünmüş",
+            "description": "Ortalanmış marka adının iki yanında bağlantılar."
+          },
+          "playful": {
+            "name": "Yüzen kapsül",
+            "description": "Her şey sayfanın üstünde yüzen yuvarlak bir kapsülün içinde."
+          }
+        },
+        "hero": {
+          "minimal": {
+            "name": "Tam genişlik görsel",
+            "description": "Fotoğraf tüm genişliği kaplar; başlık ve düğme üzerinde durur."
+          },
+          "bold": {
+            "name": "Renk bloğu",
+            "description": "Düz marka rengi bant üzerinde metin, yanında çerçeveli fotoğraf."
+          },
+          "editorial": {
+            "name": "Katmanlı başlık",
+            "description": "Önce büyük başlık, altında geniş fotoğraf."
+          },
+          "playful": {
+            "name": "Kutu kart",
+            "description": "Yumuşak şekiller ve eğik fotoğraflı yuvarlak bir kart."
+          }
+        },
+        "categoryBanner": {
+          "minimal": {
+            "name": "Görsel kutular",
+            "description": "Adı fotoğrafın üstünde olan büyük kutular, satırda üç tane."
+          },
+          "bold": {
+            "name": "Şeritler",
+            "description": "Tam genişlikte bantlar; bir yanda fotoğraf, diğer yanda renk bloğu."
+          },
+          "editorial": {
+            "name": "Metin dizini",
+            "description": "Büyük puntoyla kategori adları listesi, fotoğrafsız."
+          },
+          "playful": {
+            "name": "Daireler",
+            "description": "Yana kaydırılabilen sıra hâlinde yuvarlak fotoğraflar."
+          }
+        },
+        "productGrid": {
+          "minimal": {
+            "name": "Büyük, satırda 3",
+            "description": "Büyük kartlar: masaüstünde üç, telefonda tek tek."
+          },
+          "bold": {
+            "name": "Sık, satırda 4",
+            "description": "Dar boşluklu kompakt kartlar, masaüstünde dört tane."
+          },
+          "editorial": {
+            "name": "Öne çıkan önce",
+            "description": "İlk ürün büyük gösterilir, diğerleri etrafını doldurur."
+          },
+          "playful": {
+            "name": "Kaydırmalı",
+            "description": "Yana kayan ve her karta oturan sıra hâlinde kartlar."
+          }
+        },
+        "productCard": {
+          "minimal": {
+            "name": "Fotoğraf üstü",
+            "description": "Fotoğraf kartın tamamıdır; ad ve fiyat üzerinde durur."
+          },
+          "bold": {
+            "name": "Çerçeveli",
+            "description": "Fotoğrafın altında blok hâlinde ayrıntılar bulunan kenarlıklı kart."
+          },
+          "editorial": {
+            "name": "Dikey",
+            "description": "Altında altyazı gibi ad ve fiyat bulunan uzun fotoğraf."
+          },
+          "playful": {
+            "name": "Yan yana",
+            "description": "Bir yanda fotoğraf, diğer yanda ayrıntılar ve hap fiyat."
+          }
+        },
+        "productPage": {
+          "minimal": {
+            "name": "Galeri + panel",
+            "description": "Bir yanda fotoğraflar, diğer yanda sabit satın alma paneli."
+          },
+          "bold": {
+            "name": "Geniş sahne",
+            "description": "Üstte tek geniş fotoğraf, altında iki sütunda ayrıntılar."
+          },
+          "editorial": {
+            "name": "Lookbook",
+            "description": "Metin görünürde kalırken fotoğraflar sayfa boyunca dizilir."
+          },
+          "playful": {
+            "name": "Kartlar",
+            "description": "Fotoğraflar, satın alma paneli ve açıklama için yuvarlak kartlar."
+          }
+        },
+        "cartDrawer": {
+          "minimal": {
+            "name": "Liste + özet",
+            "description": "Kalemler liste hâlinde, toplamlar yanındaki sabit kutuda."
+          },
+          "bold": {
+            "name": "Satırlar + bant",
+            "description": "Tam genişlikte satırlar, altta koyu toplam bandı."
+          },
+          "editorial": {
+            "name": "Fiş",
+            "description": "Basılı fiş gibi düzenlenmiş tek dar sütun."
+          },
+          "playful": {
+            "name": "Kartlar",
+            "description": "Her kalem yuvarlak bir kart; toplamlar kendi kartında."
+          }
+        },
+        "checkout": {
+          "minimal": {
+            "name": "İki sütun",
+            "description": "Sabit sipariş özetinin yanında form."
+          },
+          "bold": {
+            "name": "Önce özet",
+            "description": "Üstte bant hâlinde sipariş özeti, altında form."
+          },
+          "editorial": {
+            "name": "Tek sütun",
+            "description": "Dar bir form; özet gerektiğinde açılır."
+          },
+          "playful": {
+            "name": "Kademeli kartlar",
+            "description": "Form yuvarlak bir kartta, özet vurgu renkli kartta."
+          }
+        },
+        "reviews": {
+          "minimal": {
+            "name": "Özet + liste",
+            "description": "Önce ortalama puan, yanında yorum listesi."
+          },
+          "bold": {
+            "name": "Puan tablosu",
+            "description": "Dev puan ve kutu ızgarası hâlinde yorumlar."
+          },
+          "editorial": {
+            "name": "Alıntılar",
+            "description": "Art arda büyük alıntılar hâlinde yorumlar."
+          },
+          "playful": {
+            "name": "Baloncuklar",
+            "description": "Yana kayan sırada konuşma balonu kartları."
+          }
+        },
+        "newsletter": {
+          "minimal": {
+            "name": "Bant",
+            "description": "Yumuşak bir bant üzerinde ortalanmış metin ve form."
+          },
+          "bold": {
+            "name": "Renk bloğu",
+            "description": "Büyük başlıklı, tam genişlikte marka rengi blok."
+          },
+          "editorial": {
+            "name": "Bölünmüş çizgi",
+            "description": "Bir yanda başlık, diğer yanda form, etrafında ince çizgiler."
+          },
+          "playful": {
+            "name": "Yuvarlak kart",
+            "description": "Yumuşak şekiller ve çıkartmalı yuvarlak bir kart."
+          }
+        },
+        "footer": {
+          "minimal": {
+            "name": "Dört sütun",
+            "description": "Mağaza, kategoriler ve iletişim sütunlar hâlinde."
+          },
+          "bold": {
+            "name": "Marka adı",
+            "description": "Koyu altbilgide dev mağaza adı ve tek sıra bağlantı."
+          },
+          "editorial": {
+            "name": "Ortalanmış",
+            "description": "Her şey ortada, bağlantılar noktayla ayrılmış."
+          },
+          "playful": {
+            "name": "Yuvarlak üst",
+            "description": "Çip biçimli bağlantılı yuvarlak bir panel."
+          }
+        }
+      },
+      "hero": {
+        "title": "Hero",
+        "description": "Ana sayfanın üstündeki büyük görsel. Yaklaşık 2400 × 1000 piksel, 5 MB'a kadar JPG veya WebP bir fotoğraf kullanın. Aşağıdaki hero düzeni nasıl gösterileceğini belirler.",
+        "image": "Hero görseli",
+        "noImage": "Henüz görsel yok: ana sayfa ilk öne çıkan ürünün fotoğrafını kullanır.",
+        "upload": "Görsel yükle",
+        "replace": "Görseli değiştir",
+        "headline": "Başlık",
+        "subtitle": "Alt başlık",
+        "headlinePlaceholder": "Evcil dostunuzun sevdiği her şey",
+        "subtitlePlaceholder": "Oyuncak, mama, yatak ve aksesuarlar kapınıza gelsin.",
+        "fallbackNote": "Boş alanlar mağaza sloganına ve varsayılan metne döner."
+      }
     },
     "settings": {
       "description": "Mağaza kimliği, ticaret kuralları, içerik sayfaları ve kargo.",
@@ -1156,7 +1383,8 @@
       "stepOf": "Adım {step} / {total}",
       "errorBanner": "Bazı alanlar düzeltilmeli.",
       "genericError": "Mağaza oluşturulamadı.",
-      "previewLinks": "Varyantları önizle (yalnızca geliştirme)"
+      "previewLinks": "Varyantları önizle (yalnızca geliştirme)",
+      "previewStoreName": "Mağazanız"
     },
     "steps": {
       "basics": "Temel bilgiler",
@@ -1231,7 +1459,7 @@
       "presetHint": "Tüm bölümlere uygulanır. Aşağıda tek tek bölümleri değiştirebilirsiniz.",
       "comingSoon": "Yakında",
       "sections": "Bölüm bazında geçersiz kılma",
-      "sectionsHint": "Bugün yalnızca minimal varyant mevcut; diğerleri bir sonraki tema sürümüyle gelecek.",
+      "sectionsHint": "Her bölüm ön ayardan farklı bir düzen kullanabilir. Mağaza oluşturulduktan sonra her seçeneği Tasarım sayfasında önizleyebilirsiniz.",
       "announcement": "Duyuru çubuğu",
       "announcementHint": "Vitrinin en üstünde, dil başına isteğe bağlı kısa bir mesaj. Gizlemek için boş bırakın.",
       "announcementPlaceholder": "500 TL üzeri ücretsiz kargo",

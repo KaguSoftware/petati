@@ -7,17 +7,31 @@ import type { ActionState } from "@/lib/admin/types";
 import { jsonField, optionalText, parseForm, uuidField } from "@/lib/admin/validate";
 import { env } from "@/lib/env";
 import { storeCacheTag } from "@/lib/tenant/store";
+import { heroFromSettings, heroPatchSchema, heroToSettings, mergeHero } from "@/lib/theme/hero";
 import { parseTheme } from "@/lib/theme/types";
 import { themePatchSchema } from "./constants";
 
-/** Merge a partial theme into the stored one. The storefront caches the store row, so its tags are refreshed. */
+/** Only URLs inside this store's public media folder may be stored (logo, favicon, hero). */
+function ownMediaUrl(storeId: string, url: string | null | undefined) {
+  return !url || url.startsWith(`${env.supabaseUrl()}/storage/v1/object/public/store-media/${storeId}/`);
+}
+
+/**
+ * Merge a partial theme (and, optionally, the hero content kept in `settings`) into the stored
+ * row. The storefront caches the store row, so its tags are refreshed.
+ */
 export async function saveThemeAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  const parsed = parseForm(z.object({ storeId: uuidField, theme: jsonField(themePatchSchema) }), formData);
+  const parsed = parseForm(z.object({ storeId: uuidField, theme: jsonField(themePatchSchema), hero: jsonField(heroPatchSchema).optional() }), formData);
   if (!parsed.data) return { error: "invalid", fieldErrors: parsed.fieldErrors };
-  const { storeId, theme: patch } = parsed.data;
+  const { storeId, theme: patch, hero: heroPatch } = parsed.data;
+  if (heroPatch && !ownMediaUrl(storeId, heroPatch.imageUrl)) return { error: "invalid", fieldErrors: { hero: "invalid" } };
   try {
     const { db } = await adminMutation(storeId, "store.design");
-    const { data: store } = await db.from("stores").select("slug, theme").eq("id", storeId).maybeSingle<{ slug: string; theme: unknown }>();
+    const { data: store } = await db
+      .from("stores")
+      .select("slug, theme, settings")
+      .eq("id", storeId)
+      .maybeSingle<{ slug: string; theme: unknown; settings: Record<string, unknown> | null }>();
     if (!store) return { error: "notFound" };
     const current = parseTheme(store.theme);
     const next = parseTheme({
@@ -27,7 +41,9 @@ export async function saveThemeAction(_prev: ActionState, formData: FormData): P
       radius: patch.radius ?? current.radius,
       announcement: patch.announcement ?? current.announcement,
     });
-    const { error } = await db.from("stores").update({ theme: next }).eq("id", storeId);
+    const settings = store.settings ?? {};
+    const update = heroPatch ? { theme: next, settings: { ...settings, ...heroToSettings(mergeHero(heroFromSettings(settings), heroPatch)) } } : { theme: next };
+    const { error } = await db.from("stores").update(update).eq("id", storeId);
     if (error) throw error;
     updateTag(storeCacheTag(store.slug));
     updateTag("stores");
@@ -43,8 +59,7 @@ export async function setBrandingAction(_prev: ActionState, formData: FormData):
   const parsed = parseForm(z.object({ storeId: uuidField, kind: z.enum(["logo", "favicon"]), url: optionalText(1000) }), formData);
   if (!parsed.data) return { error: "invalid", fieldErrors: parsed.fieldErrors };
   const { storeId, kind, url } = parsed.data;
-  const prefix = `${env.supabaseUrl()}/storage/v1/object/public/store-media/${storeId}/`;
-  if (url && !url.startsWith(prefix)) return { error: "invalid", fieldErrors: { url: "invalid" } };
+  if (!ownMediaUrl(storeId, url)) return { error: "invalid", fieldErrors: { url: "invalid" } };
   try {
     const { db } = await adminMutation(storeId, "store.design");
     const { data: store } = await db.from("stores").select("slug").eq("id", storeId).maybeSingle<{ slug: string }>();

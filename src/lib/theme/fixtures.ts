@@ -7,6 +7,9 @@ import type { CartSummary } from "@/lib/cart/cart";
  */
 const img = (seed: string, w = 900, h = 900) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
 
+/** A wide fixture photo for heroes when the store has none (full-bleed heroes crop square photos badly). */
+export const fixtureHeroImage = img("petati-hero", 2400, 1000);
+
 export const fixtureCategories: CategoryData[] = [
   { id: "c1", slug: "toys", name: "Toys", description: null, imageUrl: img("toys", 800, 600), parentId: null },
   { id: "c2", slug: "food", name: "Food & Treats", description: null, imageUrl: img("food", 800, 600), parentId: null },

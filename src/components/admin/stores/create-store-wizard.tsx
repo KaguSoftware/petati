@@ -27,6 +27,8 @@ interface Props {
   defaultStoreSlug: string;
   showPreviewLinks: boolean;
   variants: Record<SectionKey, VariantKey[]>;
+  /** Composed home page per design language (server-rendered with sample data). */
+  presetPreviews: Record<VariantKey, React.ReactNode[]>;
 }
 
 interface StoredDraft {
@@ -42,7 +44,7 @@ interface StoredDraft {
  * server re-validates everything and its field errors jump back to the owning step.
  * SCOPE(multi-store, unpaid): reachable only behind FEATURE_MULTI_STORE + Owner.
  */
-export function CreateStoreWizard({ locale, rootDomain, defaultStoreSlug, showPreviewLinks, variants }: Props) {
+export function CreateStoreWizard({ locale, rootDomain, defaultStoreSlug, showPreviewLinks, variants, presetPreviews }: Props) {
   const t = useTranslations("stores");
   const tErr = useTranslations("stores.fieldErrors");
   const tCommon = useTranslations("admin.common");
@@ -169,12 +171,16 @@ export function CreateStoreWizard({ locale, rootDomain, defaultStoreSlug, showPr
   const errorMessage = state.error && state.error !== "invalid" ? (t.has(`errors.${state.error}`) ? t(`errors.${state.error}`) : tCommon.has(`errors.${state.error}`) ? tCommon(`errors.${state.error}`) : t("wizard.genericError")) : Object.keys(rawErrors).length ? t("wizard.errorBanner") : null;
 
   return (
-    <form
+    // Not a <form>: the design step embeds storefront previews that carry forms of their own, and forms
+    // must not nest. Enter inside a text input still advances the step.
+    <div
       className="flex flex-col gap-6"
-      onSubmit={(e) => {
+      onKeyDown={(e) => {
+        if (e.key !== "Enter" || current === "review") return;
+        const el = e.target as HTMLElement;
+        if (el.tagName !== "INPUT" || (el as HTMLInputElement).type === "file") return;
         e.preventDefault();
-        if (current === "review") submit();
-        else goTo(step + 1);
+        goTo(step + 1);
       }}
     >
       <WizardStepper current={step} reached={reached} onSelect={goTo} />
@@ -186,7 +192,7 @@ export function CreateStoreWizard({ locale, rootDomain, defaultStoreSlug, showPr
         {current === "basics" && <BasicsStep draft={draft} update={update} errors={errors} rootDomain={rootDomain} defaultStoreSlug={defaultStoreSlug} slugTouched={slugTouched} onSlugTouched={() => setSlugTouched(true)} />}
         {current === "localesMoney" && <LocalesMoneyStep draft={draft} update={update} errors={errors} />}
         {current === "branding" && <BrandingStep draft={draft} update={update} errors={errors} logoPreview={logoPreview} logoName={logo?.name ?? null} onLogoChange={onLogoChange} />}
-        {current === "design" && <DesignStep draft={draft} update={update} errors={errors} locale={locale} variants={variants} showPreviewLinks={showPreviewLinks} />}
+        {current === "design" && <DesignStep draft={draft} update={update} errors={errors} locale={locale} variants={variants} showPreviewLinks={showPreviewLinks} presetPreviews={presetPreviews} />}
         {current === "contact" && <ContactStep draft={draft} update={update} errors={errors} />}
         {current === "domain" && <DomainStep draft={draft} update={update} errors={errors} rootDomain={rootDomain} />}
         {current === "review" && (
@@ -201,7 +207,7 @@ export function CreateStoreWizard({ locale, rootDomain, defaultStoreSlug, showPr
             {t("wizard.back")}
           </Button>
           <span className="hidden text-xs text-muted-foreground sm:block">{t("wizard.stepOf", { step: step + 1, total: STEP_ORDER.length })}</span>
-          <Button type="submit">
+          <Button type="button" onClick={() => goTo(step + 1)}>
             {t("wizard.next")}
             <ArrowRight data-icon="inline-end" className="rtl:-scale-x-100" />
           </Button>
@@ -215,6 +221,6 @@ export function CreateStoreWizard({ locale, rootDomain, defaultStoreSlug, showPr
           </Button>
         </div>
       )}
-    </form>
+    </div>
   );
 }

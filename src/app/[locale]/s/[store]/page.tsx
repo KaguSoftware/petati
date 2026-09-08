@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { storeContext } from "@/lib/tenant/context";
 import { getCategories, getProducts } from "@/lib/catalog/queries";
 import { renderSection } from "@/lib/theme/registry";
+import { resolveHero } from "@/lib/theme/hero";
 import { ProductGridWithWishlist } from "@/components/storefront/product-grid-with-wishlist";
 import { NewsletterForm } from "@/components/storefront/shared/newsletter-form";
 
@@ -17,16 +18,17 @@ export default async function StoreHome({ params }: PageProps<"/[locale]/s/[stor
     getProducts(store.id, locale, fallback, { sort: "newest", pageSize: 8 }),
   ]);
 
-  const heroImage = featured.items[0]?.imageUrl ?? newest.items[0]?.imageUrl ?? null;
+  const hero = resolveHero(store.hero, locale, fallback);
 
   return (
     <main>
       {renderSection("hero", store.theme.sections.hero, {
-        title: (store.settings.hero_title as Record<string, string> | undefined)?.[locale] ?? t("heroTitle"),
-        subtitle: (store.settings.hero_subtitle as Record<string, string> | undefined)?.[locale] ?? store.tagline ?? t("heroSubtitle"),
+        title: hero.title ?? t("heroTitle"),
+        subtitle: hero.subtitle ?? store.tagline ?? t("heroSubtitle"),
         ctaLabel: t("shopNow"),
         ctaHref: "/shop",
-        imageUrl: (store.settings.hero_image as string | undefined) ?? heroImage,
+        // No uploaded hero yet: borrow the first featured photo (the full-bleed hero falls back to a gradient when null).
+        imageUrl: hero.imageUrl ?? featured.items[0]?.imageUrl ?? newest.items[0]?.imageUrl ?? null,
       })}
       {renderSection("categoryBanner", store.theme.sections.categoryBanner, {
         title: t("browseCategories"),

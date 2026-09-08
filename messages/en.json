@@ -872,7 +872,7 @@
       },
       "sections": {
         "title": "Section layouts",
-        "description": "Pick a design for each part of the storefront. More layouts are on the way.",
+        "description": "Pick a layout for each part of the storefront. Every option is drawn with sample products in your colours; the home preview on the side follows your choices.",
         "keys": {
           "announcementBar": "Announcement bar",
           "navbar": "Navigation bar",
@@ -886,7 +886,9 @@
           "reviews": "Reviews",
           "newsletter": "Newsletter",
           "footer": "Footer"
-        }
+        },
+        "picker": "Section",
+        "selected": "Selected"
       },
       "variants": {
         "minimal": "Minimal",
@@ -898,19 +900,244 @@
         "title": "Live preview",
         "openStorefront": "Open storefront",
         "harness": "Section harness",
-        "navShop": "Shop",
-        "navAbout": "About",
-        "heroTitle": "Everything your pet loves",
-        "heroText": "Toys, beds, bowls and treats picked for happy companions.",
-        "primaryButton": "Shop now",
-        "outlineButton": "Learn more",
-        "badge": "New",
-        "productName": "Rope tug toy",
-        "productPrice": "249,00 ₺"
+        "desktop": "Desktop",
+        "mobile": "Mobile",
+        "home": "Home page with the layouts you picked."
       },
       "unsaved": "You have unsaved changes.",
       "allSaved": "All changes saved.",
-      "reset": "Discard changes"
+      "reset": "Discard changes",
+      "layouts": {
+        "announcementBar": {
+          "minimal": {
+            "name": "Slim bar",
+            "description": "One centred line above the header."
+          },
+          "bold": {
+            "name": "Marquee",
+            "description": "The message scrolls across the top, repeated."
+          },
+          "editorial": {
+            "name": "Ticker",
+            "description": "A start-aligned line with a small label, between hairlines."
+          },
+          "playful": {
+            "name": "Floating pill",
+            "description": "A rounded pill with an icon just under the top edge."
+          }
+        },
+        "navbar": {
+          "minimal": {
+            "name": "Classic",
+            "description": "Logo at the start, links in the middle, icons at the end."
+          },
+          "bold": {
+            "name": "Stacked",
+            "description": "A big centred logo on top, a full-width category bar below."
+          },
+          "editorial": {
+            "name": "Split",
+            "description": "Links on both sides of a centred wordmark."
+          },
+          "playful": {
+            "name": "Floating pill",
+            "description": "Everything inside a rounded capsule that floats over the page."
+          }
+        },
+        "hero": {
+          "minimal": {
+            "name": "Full-bleed image",
+            "description": "The photo fills the width; the headline and button sit on top of it."
+          },
+          "bold": {
+            "name": "Colour block",
+            "description": "Text on a solid brand-colour band with a framed photo beside it."
+          },
+          "editorial": {
+            "name": "Stacked headline",
+            "description": "A large headline first, then a wide photo underneath."
+          },
+          "playful": {
+            "name": "Boxed card",
+            "description": "A rounded card with soft shapes and a tilted photo."
+          }
+        },
+        "categoryBanner": {
+          "minimal": {
+            "name": "Image tiles",
+            "description": "Large photo tiles with the name over the picture, three per row."
+          },
+          "bold": {
+            "name": "Strips",
+            "description": "Full-width bands, photo on one side and a colour block on the other."
+          },
+          "editorial": {
+            "name": "Text index",
+            "description": "A list of category names in large type, no pictures."
+          },
+          "playful": {
+            "name": "Circles",
+            "description": "Round photos in a row you can scroll sideways."
+          }
+        },
+        "productGrid": {
+          "minimal": {
+            "name": "Large, 3 per row",
+            "description": "Big cards: three across on desktop, one at a time on phones."
+          },
+          "bold": {
+            "name": "Dense, 4 per row",
+            "description": "Compact cards with tight gaps, four across on desktop."
+          },
+          "editorial": {
+            "name": "Feature first",
+            "description": "The first product is shown large; the rest fill in around it."
+          },
+          "playful": {
+            "name": "Carousel",
+            "description": "Cards in a row that scrolls sideways and snaps to each card."
+          }
+        },
+        "productCard": {
+          "minimal": {
+            "name": "Photo overlay",
+            "description": "The photo is the whole card; name and price sit on top of it."
+          },
+          "bold": {
+            "name": "Framed",
+            "description": "A bordered card with the details in a block under the photo."
+          },
+          "editorial": {
+            "name": "Portrait",
+            "description": "A tall photo with a caption-style name and price below."
+          },
+          "playful": {
+            "name": "Side by side",
+            "description": "Photo on one side, details and a pill price on the other."
+          }
+        },
+        "productPage": {
+          "minimal": {
+            "name": "Gallery + panel",
+            "description": "Photos on one side, a sticky buy panel on the other."
+          },
+          "bold": {
+            "name": "Wide stage",
+            "description": "One wide photo on top, details in two columns below."
+          },
+          "editorial": {
+            "name": "Lookbook",
+            "description": "Photos stacked down the page while the text stays in view."
+          },
+          "playful": {
+            "name": "Cards",
+            "description": "Rounded cards for the photos, the buy panel and the description."
+          }
+        },
+        "cartDrawer": {
+          "minimal": {
+            "name": "List + summary",
+            "description": "Line items in a list, totals in a sticky box beside them."
+          },
+          "bold": {
+            "name": "Rows + band",
+            "description": "Full-width rows with a dark totals band at the bottom."
+          },
+          "editorial": {
+            "name": "Receipt",
+            "description": "One narrow column, laid out like a printed receipt."
+          },
+          "playful": {
+            "name": "Cards",
+            "description": "Every line is a rounded card; totals float in their own card."
+          }
+        },
+        "checkout": {
+          "minimal": {
+            "name": "Two columns",
+            "description": "The form beside a sticky order summary."
+          },
+          "bold": {
+            "name": "Summary first",
+            "description": "The order summary as a band on top, the form below it."
+          },
+          "editorial": {
+            "name": "Single column",
+            "description": "A narrow form; the summary folds open when needed."
+          },
+          "playful": {
+            "name": "Stepped cards",
+            "description": "The form in a rounded card, the summary in an accent card."
+          }
+        },
+        "reviews": {
+          "minimal": {
+            "name": "Summary + list",
+            "description": "The average score first, reviews listed beside it."
+          },
+          "bold": {
+            "name": "Score board",
+            "description": "A giant score with reviews as a grid of tiles."
+          },
+          "editorial": {
+            "name": "Pull quotes",
+            "description": "Reviews as large quotations, one after another."
+          },
+          "playful": {
+            "name": "Bubbles",
+            "description": "Speech-bubble cards in a row that scrolls sideways."
+          }
+        },
+        "newsletter": {
+          "minimal": {
+            "name": "Band",
+            "description": "Centred text and form on a soft band."
+          },
+          "bold": {
+            "name": "Colour block",
+            "description": "A full-width brand-colour block with a big headline."
+          },
+          "editorial": {
+            "name": "Split rule",
+            "description": "Headline on one side, the form on the other, hairlines around."
+          },
+          "playful": {
+            "name": "Rounded card",
+            "description": "A rounded card with soft shapes and a sticker."
+          }
+        },
+        "footer": {
+          "minimal": {
+            "name": "Four columns",
+            "description": "Store, categories and contact in columns."
+          },
+          "bold": {
+            "name": "Wordmark",
+            "description": "A giant store name on a dark footer with one row of links."
+          },
+          "editorial": {
+            "name": "Centred",
+            "description": "Everything centred, links separated by dots."
+          },
+          "playful": {
+            "name": "Rounded top",
+            "description": "A rounded panel with chip-style links."
+          }
+        }
+      },
+      "hero": {
+        "title": "Hero",
+        "description": "The big picture at the top of the home page. Use a wide photo, about 2400 × 1000 pixels, JPG or WebP up to 5 MB. The hero layout below decides how it is shown.",
+        "image": "Hero image",
+        "noImage": "No image yet: the home page borrows the first featured product photo.",
+        "upload": "Upload image",
+        "replace": "Replace image",
+        "headline": "Headline",
+        "subtitle": "Subtitle",
+        "headlinePlaceholder": "Everything your pet loves",
+        "subtitlePlaceholder": "Toys, food, beds and accessories, delivered to your door.",
+        "fallbackNote": "Empty fields fall back to the store tagline and the default wording."
+      }
     },
     "settings": {
       "description": "Store identity, commerce rules, content pages and shipping.",
@@ -1156,7 +1383,8 @@
       "stepOf": "Step {step} of {total}",
       "errorBanner": "Some fields need attention.",
       "genericError": "The store could not be created.",
-      "previewLinks": "Preview variants (dev only)"
+      "previewLinks": "Preview variants (dev only)",
+      "previewStoreName": "Your store"
     },
     "steps": {
       "basics": "Basics",
@@ -1231,7 +1459,7 @@
       "presetHint": "Applies to every section. You can override single sections below.",
       "comingSoon": "Coming soon",
       "sections": "Per-section overrides",
-      "sectionsHint": "Only the minimal variant is available today; the others arrive with the next theme release.",
+      "sectionsHint": "Every section can use a different layout than the preset. You can preview each option in Design once the store exists.",
       "announcement": "Announcement bar",
       "announcementHint": "Optional short message at the very top of the storefront, per language. Leave empty to hide.",
       "announcementPlaceholder": "Free delivery over 500 TRY",
