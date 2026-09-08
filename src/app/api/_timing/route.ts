@@ -26,8 +26,8 @@ export async function GET() {
   await lap("getClaims#2", () => supabase.auth.getClaims());
   await lap("getUser(network)", () => supabase.auth.getUser());
   const admin = createSupabaseAdminClient();
-  await lap("adminQuery ordersCount", () => admin.from("orders").select("id", { count: "exact", head: true }));
-  await lap("adminQuery ordersCount#2", () => admin.from("orders").select("id", { count: "exact", head: true }));
+  await lap("adminQuery ordersCount", async () => await admin.from("orders").select("id", { count: "exact", head: true }));
+  await lap("adminQuery ordersCount#2", async () => await admin.from("orders").select("id", { count: "exact", head: true }));
   await lap("listStores(use cache)", () => listStores());
   await lap("listStores(use cache)#2", () => listStores());
   await lap("getStoreBySlug(use cache)", () => getStoreBySlug("default"));
