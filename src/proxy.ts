@@ -48,7 +48,12 @@ export async function proxy(request: NextRequest) {
 
   // ---- 3. session + admin guard ----
   const isShared = SHARED_PREFIXES.some((p) => rest === p || rest.startsWith(`${p}/`));
-  const response = isShared ? NextResponse.next() : rewriteToStore(url, locale, slug, rest);
+  // Forwarded as REQUEST headers: src/i18n/request.ts falls back to x-locale when a dynamic
+  // render happens below a page that never called setRequestLocale.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-store-slug", slug);
+  requestHeaders.set("x-locale", locale);
+  const response = isShared ? NextResponse.next({ request: { headers: requestHeaders } }) : rewriteToStore(url, locale, slug, rest, requestHeaders);
   response.headers.set("x-store-slug", slug);
   response.headers.set("x-locale", locale);
 
@@ -66,12 +71,12 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 
-function rewriteToStore(url: URL, locale: string, slug: string, rest: string) {
+function rewriteToStore(url: URL, locale: string, slug: string, rest: string, headers: Headers) {
   // Path mode (/en/s/<slug>/...) passes through untouched.
-  if (storeFromPath(rest)) return NextResponse.next();
+  if (storeFromPath(rest)) return NextResponse.next({ request: { headers } });
   const target = new URL(url);
   target.pathname = `/${locale}/s/${slug}${rest === "/" ? "" : rest}`;
-  return NextResponse.rewrite(target);
+  return NextResponse.rewrite(target, { request: { headers } });
 }
 
 async function refreshSession(request: NextRequest, response: NextResponse) {

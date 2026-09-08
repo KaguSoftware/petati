@@ -836,7 +836,7 @@
           "heading": "Heading font",
           "body": "Body font"
         },
-        "fontNote": "Fonts apply to the storefront immediately; Persian text always falls back to Vazirmatn."
+        "fontNote": "Fonts apply to the storefront immediately. Arabic-script fonts (Vazirmatn, Noto, Cairo, Amiri, Markazi) render Persian text directly; Latin fonts are paired with a matching Arabic face for Persian."
       },
       "announcement": {
         "title": "Announcement bar",

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Inter, Manrope, Playfair_Display, Vazirmatn } from "next/font/google";
+import { Amiri, Cairo, DM_Sans, Inter, Manrope, Markazi_Text, Noto_Naskh_Arabic, Noto_Sans_Arabic, Playfair_Display, Vazirmatn } from "next/font/google";
 import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -18,7 +18,13 @@ const vazirmatn = Vazirmatn({ subsets: ["arabic", "latin"], variable: "--font-va
 const manrope = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-manrope", preload: false });
 const dmSans = DM_Sans({ subsets: ["latin", "latin-ext"], variable: "--font-dm-sans", preload: false });
 const playfair = Playfair_Display({ subsets: ["latin", "latin-ext"], variable: "--font-playfair", preload: false });
-const themeFontClasses = `${manrope.variable} ${dmSans.variable} ${playfair.variable}`;
+// Arabic-script faces (Persian storefronts pick these directly; Latin fonts pair with one of them).
+const notoSansArabic = Noto_Sans_Arabic({ subsets: ["arabic", "latin"], variable: "--font-noto-sans-arabic", preload: false });
+const notoNaskhArabic = Noto_Naskh_Arabic({ subsets: ["arabic", "latin"], variable: "--font-noto-naskh-arabic", preload: false });
+const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo", preload: false });
+const amiri = Amiri({ subsets: ["arabic", "latin"], weight: ["400", "700"], variable: "--font-amiri", preload: false });
+const markazi = Markazi_Text({ subsets: ["arabic", "latin"], variable: "--font-markazi", preload: false });
+const themeFontClasses = [manrope, dmSans, playfair, notoSansArabic, notoNaskhArabic, cairo, amiri, markazi].map((f) => f.variable).join(" ");
 
 export const metadata: Metadata = {
   title: { default: "Petati", template: "%s · Petati" },

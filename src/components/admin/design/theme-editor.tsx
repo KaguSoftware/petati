@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { localeNames, type Locale } from "@/i18n/config";
 import { saveThemeAction } from "@/lib/admin/design/actions";
 import { FONT_OPTIONS, RADIUS_PRESETS, THEME_COLOR_KEYS } from "@/lib/admin/design/constants";
+import { fontFamily } from "@/lib/theme/fonts";
 import { SECTION_KEYS, VARIANT_KEYS, themeToCssVars, type SectionKey, type StoreTheme, type VariantKey } from "@/lib/theme/types";
 import { cn } from "@/lib/utils";
 import { useActionToast } from "../shared/use-action-toast";
@@ -108,7 +109,7 @@ export function ThemeEditor({ storeId, storeName, locale, theme, enabledLocales,
                       <SelectContent alignItemWithTrigger={false}>
                         {FONT_OPTIONS.map((f) => (
                           <SelectItem key={f} value={f}>
-                            <span style={{ fontFamily: `"${f}", sans-serif` }}>{f}</span>
+                            <span style={{ fontFamily: fontFamily(f) }}>{f}</span>
                           </SelectItem>
                         ))}
                       </SelectContent>

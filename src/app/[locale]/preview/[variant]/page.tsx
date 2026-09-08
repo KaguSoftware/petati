@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { isLocale } from "@/i18n/config";
 import { DEFAULT_THEME, VARIANT_KEYS, themeToCssVars, type VariantKey } from "@/lib/theme/types";
 import { renderSection } from "@/lib/theme/registry";
@@ -27,6 +27,7 @@ export const instant = false;
 export default async function PreviewPage({ params }: PageProps<"/[locale]/preview/[variant]">) {
   if (process.env.NODE_ENV === "production") notFound();
   const { locale, variant } = await params;
+  setRequestLocale(locale);
   if (!isLocale(locale) || !(VARIANT_KEYS as readonly string[]).includes(variant)) notFound();
   const v = variant as VariantKey;
 

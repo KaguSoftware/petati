@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { requireCompleteProfile } from "@/lib/auth/session";
 import { signOutAction } from "@/lib/auth/actions";
 import { AccountNav } from "@/components/storefront/account/account-nav";
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default async function AccountLayout({ children, params }: LayoutProps<"/[locale]/s/[store]/account">) {
   const { locale } = await params;
+  setRequestLocale(locale);
   await requireCompleteProfile(locale, `/${locale}/account`);
   const [t, tn] = await Promise.all([getTranslations("account"), getTranslations("nav")]);
   return (

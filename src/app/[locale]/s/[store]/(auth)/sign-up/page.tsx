@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AuthCard } from "@/components/storefront/auth/auth-card";
 import { SignUpForm } from "@/components/storefront/auth/auth-forms";
 
@@ -7,6 +7,7 @@ type Props = PageProps<"/[locale]/s/[store]/sign-up">;
 
 export default async function SignUpPage({ params, searchParams }: Props) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations("auth");
   return (
     <AuthCard title={t("signUp")}>

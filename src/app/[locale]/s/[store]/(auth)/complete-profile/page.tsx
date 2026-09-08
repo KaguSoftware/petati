@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AuthCard } from "@/components/storefront/auth/auth-card";
 import { CompleteProfileForm } from "@/components/storefront/auth/complete-profile-form";
 import { getSessionUser } from "@/lib/auth/session";
@@ -11,6 +11,7 @@ type Props = PageProps<"/[locale]/s/[store]/complete-profile">;
 /** One-time step after first sign-in: collect the mandatory phone number. */
 export default async function CompleteProfilePage({ params, searchParams }: Props) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations("auth");
   return (
     <AuthCard title={t("completeProfileTitle")}>
