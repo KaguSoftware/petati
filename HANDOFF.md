@@ -40,9 +40,21 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
 ## Conventions
 - Every tenant table has `store_id` + RLS. Never query tenant data without a store scope.
 - Money is stored as integer minor units with the store's currency; format at the edge.
-- Storefront sections live in `src/components/storefront/<section>/{minimal,bold,editorial,playful}.tsx`
-  with a shared `types.ts` props contract. The registry in `src/lib/theme/registry.ts` picks the
+- Storefront sections live in `src/components/storefront/sections/<section>/{minimal,bold,editorial,playful}.tsx`
+  with a shared `types.ts` props contract. The registry in `src/lib/theme/registry.tsx` picks the
   variant from the store's `theme` JSON. Use Tailwind logical properties (`ps-`, `ms-`, `start-`) so RTL works.
+  The four keys are design languages AND, per section, four structurally different layouts (catalog in
+  `admin.design.layouts.*` messages; e.g. navbar = Classic / Stacked / Split / Floating pill).
+- **Container queries, not media queries, inside `src/components/storefront/**`** (2026-09-09): sections use
+  `@phablet:` `@tablet:` `@desktop:` `@wide:` (= sm/md/lg/xl, defined in `globals.css`), never `md:`. The
+  storefront root (`s/[store]/layout.tsx`) and every admin `PreviewFrame` declare `@container`, which is what
+  lets the Design picker draw a desktop layout inside a small zoomed box. Sections/shared components must not
+  declare their own `@container`, and must not use `vh`/`vw`/`*-screen`. Horizontal scroll rows with
+  fixed-width items need `contain-inline-size` or they inflate the page width. Gate:
+  `grep -rnP '(?<![w@-[:])(sm|md|lg|xl|2xl):' src/components/storefront` must return nothing.
+- Hero content (image + per-locale headline/subtitle) lives in `stores.settings` (`hero_image`, `hero_title`,
+  `hero_subtitle`), read through `src/lib/theme/hero.ts` (`Store.hero`), edited on the Design page and saved by
+  `saveThemeAction` together with the theme. New image URLs must be inside `store-media/<storeId>/`.
 - Permission matrix lives only in `src/lib/auth/permissions.ts`. Server actions check it before using
   the service-role client.
 - Payment providers implement `src/lib/payments/provider.ts`. `manual` is live; `iyzico` is a stub.
@@ -77,6 +89,7 @@ Done (build, typecheck, lint, 25 pgTAP tests green; every flow below verified wi
 - **Shipping cost at sale (2026-09-08, night)**: migration `20260908001100_shipping_cost.sql` — `shipping_rates.cost` (what the store pays the courier), `orders.shipping_cost` copied at checkout even when the customer ships free, editable in the Ship dialog, shown on the order, netted in Finance (`v_daily_sales.shipping_cost`). Verified live: order 2609-01003 (free shipping) carries cost 3500. Standard rate on the cloud is set to 35.00; Express still 0 — the client sets real figures in Settings → Shipping.
 - **Brand palette (2026-09-08)**: colours taken from the client's app icon (paw: teal-blue + orange) → primary #157fa1 (AA on white), accent #f7a83b, foreground #17323d, muted #eef8fb. Applied to the live theme via the Design page (`node_modules/.qa/apply-palette.mjs`) and to the seed. No logo file yet (the icon was "not the official file") — the monogram slot stays.
 - **Deployment**: https://petati.vercel.app is live against the cloud project (env vars set in the Vercel dashboard); all admin routes render there with zero console errors (multi-store routes 404 by design, flag off).
+- **Storefront restyle + honest design picker (2026-09-09)**: live (minimal) language = full-bleed hero with overlay copy, overlay category tiles 3-up, overlay product cards 3-up desktop / 1-up mobile, category page banner. Every section has four structurally different layouts (48 files rewritten). Admin Design: each option is the REAL section rendered with fixture data inside a zoomed `@container` frame (`PreviewFrame`), desktop/mobile toggle, colours/fonts/radius live; the side "Live preview" is the home page composed from the chosen layouts; hero card (upload + per-locale copy); wizard preset cards show composed previews. Verified: harness at 390/1280 en+fa no overflow, admin-qa/qa scripts green, build green. Design page document (52 pre-rendered nodes) measured on `next start` 2026-09-09: 891 KB raw / 69 KB gzip / 42 KB brotli, DOMContentLoaded ≈ 300 ms warm (`node_modules/.qa/design-size.mjs`), so previews stay pre-rendered; revisit lazy loading only if that grows.
 In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS verification, Google OAuth secret paste (owner), SMTP for staff invites.
 
 ## File map (key files)
@@ -99,9 +112,11 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 - `src/lib/account/{queries,actions}.ts` — orders/addresses/wishlist/reviews/profile for shoppers.
 - `src/lib/email/send.ts`, `src/emails/order-confirmation.tsx` — Resend or console fallback.
 - `src/components/storefront/sections/types.ts` — the props contract every variant must honour; `<section>/{minimal,bold,editorial,playful}.tsx` are the four implementations, all wired in `src/lib/theme/registry.tsx`.
+- `src/lib/theme/{preview.tsx,preview-compose.ts,client-registry.ts,hero.ts,fixtures.ts}` — `buildSectionPreviews` (server: every section × variant with fixtures, 16 grid×card combos), `composeHome`, client-renderable hero/announcement registries (live typing in the editor), hero settings helpers.
+- `src/components/admin/design/{theme-editor,section-picker,preview-frame,hero-card,logo-uploader}.tsx` — the Design page; `PreviewFrame` = zoomed `@container` box with the draft's CSS vars, `inert`.
 - `src/lib/theme/fonts.ts` — font allow-list + CSS stacks (see Conventions).
 - `src/lib/admin/brands/*`, `src/components/admin/products/brand-{list,dialog}.tsx` — brands admin; storefront brand pages under `src/app/[locale]/s/[store]/{brands,b/[slug]}/`, `shared/brand-mark.tsx`, `shared/category-nav.ts` (drawer tree).
-- `node_modules/.qa/*.mjs` (untracked) — Playwright QA: `admin-qa`, `speed-qa`, `nav-timing`, `fa-qa`, `catalog-live-qa`, `shipping-cost-qa`, `orders-qa`, `apply-palette`, `cloud-catalog` (one-off data restructure, idempotent, `--local` flag).
+- `node_modules/.qa/*.mjs` (untracked) — Playwright QA: `admin-qa`, `speed-qa`, `nav-timing`, `fa-qa`, `catalog-live-qa`, `shipping-cost-qa`, `orders-qa`, `apply-palette`, `cloud-catalog` (one-off data restructure, idempotent, `--local` flag), `design-qa` (Design page: frames flip per device, errors, document bytes), `shot-pages` + `png-diff` (full-page screenshots of storefront/harness and pixel diff), `overflow-probe`, `wizard-check`.
 - `src/components/admin/shared/{tabbed-panels,optimistic-store,use-optimistic-action,optimistic-status-badge}.tsx` — the speed toolkit (see Conventions); `isPlainList` in `src/lib/admin/list-params.ts`.
 - `src/components/storefront/shared/*` — interactive pieces shared by all variants (add-to-cart, cart controls, forms).
 - `src/i18n/{config,routing,navigation,request}.ts` — locales, RTL helper, next-intl wiring.
@@ -121,14 +136,15 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 5. ~~Admin panel (all modules; store creation hidden behind flag)~~ (done 2026-09-08)
 6. ~~Themes B, C, D~~ (done 2026-09-08)
 7. **← NEXT (owner-side)** Deploy readiness leftovers: paste the Google OAuth client secret into Supabase (everything else is staged), add `https://petati.vercel.app/auth/callback` + `http://localhost:3000/auth/callback` to Supabase Auth → URL configuration → Redirect URLs, Resend key, SMTP for staff invites, wildcard domain when multi-store is paid
-8. Client logo + brand colours (Design page), iyzico when credentials arrive
+8. Client logo + brand colours + a real wide hero photo (Design page → Hero), iyzico when credentials arrive
 
 ## Deliberately partial — grows later (scope ledger)
 | Area | What shipped now | Intended full shape | Grows in |
 |---|---|---|---|
 | Multi-store | Built, hidden behind `FEATURE_MULTI_STORE` + Owner | Visible "Create store" wizard, domains UI | When client pays |
 | Payments | `manual` provider (order = pending_payment, admin marks paid) | iyzico checkout + webhooks + refunds | When client supplies iyzico credentials |
-| Themes | Four variants per section, fixture-verified | Per-variant product-page galleries/lookbooks, theme-specific animations | As requested |
+| Themes | Four structurally distinct layouts per section, previewed for real in admin | Per-section options (e.g. hero height, card aspect), theme-specific animations | As requested |
+| Design previews | 52 nodes pre-rendered per page load (fixtures, 6 products per grid) | Lazy per-section loading via a server function if the page grows heavy | If measured slow |
 | Admin lists | Buckets preloaded only for a "plain" URL (just `status`); search/date/category/page/sort go back to server paging | Client-side filtering over a larger preloaded window | If lists grow |
 | Optimistic UI | Toggles, statuses, moderation, roles, order transitions | Optimistic create/delete rows (needs client-owned tables) | As needed |
 | Brands | Name/slug/logo/active; product ↔ one brand; brand pages + shop filter | Brand descriptions/translations, brand filter in the admin products toolbar (`?brand=<id>` already works) | When asked |
@@ -176,6 +192,8 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 - Base UI Dialog/Select trigger = `render={<Button/>}`; a Close rendering a `<Link>` needs `nativeButton={false}`.
 - OverlayScrollbars body mode skips direction detection: `globals.css` mirrors the document bar under `[dir=rtl]`; hidden Base UI inputs get `margin-left:0` under RTL to avoid a 1px scroll.
 - **Locale under Cache Components**: the root layout's `setRequestLocale` is part of the static shell and is NOT replayed in a dynamic resume, so any page/layout that renders dynamically without its own `setRequestLocale(locale)` fell back to English (seen on /fa/account). Every page now calls it (storefront pages via `storeContext`), and `src/i18n/request.ts` falls back to the `x-locale` REQUEST header the proxy forwards. Keep both when adding pages.
+- The Design editor's `<form>` holds only hidden inputs (Save uses `form="theme-form"`) and the store wizard is a `<div>`: the previews contain their own forms (search, newsletter, checkout) and nested forms break hydration.
+- `admin.design.preview.*` mock strings were removed; layout names/descriptions live under `admin.design.layouts.<section>.<key>` in all three locales (96 strings each).
 - Theme fonts: Latin-only fonts are paired with an Arabic face for Persian (`FONTS[...].pair` in `src/lib/theme/fonts.ts`); Arabic-script fonts render Persian directly. Verify with `node_modules/.qa/fa-qa.mjs <base>` (it temporarily changes the live theme font and reverts).
 - QA scripts live in `node_modules/.qa/*.mjs` (untracked): sign in as testuser, exercise each module with Playwright (Edge channel). `speed-qa.mjs` covers tabs/optimistic/themes; `admin-qa.mjs <base>` works against Vercel too.
 - `TabbedPanels` uses `history.replaceState` (Next syncs `useSearchParams`); it must sit inside a Suspense boundary (it does — the page's list child). Panels stay mounted but `hidden`, so forms in inactive tabs keep their state.
