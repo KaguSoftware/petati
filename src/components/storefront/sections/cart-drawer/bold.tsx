@@ -48,7 +48,7 @@ export function CartViewBold({ cart, totals, currency, locale, labels, lineContr
       </div>
       {cart.lines.length > 0 && (
         <div className="mt-10 bg-foreground text-background">
-          <div className="mx-auto flex max-w-6xl flex-col gap-8 px-gutter py-10 @tablet:flex-row @tablet:items-end @tablet:justify-end @tablet:gap-12">
+          <div className="mx-auto flex max-w-6xl flex-col gap-8 px-gutter py-10 @tablet:flex-row @tablet:items-end @tablet:justify-between @tablet:gap-12">
             <dl className="grid w-full gap-x-8 gap-y-2 text-sm font-medium @tablet:max-w-md">
               <Row label={labels.subtotal} value={money(totals.subtotal)} />
               {totals.discount > 0 && <Row label={labels.discount} value={`−${money(totals.discount)}`} />}

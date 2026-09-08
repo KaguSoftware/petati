@@ -39,7 +39,7 @@ export function FooterBold({ storeName, tagline, categories, contactEmail, conta
         </div>
         <div className="flex flex-col gap-4 pb-2 text-[11px] font-bold tracking-widest text-background/60 uppercase @phablet:flex-row @phablet:items-center @phablet:justify-between">
           <span>
-            © {year} {storeName}. {labels.rights}
+            <bdi dir="ltr">© {year} {storeName}.</bdi> {labels.rights}
           </span>
           {localeSlot}
         </div>

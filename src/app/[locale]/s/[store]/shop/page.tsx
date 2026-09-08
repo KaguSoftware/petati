@@ -46,7 +46,7 @@ export async function Results({ ctx, searchParams, categorySlug, brandSlug }: Re
   return (
     <>
       <ShopToolbar total={result.total} brands={brands} />
-      <div className="-mx-4">
+      <div className="mx-gutter-bleed">
         <ProductGridWithWishlist ctx={ctx} products={result.items} emptyLabel={t("noResults")} />
       </div>
       <Pagination

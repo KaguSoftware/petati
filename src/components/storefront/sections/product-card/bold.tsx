@@ -9,19 +9,19 @@ const squareBadge = "px-2 py-1 text-[10px] font-extrabold tracking-widest upperc
 
 export function ProductCardBold({ product, currency, locale, labels, wishlistSlot }: ProductCardProps) {
   return (
-    <article className="group relative flex flex-col border-2 border-foreground bg-background">
+    <article className="group relative flex h-full flex-col border-2 border-foreground bg-background">
       <Link href={`/p/${product.slug}`} className="relative block overflow-hidden border-b-2 border-foreground">
         <ProductImage
           src={product.imageUrl}
           alt={product.imageAlt}
           className="aspect-square transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
         />
-        {product.isNew && <span className={cn("absolute start-2 top-2 bg-accent text-accent-foreground", squareBadge)}>{labels.new}</span>}
+        {product.isNew && <span className={cn("absolute start-3 top-3 flex min-h-10 items-center bg-accent text-accent-foreground", squareBadge)}>{labels.new}</span>}
         {!product.inStock && (
           <span className={cn("absolute inset-x-0 bottom-0 bg-foreground text-center text-background", squareBadge)}>{labels.outOfStock}</span>
         )}
       </Link>
-      {wishlistSlot && <div className="absolute end-2 top-2">{wishlistSlot}</div>}
+      {wishlistSlot && <div className="absolute end-3 top-3">{wishlistSlot}</div>}
       <div className="flex flex-1 flex-col gap-2 p-3">
         <p className="min-h-[1lh] truncate text-[10px] font-bold tracking-widest text-muted-foreground uppercase">{product.brand}</p>
         <Link
@@ -30,7 +30,7 @@ export function ProductCardBold({ product, currency, locale, labels, wishlistSlo
         >
           {product.name}
         </Link>
-        {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} />}
+        <div className="min-h-5">{product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} />}</div>
         <Price
           amount={product.price}
           compareAt={product.compareAtPrice}

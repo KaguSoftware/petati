@@ -23,10 +23,9 @@ export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, f
           <span />
         )}
         <div className="@tablet:max-w-xs">{formSlot}</div>
+        {reviews.length === 0 && <p className="text-sm font-bold tracking-wide text-muted-foreground uppercase @tablet:col-span-3">{labels.empty}</p>}
       </div>
-      {reviews.length === 0 ? (
-        <p className="text-sm font-bold tracking-wide text-muted-foreground uppercase">{labels.empty}</p>
-      ) : (
+      {reviews.length === 0 ? null : (
         <ul className="grid gap-4 @tablet:grid-cols-2 @desktop:grid-cols-3">
           {reviews.map((r) => (
             <li key={r.id} className="flex flex-col gap-2 border-2 border-foreground p-5">

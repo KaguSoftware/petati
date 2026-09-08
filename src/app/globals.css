@@ -231,29 +231,41 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
 
 /* ---- Storefront gutters: one horizontal inset for every section/page container ------------- */
 @utility px-gutter {
-  padding-inline: 1rem;
+  --gutter: 1rem;
+  padding-inline: var(--gutter);
   @container (min-width: 48rem) {
-    padding-inline: 1.5rem;
+    --gutter: 1.5rem;
   }
   @container (min-width: 64rem) {
-    padding-inline: 2rem;
+    --gutter: 2rem;
   }
+}
+/* A child that should run edge to edge inside a px-gutter container (scroll rails, nested grids). */
+@utility bleed-gutter {
+  margin-inline: calc(var(--gutter, 1rem) * -1);
+  padding-inline: var(--gutter, 1rem);
+}
+@utility mx-gutter-bleed {
+  margin-inline: calc(var(--gutter, 1rem) * -1);
 }
 
 /* Mixed-direction content (an English product name on a Persian page): let each run pick its
    own direction so punctuation and numbers stay attached to their words. */
 @utility bidi-auto {
   unicode-bidi: plaintext;
+  text-align: match-parent;
 }
 
 /* ---- Storefront controls are shop-sized (the admin keeps shadcn's compact sizes) ------------- */
-[data-storefront] [data-slot="input"]:not([type="checkbox"], [type="radio"], [type="file"]) {
+[data-storefront] [data-slot="input"]:not([type="checkbox"], [type="radio"], [type="file"]),
+[data-slot="sheet-content"] [data-slot="input"]:not([type="checkbox"], [type="radio"], [type="file"]) {
   height: 2.75rem;
   padding-inline: 0.875rem;
   font-size: 1rem;
 }
 /* Search: room for the magnifier on BOTH sides, because `dir="auto"` may flip the input's start. */
-[data-storefront] [role="search"] [data-slot="input"] {
+[data-storefront] [role="search"] [data-slot="input"],
+[data-slot="sheet-content"] [role="search"] [data-slot="input"] {
   height: 2.5rem;
   padding-inline: 2rem;
   font-size: 0.9375rem;
@@ -288,6 +300,7 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
   --border: transparent;
   --input: rgb(255 255 255 / 0.25);
   --ring: rgb(255 255 255 / 0.6);
+  color: #ffffff;
   background-color: transparent;
   border-color: transparent;
   box-shadow: none;

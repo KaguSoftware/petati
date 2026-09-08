@@ -9,7 +9,7 @@ import { ProductImage } from "@/components/storefront/shared/product-image";
 import { Results } from "../../shop/page";
 
 const chip =
-  "inline-flex items-center rounded-full border border-border bg-background px-3.5 py-1.5 text-sm font-medium transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none";
+  "inline-flex h-10 items-center rounded-full border border-border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none";
 
 /**
  * Category listing. Categories form a tree: a parent page lists every product in its subtree

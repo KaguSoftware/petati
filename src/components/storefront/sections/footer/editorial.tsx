@@ -42,7 +42,7 @@ export function FooterEditorial({ storeName, tagline, categories, contactEmail, 
         <div className="flex flex-col items-center gap-3 text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
           {localeSlot}
           <span>
-            © {year} {storeName}. {labels.rights}
+            <bdi dir="ltr">© {year} {storeName}.</bdi> {labels.rights}
           </span>
         </div>
       </div>

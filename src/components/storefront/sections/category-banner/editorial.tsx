@@ -11,12 +11,12 @@ export function CategoryBannerEditorial({ title, categories }: CategoryBannerPro
         </span>
         <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{title}</h2>
       </div>
-      <ul className="flex flex-col divide-y divide-foreground/15 border-y border-foreground/15 @tablet:flex-row @tablet:flex-wrap @tablet:divide-x @tablet:divide-y-0">
+      <ul className="flex flex-col divide-y divide-foreground/15 border-y border-foreground/15 @desktop:flex-row @desktop:flex-wrap @desktop:divide-x @desktop:divide-y-0">
         {categories.map((c) => (
-          <li key={c.id} className="@tablet:flex-1">
+          <li key={c.id} className="@desktop:flex-1">
             <Link
               href={`/c/${c.slug}`}
-              className="flex h-full items-center py-4 font-serif text-2xl font-medium tracking-tight transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-none @tablet:justify-center @tablet:px-6 @tablet:py-6 @tablet:text-center @tablet:text-3xl @desktop:text-4xl"
+              className="flex h-full items-center py-4 font-serif text-2xl font-medium tracking-tight transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-none @desktop:justify-center @desktop:px-6 @desktop:py-6 @desktop:text-center @desktop:text-3xl @wide:text-4xl"
             >
               {c.name}
             </Link>

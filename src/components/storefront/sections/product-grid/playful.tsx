@@ -29,7 +29,7 @@ export async function ProductGridPlayful({ title, products, currency, locale, ca
       {products.length === 0 ? (
         <p className="rounded-3xl bg-muted py-12 text-center text-muted-foreground">{emptyLabel}</p>
       ) : (
-        <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pt-2 pb-6 contain-inline-size [scrollbar-width:thin] [mask-image:linear-gradient(to_right,black_92%,transparent)] rtl:[mask-image:linear-gradient(to_left,black_92%,transparent)]">
+        <ul className="bleed-gutter flex snap-x snap-mandatory gap-4 overflow-x-auto pt-2 pb-6 contain-inline-size [scrollbar-width:thin] [mask-image:linear-gradient(to_right,black_92%,transparent)] rtl:[mask-image:linear-gradient(to_left,black_92%,transparent)]">
           {products.map((p) => (
             <li key={p.id} className="w-[82%] shrink-0 snap-start @phablet:w-[46%] @desktop:w-[31.5%]">
               {renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}

@@ -36,7 +36,7 @@ export function ProductPageBold({ product, labels, purchasePanel, reviewsSection
         </div>
       </div>
       <div className="mt-8 bg-foreground text-background">
-        <div className="mx-auto grid max-w-7xl gap-8 px-gutter py-10 @tablet:grid-cols-2 @tablet:gap-14 @tablet:py-14">
+        <div className="mx-auto grid max-w-7xl gap-8 px-gutter py-10 @desktop:grid-cols-2 @desktop:gap-14 @tablet:py-14">
           <div className="flex flex-col gap-4">
             {product.brand && (
               <p className="text-xs font-bold tracking-widest text-background/70 uppercase">
@@ -49,7 +49,7 @@ export function ProductPageBold({ product, labels, purchasePanel, reviewsSection
                 )}
               </p>
             )}
-            <h1 className="bidi-auto text-4xl leading-[0.95] font-extrabold tracking-tight text-balance uppercase @tablet:text-6xl">{product.name}</h1>
+            <h1 className="bidi-auto text-4xl leading-none font-extrabold tracking-tight text-balance uppercase break-words @tablet:text-5xl @desktop:text-6xl">{product.name}</h1>
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={18} className="[&_span:last-child]:text-background/70" />}
             {product.shortDescription && <p className="bidi-auto text-lg font-medium text-background/80">{product.shortDescription}</p>}
           </div>

@@ -18,7 +18,7 @@ export function ReviewsPlayful({ reviews, ratingAvg, ratingCount, locale, labels
       {reviews.length === 0 ? (
         <p className="rounded-3xl bg-muted/60 px-6 py-10 text-center text-muted-foreground">{labels.empty}</p>
       ) : (
-        <ul className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pt-1 pb-6 contain-inline-size [scrollbar-width:thin]">
+        <ul className="bleed-gutter flex snap-x gap-4 overflow-x-auto pt-1 pb-6 contain-inline-size [scrollbar-width:thin]">
           {reviews.map((r) => (
             <li
               key={r.id}

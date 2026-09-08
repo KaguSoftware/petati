@@ -22,7 +22,7 @@ export function ReviewForm({ storeSlug, productId }: { storeSlug: string; produc
       <input type="hidden" name="productId" value={productId} />
       <input type="hidden" name="rating" value={rating} />
       <p className="font-medium">{t("writeReview")}</p>
-      <div className="inline-flex" dir="ltr">
+      <div className="inline-flex self-start" dir="ltr">
         {[1, 2, 3, 4, 5].map((i) => (
           <button key={i} type="button" aria-label={`${i}`} onClick={() => setRating(i)} className="p-0.5">
             <Star className={cn("size-5", i <= rating ? "fill-accent text-accent" : "text-muted-foreground/40")} />

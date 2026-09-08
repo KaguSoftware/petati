@@ -56,7 +56,7 @@ export async function StoreChrome({ ctx, children }: { ctx: StoreContext; childr
           </Suspense>
         ),
       })}
-      <div className="flex flex-1 flex-col">{children}</div>
+      <div className="flex flex-1 flex-col *:w-full">{children}</div>
       {renderSection("footer", store.theme.sections.footer, {
         storeName: store.name,
         tagline: store.tagline,

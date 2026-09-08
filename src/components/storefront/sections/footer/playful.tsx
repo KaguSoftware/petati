@@ -41,7 +41,7 @@ export function FooterPlayful({ storeName, tagline, categories, contactEmail, co
       </div>
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-gutter pb-8 text-xs text-muted-foreground @phablet:flex-row @phablet:items-center @phablet:justify-between">
         <span className="rounded-full bg-background/60 px-3 py-1">
-          © {year} {storeName}. {labels.rights}
+          <bdi dir="ltr">© {year} {storeName}.</bdi> {labels.rights}
         </span>
         {localeSlot}
       </div>

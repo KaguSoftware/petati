@@ -153,7 +153,7 @@ export function CheckoutForm({ storeSlug, locale, currency, email, phone, addres
       </Field>
 
       <Label className="items-center gap-2.5 font-normal leading-none">
-        <Checkbox name="accepts_marketing" />
+        <Checkbox name="accepts_marketing" className="size-5" />
         {t("marketingOptIn")}
       </Label>
 

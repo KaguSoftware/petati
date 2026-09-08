@@ -49,7 +49,7 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
     <div key={item.href} className="flex flex-col gap-0.5">
       {renderLink(item, row++)}
       {item.children && item.children.length > 0 && (
-        <div className="ms-5 flex flex-col gap-0.5 border-s-2 border-border ps-2">{item.children.map((child) => renderLink(child, row++, true))}</div>
+        <div className="ms-5 flex flex-col gap-0.5 border-s-2 border-foreground/15 ps-2">{item.children.map((child) => renderLink(child, row++, true))}</div>
       )}
     </div>
   );

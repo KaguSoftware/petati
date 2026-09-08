@@ -24,7 +24,7 @@ export function ProductCardMinimal({ product, currency, locale, labels, wishlist
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} className="[&_span:last-child]:text-white/70" />}
           </div>
         </div>
-        <div className="absolute start-3 top-3 flex flex-col items-start gap-1.5">
+        <div className="absolute start-3 top-3 flex min-h-10 flex-col items-start justify-center gap-1.5">
           {product.isNew && <span className="rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-foreground">{labels.new}</span>}
           {!product.inStock && <span className="rounded-full bg-black/70 px-2.5 py-0.5 text-[11px] font-medium text-white">{labels.outOfStock}</span>}
         </div>

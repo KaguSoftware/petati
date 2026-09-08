@@ -27,14 +27,14 @@ export function CartViewPlayful({ cart, totals, currency, locale, labels, lineCo
                   <ProductImage src={l.imageUrl} alt={l.name} className="size-24 rounded-2xl" sizes="96px" />
                 </Link>
                 <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
-                  <Link href={`/p/${l.productSlug}`} className="bidi-auto font-semibold hover:underline">
-                    {l.name}
-                  </Link>
-                  {l.variantLabel && <p className="text-sm text-muted-foreground">{l.variantLabel}</p>}
-                  <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
-                    {lineControls[l.id]}
-                    <Price amount={l.lineTotal} currency={currency} locale={locale} />
+                  <div className="flex items-start justify-between gap-3">
+                    <Link href={`/p/${l.productSlug}`} className="bidi-auto font-semibold hover:underline">
+                      {l.name}
+                    </Link>
+                    <Price amount={l.lineTotal} currency={currency} locale={locale} className="shrink-0" />
                   </div>
+                  {l.variantLabel && <p className="text-sm text-muted-foreground">{l.variantLabel}</p>}
+                  <div className="mt-1">{lineControls[l.id]}</div>
                 </div>
               </li>
             ))}

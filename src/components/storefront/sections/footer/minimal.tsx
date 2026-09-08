@@ -30,7 +30,7 @@ export function FooterMinimal({ storeName, tagline, categories, contactEmail, co
       <div className="border-t">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-gutter py-5 text-xs text-muted-foreground @phablet:flex-row @phablet:items-center @phablet:justify-between">
           <span>
-            © {year} {storeName}. {labels.rights}
+            <bdi dir="ltr">© {year} {storeName}.</bdi> {labels.rights}
           </span>
           {localeSlot}
         </div>
