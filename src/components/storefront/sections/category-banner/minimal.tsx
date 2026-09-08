@@ -7,7 +7,7 @@ export function CategoryBannerMinimal({ title, categories }: CategoryBannerProps
   return (
     <section className="mx-auto max-w-7xl px-4 py-10">
       <h2 className="mb-5 text-xl font-semibold tracking-tight">{title}</h2>
-      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <ul className="grid grid-cols-2 gap-4 @phablet:grid-cols-3 @desktop:grid-cols-5">
         {categories.map((c) => (
           <li key={c.id}>
             <Link href={`/c/${c.slug}`} className="group flex flex-col gap-2">

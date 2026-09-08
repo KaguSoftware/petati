@@ -6,9 +6,9 @@ import type { CategoryBannerProps } from "../types";
 export function CategoryBannerBold({ title, categories }: CategoryBannerProps) {
   if (categories.length === 0) return null;
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 md:py-16">
-      <h2 className="mb-6 text-3xl font-extrabold tracking-tight uppercase md:text-5xl">{title}</h2>
-      <ul className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+    <section className="mx-auto max-w-7xl px-4 py-12 @tablet:py-16">
+      <h2 className="mb-6 text-3xl font-extrabold tracking-tight uppercase @tablet:text-5xl">{title}</h2>
+      <ul className="grid grid-cols-2 gap-2 @tablet:grid-cols-3 @desktop:grid-cols-4">
         {categories.map((c, i) => (
           <li key={c.id}>
             <Link
@@ -26,7 +26,7 @@ export function CategoryBannerBold({ title, categories }: CategoryBannerProps) {
                   sizes="(min-width: 1024px) 25vw, 50vw"
                 />
               )}
-              <span className="relative line-clamp-2 text-2xl leading-none font-extrabold tracking-tight uppercase md:text-3xl">{c.name}</span>
+              <span className="relative line-clamp-2 text-2xl leading-none font-extrabold tracking-tight uppercase @tablet:text-3xl">{c.name}</span>
             </Link>
           </li>
         ))}

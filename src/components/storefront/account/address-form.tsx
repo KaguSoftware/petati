@@ -18,7 +18,7 @@ export function AddressList({ storeSlug, addresses, defaultCountry }: { storeSlu
   return (
     <div className="flex flex-col gap-4">
       {addresses.length === 0 && !editing && <p className="text-muted-foreground">{t("noAddresses")}</p>}
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <ul className="grid gap-3 @phablet:grid-cols-2">
         {addresses.map((a) => (
           <li key={a.id} className="flex flex-col gap-2 rounded-lg border p-4 text-sm">
             <div className="flex items-center justify-between">
@@ -59,7 +59,7 @@ function AddressForm({ storeSlug, address, defaultCountry, onDone }: { storeSlug
   }, {} as SimpleState);
 
   return (
-    <form action={action} className="grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
+    <form action={action} className="grid gap-4 rounded-lg border p-4 @phablet:grid-cols-2">
       <input type="hidden" name="storeSlug" value={storeSlug} />
       {address && <input type="hidden" name="id" value={address.id} />}
       <F name="label" label={ta("label")} value={address?.label} />
@@ -74,12 +74,12 @@ function AddressForm({ storeSlug, address, defaultCountry, onDone }: { storeSlug
         <Label htmlFor="addr-country">{t("country")}</Label>
         <CountrySelect id="addr-country" name="country" defaultValue={address?.country ?? defaultCountry} required />
       </div>
-      <Label className="gap-2.5 font-normal sm:col-span-2">
+      <Label className="gap-2.5 font-normal @phablet:col-span-2">
         <Checkbox name="is_default" defaultChecked={address?.is_default ?? false} />
         {ta("defaultAddress")}
       </Label>
-      {state.error && <p className="text-sm text-destructive sm:col-span-2">{tc("error")}</p>}
-      <div className="flex gap-2 sm:col-span-2">
+      {state.error && <p className="text-sm text-destructive @phablet:col-span-2">{tc("error")}</p>}
+      <div className="flex gap-2 @phablet:col-span-2">
         <Button type="submit" disabled={pending}>{tc("save")}</Button>
         <Button type="button" variant="ghost" onClick={onDone}>{tc("cancel")}</Button>
       </div>

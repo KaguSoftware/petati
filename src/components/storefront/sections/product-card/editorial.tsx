@@ -22,7 +22,7 @@ export function ProductCardEditorial({ product, currency, locale, labels, wishli
           <p className={cn("text-[10px] uppercase tracking-[0.2em]", product.inStock ? "text-primary" : "text-muted-foreground")}>{eyebrow}</p>
         )}
         {product.brand && <p className="truncate text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{product.brand}</p>}
-        <Link href={`/p/${product.slug}`} className="line-clamp-2 font-serif text-base font-medium leading-snug transition-colors hover:text-primary md:text-lg">
+        <Link href={`/p/${product.slug}`} className="line-clamp-2 font-serif text-base font-medium leading-snug transition-colors hover:text-primary @tablet:text-lg">
           {product.name}
         </Link>
         {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} className="opacity-70" />}

@@ -7,9 +7,9 @@ const link = "text-sm text-foreground/80 transition-colors hover:text-primary";
 export function FooterEditorial({ storeName, tagline, categories, contactEmail, contactPhone, labels, localeSlot, year }: FooterProps) {
   return (
     <footer className="border-t border-foreground/15 bg-background">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-4 md:gap-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 @tablet:grid-cols-4 @tablet:gap-8">
         <div className="flex flex-col gap-3">
-          <p className="font-serif text-3xl font-medium tracking-tight md:text-4xl">{storeName}</p>
+          <p className="font-serif text-3xl font-medium tracking-tight @tablet:text-4xl">{storeName}</p>
           {tagline && <p className="max-w-xs font-serif text-sm italic text-muted-foreground">{tagline}</p>}
         </div>
         <div className="flex flex-col gap-3">

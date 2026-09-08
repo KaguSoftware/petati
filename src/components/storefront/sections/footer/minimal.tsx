@@ -4,8 +4,8 @@ import type { FooterProps } from "../types";
 export function FooterMinimal({ storeName, tagline, categories, contactEmail, contactPhone, labels, localeSlot, year }: FooterProps) {
   return (
     <footer className="border-t">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-4">
-        <div className="flex flex-col gap-2 md:col-span-2">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 @tablet:grid-cols-4">
+        <div className="flex flex-col gap-2 @tablet:col-span-2">
           <p className="text-lg font-semibold">{storeName}</p>
           {tagline && <p className="max-w-sm text-sm text-muted-foreground">{tagline}</p>}
         </div>

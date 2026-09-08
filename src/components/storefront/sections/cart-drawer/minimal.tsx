@@ -18,7 +18,7 @@ export function CartViewMinimal({ cart, totals, currency, locale, labels, lineCo
           </Link>
         </div>
       ) : (
-        <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
+        <div className="grid gap-10 @desktop:grid-cols-[1fr_360px]">
           <ul className="divide-y">
             {cart.lines.map((l) => (
               <li key={l.id} className="flex gap-4 py-4">

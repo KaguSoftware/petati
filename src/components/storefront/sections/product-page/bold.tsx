@@ -6,7 +6,7 @@ import type { ProductPageProps } from "../types";
 export function ProductPageBold({ product, labels, purchasePanel, reviewsSection, wishlistSlot }: ProductPageProps) {
   const [main, ...rest] = product.images;
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 md:py-12">
+    <main className="mx-auto max-w-7xl px-4 py-8 @tablet:py-12">
       <nav className="mb-6 text-xs font-bold tracking-widest text-muted-foreground uppercase">
         {product.categories.map((c, i) => (
           <span key={c.slug}>
@@ -17,7 +17,7 @@ export function ProductPageBold({ product, labels, purchasePanel, reviewsSection
           </span>
         ))}
       </nav>
-      <div className="grid gap-10 md:grid-cols-2 md:gap-14">
+      <div className="grid gap-10 @tablet:grid-cols-2 @tablet:gap-14">
         <div className="flex flex-col gap-3">
           <div className="relative border-4 border-foreground">
             <ProductImage src={main?.url ?? null} alt={main?.alt ?? product.name} className="aspect-square" sizes="(min-width: 768px) 50vw, 100vw" priority />
@@ -46,11 +46,11 @@ export function ProductPageBold({ product, labels, purchasePanel, reviewsSection
                 )}
               </p>
             )}
-            <h1 className="text-4xl leading-[0.95] font-extrabold tracking-tight text-balance uppercase md:text-6xl">{product.name}</h1>
+            <h1 className="text-4xl leading-[0.95] font-extrabold tracking-tight text-balance uppercase @tablet:text-6xl">{product.name}</h1>
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={18} />}
             {product.shortDescription && <p className="text-lg font-medium text-muted-foreground">{product.shortDescription}</p>}
           </div>
-          <div className="border-4 border-foreground p-5 md:p-6">{purchasePanel}</div>
+          <div className="border-4 border-foreground p-5 @tablet:p-6">{purchasePanel}</div>
           {product.description && (
             <section className="border-t-4 border-foreground pt-6">
               <h2 className="mb-3 text-sm font-extrabold tracking-widest uppercase">{labels.description}</h2>

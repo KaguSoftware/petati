@@ -6,8 +6,8 @@ const pill = "-ms-3 w-fit rounded-full px-3 py-1 text-muted-foreground transitio
 export function FooterPlayful({ storeName, tagline, categories, contactEmail, contactPhone, labels, localeSlot, year }: FooterProps) {
   return (
     <footer className="mt-8 rounded-t-[3rem] bg-muted ring-1 ring-foreground/5">
-      <div className="mx-auto grid max-w-7xl gap-8 px-6 pt-14 pb-10 md:grid-cols-4 md:px-8">
-        <div className="flex flex-col gap-2 md:col-span-2">
+      <div className="mx-auto grid max-w-7xl gap-8 px-6 pt-14 pb-10 @tablet:grid-cols-4 @tablet:px-8">
+        <div className="flex flex-col gap-2 @tablet:col-span-2">
           <p className="text-2xl font-bold tracking-tight">{storeName}</p>
           {tagline && <p className="max-w-sm text-sm text-muted-foreground">{tagline}</p>}
         </div>
@@ -39,7 +39,7 @@ export function FooterPlayful({ storeName, tagline, categories, contactEmail, co
           </Link>
         </div>
       </div>
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 pb-6 text-xs text-muted-foreground md:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 pb-6 text-xs text-muted-foreground @tablet:px-8">
         <span className="rounded-full bg-background/60 px-3 py-1">
           © {year} {storeName}. {labels.rights}
         </span>

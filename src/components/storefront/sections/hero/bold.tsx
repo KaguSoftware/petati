@@ -7,10 +7,10 @@ import type { HeroProps } from "../types";
 export function HeroBold({ title, subtitle, ctaLabel, ctaHref, imageUrl }: HeroProps) {
   return (
     <section className="bg-primary text-primary-foreground">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 md:grid-cols-[1.1fr_1fr] md:gap-14 md:py-24">
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 @tablet:grid-cols-[1.1fr_1fr] @tablet:gap-14 @tablet:py-24">
         <div className="flex flex-col gap-6">
-          <h1 className="text-5xl leading-[0.95] font-extrabold tracking-tight text-balance uppercase md:text-7xl">{title}</h1>
-          <p className="max-w-prose text-lg font-medium text-primary-foreground/80 md:text-xl">{subtitle}</p>
+          <h1 className="text-5xl leading-[0.95] font-extrabold tracking-tight text-balance uppercase @tablet:text-7xl">{title}</h1>
+          <p className="max-w-prose text-lg font-medium text-primary-foreground/80 @tablet:text-xl">{subtitle}</p>
           <Link
             href={ctaHref}
             className={cn(

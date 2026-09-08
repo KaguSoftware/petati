@@ -12,7 +12,7 @@ export async function ProductGridPlayful({ title, products, currency, locale, ca
       {(title || viewAllHref) && (
         <div className="mb-6 flex items-center justify-between gap-4">
           {title && (
-            <h2 className="relative text-2xl font-bold tracking-tight md:text-3xl">
+            <h2 className="relative text-2xl font-bold tracking-tight @tablet:text-3xl">
               <span className="relative z-10">{title}</span>
               <span aria-hidden className="absolute start-0 bottom-0.5 h-3 w-16 rounded-full bg-accent/50" />
             </h2>
@@ -31,7 +31,7 @@ export async function ProductGridPlayful({ title, products, currency, locale, ca
       {products.length === 0 ? (
         <p className="rounded-3xl bg-muted py-12 text-center text-muted-foreground">{emptyLabel}</p>
       ) : (
-        <ul className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-6 @tablet:grid-cols-3 @desktop:grid-cols-4">
           {products.map((p) => (
             <li key={p.id}>
               {renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}

@@ -5,9 +5,9 @@ import type { HeroProps } from "../types";
 
 export function HeroMinimal({ title, subtitle, ctaLabel, ctaHref, imageUrl }: HeroProps) {
   return (
-    <section className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-14 md:grid-cols-2 md:py-20">
+    <section className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-14 @tablet:grid-cols-2 @tablet:py-20">
       <div className="flex flex-col gap-5">
-        <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">{title}</h1>
+        <h1 className="text-4xl font-semibold tracking-tight @tablet:text-5xl">{title}</h1>
         <p className="max-w-prose text-lg text-muted-foreground">{subtitle}</p>
         <Link href={ctaHref} className={buttonVariants({ size: "lg", className: "self-start" })}>
           {ctaLabel}

@@ -49,6 +49,17 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Storefront sections respond to their CONTAINER, not the viewport, so the admin design picker can
+   render a desktop layout inside a small scaled frame. The storefront root and every preview frame
+   declare `@container`; sections use `@phablet:` `@tablet:` `@desktop:` `@wide:` (= sm md lg xl).
+   Custom names on purpose: the `--container-*` namespace also drives `max-w-*`. */
+@theme {
+  --container-phablet: 40rem;
+  --container-tablet: 48rem;
+  --container-desktop: 64rem;
+  --container-wide: 80rem;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

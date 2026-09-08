@@ -15,7 +15,7 @@ export function ProductPagePlayful({ product, labels, purchasePanel, reviewsSect
           </Link>
         ))}
       </nav>
-      <div className="grid gap-10 md:grid-cols-2">
+      <div className="grid gap-10 @tablet:grid-cols-2">
         <div className="flex flex-col gap-4">
           <div className="relative overflow-hidden rounded-3xl shadow-lg shadow-primary/10 ring-1 ring-foreground/5">
             <ProductImage src={main?.url ?? null} alt={main?.alt ?? product.name} className="aspect-square" sizes="(min-width: 768px) 50vw, 100vw" priority />
@@ -54,7 +54,7 @@ export function ProductPagePlayful({ product, labels, purchasePanel, reviewsSect
                 {product.inStock ? labels.inStock : labels.outOfStock}
               </p>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{product.name}</h1>
+            <h1 className="text-3xl font-bold tracking-tight @tablet:text-4xl">{product.name}</h1>
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={16} />}
             {product.shortDescription && <p className="text-lg text-muted-foreground">{product.shortDescription}</p>}
           </div>
@@ -67,7 +67,7 @@ export function ProductPagePlayful({ product, labels, purchasePanel, reviewsSect
           )}
         </div>
       </div>
-      <section className="mt-14 rounded-3xl bg-muted/40 p-6 ring-1 ring-foreground/5 md:p-8">{reviewsSection}</section>
+      <section className="mt-14 rounded-3xl bg-muted/40 p-6 ring-1 ring-foreground/5 @tablet:p-8">{reviewsSection}</section>
     </main>
   );
 }

@@ -7,9 +7,9 @@ const link = "text-sm font-medium text-background/70 decoration-2 underline-offs
 export function FooterBold({ storeName, tagline, categories, contactEmail, contactPhone, labels, localeSlot, year }: FooterProps) {
   return (
     <footer className="bg-foreground text-background">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-4 md:py-20">
-        <div className="flex flex-col gap-4 md:col-span-2">
-          <p className="text-4xl leading-none font-extrabold tracking-tight uppercase md:text-6xl">{storeName}</p>
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 @tablet:grid-cols-4 @tablet:py-20">
+        <div className="flex flex-col gap-4 @tablet:col-span-2">
+          <p className="text-4xl leading-none font-extrabold tracking-tight uppercase @tablet:text-6xl">{storeName}</p>
           {tagline && <p className="max-w-sm text-sm font-medium text-background/70">{tagline}</p>}
         </div>
         <div className="flex flex-col gap-3">

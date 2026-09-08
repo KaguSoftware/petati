@@ -4,7 +4,7 @@ import type { ReviewsProps } from "../types";
 
 export function ReviewsMinimal({ reviews, ratingAvg, ratingCount, locale, labels, formSlot }: ReviewsProps) {
   return (
-    <div className="grid gap-8 md:grid-cols-[280px_1fr]">
+    <div className="grid gap-8 @tablet:grid-cols-[280px_1fr]">
       <div className="flex flex-col gap-3">
         <h2 className="text-xl font-semibold tracking-tight">{labels.title}</h2>
         {ratingCount > 0 && (

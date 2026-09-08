@@ -17,7 +17,7 @@ export function ProductPageMinimal({ product, labels, purchasePanel, reviewsSect
           </span>
         ))}
       </nav>
-      <div className="grid gap-10 md:grid-cols-2">
+      <div className="grid gap-10 @tablet:grid-cols-2">
         <div className="flex flex-col gap-3">
           <div className="relative">
             <ProductImage src={main?.url ?? null} alt={main?.alt ?? product.name} className="aspect-square rounded-lg" sizes="(min-width: 768px) 50vw, 100vw" priority />

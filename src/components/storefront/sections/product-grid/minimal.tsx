@@ -21,7 +21,7 @@ export async function ProductGridMinimal({ title, products, currency, locale, ca
       {products.length === 0 ? (
         <p className="py-10 text-center text-muted-foreground">{emptyLabel}</p>
       ) : (
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-8 @tablet:grid-cols-3 @desktop:grid-cols-4">
           {products.map((p) => (
             <li key={p.id}>
               {renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}

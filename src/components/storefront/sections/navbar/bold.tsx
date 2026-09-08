@@ -21,7 +21,7 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-foreground bg-background">
-      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3 px-4 md:h-20 md:gap-6">
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3 px-4 @tablet:h-20 @tablet:gap-6">
         <div className="flex items-center gap-1">
           <MobileNav
             labels={{ menu: labels.menu, closeMenu: labels.closeMenu, categories: labels.categories, search: labels.search }}
@@ -38,7 +38,7 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
           {brand}
         </div>
 
-        <nav aria-label={labels.menu} className="hidden min-w-0 items-center justify-center gap-2 overflow-hidden md:flex lg:gap-4">
+        <nav aria-label={labels.menu} className="hidden min-w-0 items-center justify-center gap-2 overflow-hidden @tablet:flex @desktop:gap-4">
           <Link href="/shop" className={navLink}>
             {labels.shop}
           </Link>
@@ -46,18 +46,18 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, cartSlot, a
             {labels.brands}
           </Link>
           {categoryLinks.map((l, i) => (
-            <Link key={l.href} href={l.href} className={cn(navLink, i >= 5 ? "hidden" : i >= 3 ? "hidden xl:inline-flex" : undefined)}>
+            <Link key={l.href} href={l.href} className={cn(navLink, i >= 5 ? "hidden" : i >= 3 ? "hidden @wide:inline-flex" : undefined)}>
               {l.label}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center justify-end gap-0.5 md:gap-1">
+        <div className="flex items-center justify-end gap-0.5 @tablet:gap-1">
           <SearchForm
             placeholder={labels.search}
-            className="hidden w-44 md:block lg:w-64 md:me-1 [&_input]:rounded-none [&_input]:border-2 [&_input]:border-foreground [&_input]:bg-background"
+            className="hidden w-44 @tablet:block @desktop:w-64 @tablet:me-1 [&_input]:rounded-none [&_input]:border-2 [&_input]:border-foreground [&_input]:bg-background"
           />
-          <div className="hidden md:block">{localeSlot}</div>
+          <div className="hidden @tablet:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>

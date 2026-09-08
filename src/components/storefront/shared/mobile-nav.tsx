@@ -55,7 +55,7 @@ export function MobileNav({ labels, brand, primary, categories, footer }: Props)
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        render={<Button variant="ghost" size="icon-lg" className="group/burger md:hidden" aria-label={open ? labels.closeMenu : labels.menu} />}
+        render={<Button variant="ghost" size="icon-lg" className="group/burger @tablet:hidden" aria-label={open ? labels.closeMenu : labels.menu} />}
       >
         <span aria-hidden className="flex flex-col items-center justify-center gap-[5px]">
           <span className={`${bar} group-data-[popup-open]/burger:translate-y-[7px] group-data-[popup-open]/burger:rotate-45`} />

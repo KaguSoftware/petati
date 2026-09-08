@@ -12,7 +12,7 @@ export function CartViewEditorial({ cart, totals, currency, locale, labels, line
   const money = (n: number) => formatMoney(n, currency, locale);
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="mb-10 border-b border-foreground/15 pb-4 font-serif text-4xl font-medium tracking-tight md:text-5xl">{labels.title}</h1>
+      <h1 className="mb-10 border-b border-foreground/15 pb-4 font-serif text-4xl font-medium tracking-tight @tablet:text-5xl">{labels.title}</h1>
       {cart.lines.length === 0 ? (
         <div className="flex flex-col items-center gap-5 py-20 text-center">
           <p className="font-serif text-lg italic text-muted-foreground">{labels.empty}</p>
@@ -21,7 +21,7 @@ export function CartViewEditorial({ cart, totals, currency, locale, labels, line
           </Link>
         </div>
       ) : (
-        <div className="grid gap-12 lg:grid-cols-[1fr_360px] lg:gap-16">
+        <div className="grid gap-12 @desktop:grid-cols-[1fr_360px] @desktop:gap-16">
           <ul className="divide-y divide-foreground/15 border-b border-foreground/15">
             {cart.lines.map((l) => (
               <li key={l.id} className="flex gap-5 py-6">
@@ -41,7 +41,7 @@ export function CartViewEditorial({ cart, totals, currency, locale, labels, line
               </li>
             ))}
           </ul>
-          <aside className="flex h-fit flex-col gap-5 border-t border-foreground/15 pt-6 lg:border-t-0 lg:border-s lg:ps-8 lg:pt-0">
+          <aside className="flex h-fit flex-col gap-5 border-t border-foreground/15 pt-6 @desktop:border-t-0 @desktop:border-s @desktop:ps-8 @desktop:pt-0">
             {couponSlot}
             <dl className="flex flex-col gap-2.5 text-sm">
               <Row label={labels.subtotal} value={money(totals.subtotal)} />

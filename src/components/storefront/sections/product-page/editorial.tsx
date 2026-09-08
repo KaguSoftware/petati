@@ -21,8 +21,8 @@ export function ProductPageEditorial({ product, labels, purchasePanel, reviewsSe
           </span>
         ))}
       </nav>
-      <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
-        <div className="flex flex-col gap-3 lg:col-span-7">
+      <div className="grid gap-10 @desktop:grid-cols-12 @desktop:gap-14">
+        <div className="flex flex-col gap-3 @desktop:col-span-7">
           <div className="relative">
             <ProductImage src={main?.url ?? null} alt={main?.alt ?? product.name} className="aspect-[4/5] rounded-none" sizes="(min-width: 1024px) 58vw, 100vw" priority />
             {wishlistSlot && <div className="absolute end-3 top-3">{wishlistSlot}</div>}
@@ -37,7 +37,7 @@ export function ProductPageEditorial({ product, labels, purchasePanel, reviewsSe
             </ul>
           )}
         </div>
-        <div className="flex flex-col gap-8 self-start lg:sticky lg:top-24 lg:col-span-5">
+        <div className="flex flex-col gap-8 self-start @desktop:sticky @desktop:top-24 @desktop:col-span-5">
           <div className="flex flex-col gap-3">
             {product.brand && (
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -50,7 +50,7 @@ export function ProductPageEditorial({ product, labels, purchasePanel, reviewsSe
                 )}
               </p>
             )}
-            <h1 className="font-serif text-3xl font-medium tracking-tight text-balance md:text-4xl">{product.name}</h1>
+            <h1 className="font-serif text-3xl font-medium tracking-tight text-balance @tablet:text-4xl">{product.name}</h1>
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={16} className="opacity-70" />}
             {product.shortDescription && <p className="max-w-prose font-serif text-lg italic text-muted-foreground">{product.shortDescription}</p>}
           </div>

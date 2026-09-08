@@ -5,9 +5,9 @@ import type { ReviewsProps } from "../types";
 export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, formSlot }: ReviewsProps) {
   const ratingPct = Math.min(100, Math.max(0, (ratingAvg / 5) * 100));
   return (
-    <div className="grid gap-10 md:grid-cols-[300px_1fr]">
+    <div className="grid gap-10 @tablet:grid-cols-[300px_1fr]">
       <div className="flex flex-col gap-5">
-        <h2 className="text-3xl font-extrabold tracking-tight uppercase md:text-4xl">{labels.title}</h2>
+        <h2 className="text-3xl font-extrabold tracking-tight uppercase @tablet:text-4xl">{labels.title}</h2>
         {ratingCount > 0 && (
           <div className="flex flex-col gap-3 border-4 border-foreground p-5">
             <span className="text-7xl leading-none font-extrabold tracking-tighter tabular-nums">{ratingAvg.toFixed(1)}</span>

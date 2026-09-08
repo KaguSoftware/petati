@@ -15,7 +15,7 @@ export default async function StoreLayout({ children, params }: LayoutProps<"/[l
   return (
     <div
       data-storefront
-      className="flex min-h-screen flex-col bg-background font-sans text-foreground"
+      className="@container flex min-h-screen flex-col bg-background font-sans text-foreground"
       style={themeToCssVars(store.theme) as React.CSSProperties}
     >
       <StoreProvider

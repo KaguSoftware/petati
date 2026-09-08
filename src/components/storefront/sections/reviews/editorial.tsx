@@ -5,7 +5,7 @@ import type { ReviewsProps } from "../types";
 export function ReviewsEditorial({ reviews, ratingAvg, ratingCount, locale, labels, formSlot }: ReviewsProps) {
   const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
   return (
-    <div className="grid gap-10 md:grid-cols-[280px_1fr] md:gap-14">
+    <div className="grid gap-10 @tablet:grid-cols-[280px_1fr] @tablet:gap-14">
       <div className="flex flex-col gap-4">
         <h2 className="font-serif text-3xl font-medium tracking-tight">{labels.title}</h2>
         {ratingCount > 0 && (
@@ -22,7 +22,7 @@ export function ReviewsEditorial({ reviews, ratingAvg, ratingCount, locale, labe
         <ul className="divide-y divide-foreground/15">
           {reviews.map((r) => (
             <li key={r.id} className="flex flex-col gap-3 py-8 first:pt-0">
-              {r.title && <p className="font-serif text-2xl font-medium leading-snug text-balance md:text-3xl">{r.title}</p>}
+              {r.title && <p className="font-serif text-2xl font-medium leading-snug text-balance @tablet:text-3xl">{r.title}</p>}
               {r.body && <p className={r.title ? "max-w-prose text-sm leading-relaxed text-muted-foreground" : "max-w-prose font-serif text-xl leading-snug"}>{r.body}</p>}
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1">
                 <RatingStars value={r.rating} className="opacity-60" />

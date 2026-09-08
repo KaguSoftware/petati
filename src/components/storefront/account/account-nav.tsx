@@ -12,7 +12,7 @@ export function AccountNav({ labels }: { labels: { orders: string; addresses: st
     { href: "/account/profile", label: labels.profile },
   ];
   return (
-    <nav className="flex flex-row gap-1 overflow-x-auto md:flex-col">
+    <nav className="flex flex-row gap-1 overflow-x-auto @tablet:flex-col">
       {items.map((i) => {
         const active = i.href === "/account" ? pathname === "/account" : pathname.startsWith(i.href);
         return (
