@@ -36,9 +36,12 @@ export interface NoStoreContext {
  */
 export const adminContext = cache(async (localeParam: string): Promise<AdminContext | NoStoreContext> => {
   const locale: Locale = isLocale(localeParam) ? localeParam : "en";
+  // The store list does not depend on the session: start it before the profile round trip so the
+  // two overlap (each is one network hop from the function).
+  const storesPromise = listStores();
   const user = await requireCompleteProfile(locale, `/${locale}/admin`);
 
-  const [accessible, allStores] = await Promise.all([getAdminStoreIds(), listStores()]);
+  const [accessible, allStores] = await Promise.all([getAdminStoreIds(), storesPromise]);
   const stores = accessible === "all" ? allStores : allStores.filter((s) => accessible.includes(s.id));
   if (stores.length === 0) return { ok: false, locale, user };
 

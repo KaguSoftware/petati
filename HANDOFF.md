@@ -33,7 +33,7 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
 - next-intl 4 with `messages/{en,tr,fa}.json`, `[locale]` prefix always.
 - Supabase (Postgres, Auth, Storage) via `@supabase/ssr`. **The app runs against the linked cloud project `zsuxkiqswaaxgpibwstb`** (eu-central-1, the client's account) since 2026-09-08; `.env.local` holds its URL + legacy anon/service_role JWTs (`npx supabase projects api-keys --project-ref zsuxkiqswaaxgpibwstb -o json`). The local Docker stack (machine 2 only) is used for `db reset` + pgTAP. Migrations reach the cloud with `npx supabase db push` (CLI already linked + authenticated).
 - Resend + react-email for transactional mail (optional in dev, logs to console without a key).
-- Vercel hosting at https://petati.vercel.app (auto-deploys from `main`). The Vercel CLI is not logged in on any dev machine, so env vars are set in the Vercel dashboard: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ROOT_DOMAIN=petati.vercel.app`, `DEFAULT_STORE_SLUG=default`, `FEATURE_MULTI_STORE=false`, `NEXT_PUBLIC_APP_URL=https://petati.vercel.app`, `EMAIL_FROM_FALLBACK`, optional `RESEND_API_KEY`.
+- Vercel hosting at https://petati.vercel.app (auto-deploys from `main`). **Functions are pinned to `fra1` in `vercel.json`** (next to the Supabase project; the default was `iad1`, which cost ~120 ms per database call — see Gotchas). The Vercel CLI is not logged in on any dev machine, so env vars are set in the Vercel dashboard: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ROOT_DOMAIN=petati.vercel.app`, `DEFAULT_STORE_SLUG=default`, `FEATURE_MULTI_STORE=false`, `NEXT_PUBLIC_APP_URL=https://petati.vercel.app`, `EMAIL_FROM_FALLBACK`, optional `RESEND_API_KEY`.
 - Dev OS: Windows 11. Machine 1: Node 22.14, npm 11 (no Docker). Machine 2: Node 24.15, npm 12, Docker Desktop 29 (works).
 - No secrets in this file. Env template: `.env.example`.
 
@@ -55,6 +55,10 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
   quick actions are optimistic — flip first, roll back on a rejected result (`useOptimisticAction` +
   the cross-cell `optimistic-store`); React `cache()` dedupes `adminContext`; `loading.tsx` streams.
   New admin surfaces must follow this: no spinner where a pre-rendered panel or an optimistic patch will do.
+  Server side: sessions are verified locally (`supabase.auth.getClaims()`, ES256 + cached JWKS — never
+  `getUser()` on a hot path), `listStores` is `"use cache"` under the `stores` tag, list pages run counts +
+  every bucket in ONE `Promise.all`, and sidebar links use `prefetch={true}` so the full page (data included)
+  is in the client cache before the click (re-prefetched on hover after `staleTimes.static` = 60 s).
 - Theme fonts: the five `FONT_OPTIONS` (`src/lib/theme/fonts.ts`) are loaded once by the root layout;
   `themeToCssVars` maps the store's choice to `--font-sans` / `--heading-font`, Vazirmatn is always the
   Persian fallback. Add a font = add it to `fonts.ts` AND to the `next/font` block in `[locale]/layout.tsx`.
@@ -68,6 +72,7 @@ Done (build, typecheck, lint, 25 pgTAP tests green; every flow below verified wi
 - **Multi-store (hidden)**: `/admin/stores` list + 7-step create wizard + domain actions, gated by `FEATURE_MULTI_STORE` AND platform owner (`requireMultiStore`). On locally (`.env.local`) so `testuser@gmail.com` (platform owner on the cloud project, password `12345678`) can use it; keep it off in Vercel.
 - **Themes B–D (2026-09-08, late)**: every section now has `bold`, `editorial` and `playful` variants (48 files, all registered; the design editor and wizard show no "coming soon"). Verified in `/en|fa/preview/<variant>` at 390/1280: no overflow, no native controls. Theme fonts now really apply to the storefront.
 - **Speed pass (2026-09-08, late)**: `staleTimes`; Settings is one page with four pre-rendered panels (`?tab=`, old sub-routes redirect); Orders/Products/Reviews preload every status bucket and switch tabs with zero requests; optimistic featured/active/tracking switches, product status, review moderation, order status transitions and staff roles, all with rollback; sidebar links show a pending pulse. Verified with `node_modules/.qa/speed-qa.mjs`.
+- **Navigation speed (2026-09-08, night)**: sidebar click → painted page went from ~1.3 s to ~130 ms on Vercel (full prefetch + router cache); raw server render of an admin page from ~1.0–1.4 s to ~0.2–0.4 s (region fra1, local JWT verification, cached store list, single query wave). Measure with `node_modules/.qa/nav-timing.mjs <base> <rounds> <settleMs>`.
 - **Deployment**: https://petati.vercel.app is live against the cloud project (env vars set in the Vercel dashboard); all admin routes render there with zero console errors (multi-store routes 404 by design, flag off).
 In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS verification, Google OAuth secret paste (owner), SMTP for staff invites.
 
@@ -167,6 +172,9 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 - `TabbedPanels` uses `history.replaceState` (Next syncs `useSearchParams`); it must sit inside a Suspense boundary (it does — the page's list child). Panels stay mounted but `hidden`, so forms in inactive tabs keep their state.
 - `optimistic-store` clears a key once the server prop equals the patch; if a server refresh returns a DIFFERENT value than the optimistic one (race), the patch stays until the action's rollback/next reconcile — call `clearOptimistic` in error paths.
 - The old `/admin/settings/{commerce,pages,shipping}` routes are redirect stubs; link to `/admin/settings?tab=…` instead.
+- **Vercel region**: `X-Vercel-Id: fra1::…` only names the edge PoP that served you — the function ran in `iad1` until `vercel.json` pinned `regions: ["fra1"]`. Verify with `process.env.VERCEL_REGION` from inside a route, not from headers. Each Supabase call from fra1 is still ~40–60 ms (PostgREST + TLS), so sequential waves are what to hunt.
+- Next.js private folders: a route under `app/api/_name/` never becomes a route (underscore = private). The proxy matcher now skips `/api/` entirely (no locale redirect for API routes).
+- `getClaims()` refreshes an expired session through `getSession()` regardless of `autoRefreshToken`, so the proxy still rotates cookies; the JWKS is cached process-wide by auth-js (`GLOBAL_JWKS`).
 
 ## Running it
 ```
