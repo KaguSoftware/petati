@@ -73,6 +73,9 @@ Done (build, typecheck, lint, 25 pgTAP tests green; every flow below verified wi
 - **Themes B–D (2026-09-08, late)**: every section now has `bold`, `editorial` and `playful` variants (48 files, all registered; the design editor and wizard show no "coming soon"). Verified in `/en|fa/preview/<variant>` at 390/1280: no overflow, no native controls. Theme fonts now really apply to the storefront.
 - **Speed pass (2026-09-08, late)**: `staleTimes`; Settings is one page with four pre-rendered panels (`?tab=`, old sub-routes redirect); Orders/Products/Reviews preload every status bucket and switch tabs with zero requests; optimistic featured/active/tracking switches, product status, review moderation, order status transitions and staff roles, all with rollback; sidebar links show a pending pulse. Verified with `node_modules/.qa/speed-qa.mjs`.
 - **Navigation speed (2026-09-08, night)**: sidebar click → painted page went from ~1.3 s to ~130 ms on Vercel (full prefetch + router cache); raw server render of an admin page from ~1.0–1.4 s to ~0.2–0.4 s (region fra1, local JWT verification, cached store list, single query wave). Measure with `node_modules/.qa/nav-timing.mjs <base> <rounds> <settleMs>`.
+- **Client catalog model (2026-09-08, night)**: categories are a TREE and a parent lists its whole subtree (`categorySubtreeIds` in `src/lib/catalog/queries.ts`; child chips + parent breadcrumb on `/c/<slug>`; nested drawer). New BRANDS taxonomy: migration `20260908001000_brands.sql` (table `brands`, `products.brand_id`, free-text `products.brand` dropped), admin module `src/lib/admin/brands/*` + `/admin/products/brands`, product form brand Select, storefront `/brands`, `/b/<slug>`, brand filter on `/shop`, "Brands" nav link. Live catalog restructured with `node_modules/.qa/cloud-catalog.mjs` (8 brands, 12 categories, 25 products) and the seed mirrors it.
+- **Shipping cost at sale (2026-09-08, night)**: migration `20260908001100_shipping_cost.sql` — `shipping_rates.cost` (what the store pays the courier), `orders.shipping_cost` copied at checkout even when the customer ships free, editable in the Ship dialog, shown on the order, netted in Finance (`v_daily_sales.shipping_cost`). Verified live: order 2609-01003 (free shipping) carries cost 3500. Standard rate on the cloud is set to 35.00; Express still 0 — the client sets real figures in Settings → Shipping.
+- **Brand palette (2026-09-08)**: colours taken from the client's app icon (paw: teal-blue + orange) → primary #157fa1 (AA on white), accent #f7a83b, foreground #17323d, muted #eef8fb. Applied to the live theme via the Design page (`node_modules/.qa/apply-palette.mjs`) and to the seed. No logo file yet (the icon was "not the official file") — the monogram slot stays.
 - **Deployment**: https://petati.vercel.app is live against the cloud project (env vars set in the Vercel dashboard); all admin routes render there with zero console errors (multi-store routes 404 by design, flag off).
 In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS verification, Google OAuth secret paste (owner), SMTP for staff invites.
 
@@ -97,6 +100,8 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 - `src/lib/email/send.ts`, `src/emails/order-confirmation.tsx` — Resend or console fallback.
 - `src/components/storefront/sections/types.ts` — the props contract every variant must honour; `<section>/{minimal,bold,editorial,playful}.tsx` are the four implementations, all wired in `src/lib/theme/registry.tsx`.
 - `src/lib/theme/fonts.ts` — font allow-list + CSS stacks (see Conventions).
+- `src/lib/admin/brands/*`, `src/components/admin/products/brand-{list,dialog}.tsx` — brands admin; storefront brand pages under `src/app/[locale]/s/[store]/{brands,b/[slug]}/`, `shared/brand-mark.tsx`, `shared/category-nav.ts` (drawer tree).
+- `node_modules/.qa/*.mjs` (untracked) — Playwright QA: `admin-qa`, `speed-qa`, `nav-timing`, `fa-qa`, `catalog-live-qa`, `shipping-cost-qa`, `orders-qa`, `apply-palette`, `cloud-catalog` (one-off data restructure, idempotent, `--local` flag).
 - `src/components/admin/shared/{tabbed-panels,optimistic-store,use-optimistic-action,optimistic-status-badge}.tsx` — the speed toolkit (see Conventions); `isPlainList` in `src/lib/admin/list-params.ts`.
 - `src/components/storefront/shared/*` — interactive pieces shared by all variants (add-to-cart, cart controls, forms).
 - `src/i18n/{config,routing,navigation,request}.ts` — locales, RTL helper, next-intl wiring.
@@ -126,6 +131,9 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 | Themes | Four variants per section, fixture-verified | Per-variant product-page galleries/lookbooks, theme-specific animations | As requested |
 | Admin lists | Buckets preloaded only for a "plain" URL (just `status`); search/date/category/page/sort go back to server paging | Client-side filtering over a larger preloaded window | If lists grow |
 | Optimistic UI | Toggles, statuses, moderation, roles, order transitions | Optimistic create/delete rows (needs client-owned tables) | As needed |
+| Brands | Name/slug/logo/active; product ↔ one brand; brand pages + shop filter | Brand descriptions/translations, brand filter in the admin products toolbar (`?brand=<id>` already works) | When asked |
+| Categories | Tree via `parent_id`; storefront lists subtrees; drawer nests one level | Deeper nesting in desktop nav (mega menu), category images per child | When asked |
+| Shipping cost | Per-rate courier cost copied to the order; editable when shipping; finance nets it | Per-order weight/zone pricing, courier API costs | When asked |
 | Content pages | privacy/terms/about read plain text from `store.settings.pages` | Rich text editor in admin | Step 5 |
 | Admin | All modules live | Rich text for pages/descriptions, CSV export, SQL aggregates for counts | As needed |
 | Phone | Unique E.164 per account; emoji flags (letter pairs on Windows) | SVG flags; OTP login | Later |
@@ -175,6 +183,10 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 - The old `/admin/settings/{commerce,pages,shipping}` routes are redirect stubs; link to `/admin/settings?tab=…` instead.
 - **Vercel region**: `X-Vercel-Id: fra1::…` only names the edge PoP that served you — the function ran in `iad1` until `vercel.json` pinned `regions: ["fra1"]`. Verify with `process.env.VERCEL_REGION` from inside a route, not from headers. Each Supabase call from fra1 is still ~40–60 ms (PostgREST + TLS), so sequential waves are what to hunt.
 - Next.js private folders: a route under `app/api/_name/` never becomes a route (underscore = private). The proxy matcher now skips `/api/` entirely (no locale redirect for API routes).
+- After ANY direct data change on the cloud (scripts, SQL), the storefront's "use cache" entries (hours) keep serving old catalog/shipping data until a tag is updated: toggle a brand or save a category (`catalogTag`), re-save a shipping rate (`shipping:<storeId>`). `catalog-live-qa.mjs` does exactly that.
+- PostgREST's schema cache on the cloud lags a `db push` by ~10–20 s ("Could not find the table … in the schema cache") — retry.
+- Product QA: `rope-tug-toy` shows "Out of stock" on the live store now (earlier QA orders drained it); `orders-qa.mjs` uses `royal-canin-kitten`.
+- The client's app icon reads "petitati" (and the mailbox is petitati.ist@gmail.com) while the store/site is named "Petati" everywhere — confirm the spelling with the client before the logo lands.
 - `getClaims()` refreshes an expired session through `getSession()` regardless of `autoRefreshToken`, so the proxy still rotates cookies; the JWKS is cached process-wide by auth-js (`GLOBAL_JWKS`).
 
 ## Running it
