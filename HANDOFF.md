@@ -48,6 +48,16 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
 - Payment providers implement `src/lib/payments/provider.ts`. `manual` is live; `iyzico` is a stub.
 - Next.js 16 differs from older training data: read `node_modules/next/dist/docs/` before using an
   API you are unsure about (see `AGENTS.md`). Middleware is `src/proxy.ts`.
+- **Fast admin (owner rule, copied from KaguOs)**: router `staleTimes` (30s dynamic) keeps visited
+  pages warm; tab-like views render EVERY panel up front on the server and switch with local state
+  (`TabbedPanels`, URL mirrored via `history.replaceState`); list pages with status tabs preload page 1
+  of every bucket in one `Promise.all` wave when the URL carries only `status` (`isPlainList`);
+  quick actions are optimistic — flip first, roll back on a rejected result (`useOptimisticAction` +
+  the cross-cell `optimistic-store`); React `cache()` dedupes `adminContext`; `loading.tsx` streams.
+  New admin surfaces must follow this: no spinner where a pre-rendered panel or an optimistic patch will do.
+- Theme fonts: the five `FONT_OPTIONS` (`src/lib/theme/fonts.ts`) are loaded once by the root layout;
+  `themeToCssVars` maps the store's choice to `--font-sans` / `--heading-font`, Vazirmatn is always the
+  Persian fallback. Add a font = add it to `fonts.ts` AND to the `next/font` block in `[locale]/layout.tsx`.
 
 ## Current status (2026-09-08, evening)
 Done (build, typecheck, lint, 25 pgTAP tests green; every flow below verified with Playwright against the cloud project):
@@ -56,7 +66,10 @@ Done (build, typecheck, lint, 25 pgTAP tests green; every flow below verified wi
 - **Phone onboarding**: `profiles.phone` (E.164, unique) + `phone_country`; `PhoneField` (country Combobox + LTR number, `libphonenumber-js` server-side); required at sign-up and enforced by a one-time `/complete-profile` screen (account, checkout, admin, sign-in, OAuth callback).
 - **Step 5 admin — all modules built**: dashboard, orders (lifecycle + emails + refunds), products (translations, options/variants, images, categories), inventory (adjustments = stock movements, log), customers (`v_customer_stats`), coupons, reviews, finance (overview, margins, expenses), design (theme editor + live preview + branding upload), settings (general/commerce/pages/shipping), staff (invite/role/remove). Shell: Suspense frame (`instant = false`), mobile Sheet nav, DropdownMenu user menu, breadcrumbs, shared `StatusTabs`/DataTable/toolbar/dialog components under `src/components/admin/shared/`.
 - **Multi-store (hidden)**: `/admin/stores` list + 7-step create wizard + domain actions, gated by `FEATURE_MULTI_STORE` AND platform owner (`requireMultiStore`). On locally (`.env.local`) so `testuser@gmail.com` (platform owner on the cloud project, password `12345678`) can use it; keep it off in Vercel.
-In progress: nothing. Not started: themes B–D, iyzico, rich text editor, CSV export, DNS verification.
+- **Themes B–D (2026-09-08, late)**: every section now has `bold`, `editorial` and `playful` variants (48 files, all registered; the design editor and wizard show no "coming soon"). Verified in `/en|fa/preview/<variant>` at 390/1280: no overflow, no native controls. Theme fonts now really apply to the storefront.
+- **Speed pass (2026-09-08, late)**: `staleTimes`; Settings is one page with four pre-rendered panels (`?tab=`, old sub-routes redirect); Orders/Products/Reviews preload every status bucket and switch tabs with zero requests; optimistic featured/active/tracking switches, product status, review moderation, order status transitions and staff roles, all with rollback; sidebar links show a pending pulse. Verified with `node_modules/.qa/speed-qa.mjs`.
+- **Deployment**: https://petati.vercel.app is live against the cloud project (env vars set in the Vercel dashboard); all admin routes render there with zero console errors (multi-store routes 404 by design, flag off).
+In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS verification, Google OAuth secret paste (owner), SMTP for staff invites.
 
 ## File map (key files)
 - `next.config.ts` — cacheComponents on, next-intl plugin, image hosts.
@@ -77,7 +90,9 @@ In progress: nothing. Not started: themes B–D, iyzico, rich text editor, CSV e
 - `src/lib/payments/{provider,manual,iyzico,index}.ts` — gateway contract; manual live, iyzico stub.
 - `src/lib/account/{queries,actions}.ts` — orders/addresses/wishlist/reviews/profile for shoppers.
 - `src/lib/email/send.ts`, `src/emails/order-confirmation.tsx` — Resend or console fallback.
-- `src/components/storefront/sections/types.ts` — the props contract every variant must honour.
+- `src/components/storefront/sections/types.ts` — the props contract every variant must honour; `<section>/{minimal,bold,editorial,playful}.tsx` are the four implementations, all wired in `src/lib/theme/registry.tsx`.
+- `src/lib/theme/fonts.ts` — font allow-list + CSS stacks (see Conventions).
+- `src/components/admin/shared/{tabbed-panels,optimistic-store,use-optimistic-action,optimistic-status-badge}.tsx` — the speed toolkit (see Conventions); `isPlainList` in `src/lib/admin/list-params.ts`.
 - `src/components/storefront/shared/*` — interactive pieces shared by all variants (add-to-cart, cart controls, forms).
 - `src/i18n/{config,routing,navigation,request}.ts` — locales, RTL helper, next-intl wiring.
 - `messages/{en,tr,fa}.json` — all UI strings, namespaced.
@@ -94,8 +109,8 @@ In progress: nothing. Not started: themes B–D, iyzico, rich text editor, CSV e
 3. ~~Tenant proxy, i18n layouts, Supabase auth, permission matrix, admin route guard~~ (done 2026-09-07)
 4. ~~Storefront theme A end to end~~ (done 2026-09-07, verified against the local DB 2026-09-08)
 5. ~~Admin panel (all modules; store creation hidden behind flag)~~ (done 2026-09-08)
-6. **← NEXT** Themes B, C, D (section variants `bold`/`editorial`/`playful`; the design editor and wizard already list them as "coming soon")
-7. Deploy readiness: Vercel env vars (see Stack), wildcard domain for subdomains, Resend key, Google OAuth credentials in the Supabase dashboard, SMTP for staff invites
+6. ~~Themes B, C, D~~ (done 2026-09-08)
+7. **← NEXT (owner-side)** Deploy readiness leftovers: paste the Google OAuth client secret into Supabase (everything else is staged), add `https://petati.vercel.app/auth/callback` + `http://localhost:3000/auth/callback` to Supabase Auth → URL configuration → Redirect URLs, Resend key, SMTP for staff invites, wildcard domain when multi-store is paid
 8. Client logo + brand colours (Design page), iyzico when credentials arrive
 
 ## Deliberately partial — grows later (scope ledger)
@@ -103,12 +118,13 @@ In progress: nothing. Not started: themes B–D, iyzico, rich text editor, CSV e
 |---|---|---|---|
 | Multi-store | Built, hidden behind `FEATURE_MULTI_STORE` + Owner | Visible "Create store" wizard, domains UI | When client pays |
 | Payments | `manual` provider (order = pending_payment, admin marks paid) | iyzico checkout + webhooks + refunds | When client supplies iyzico credentials |
-| Themes | `minimal` only; registry falls back to it for any other variant | Four variants per section | Step 6 |
+| Themes | Four variants per section, fixture-verified | Per-variant product-page galleries/lookbooks, theme-specific animations | As requested |
+| Admin lists | Buckets preloaded only for a "plain" URL (just `status`); search/date/category/page/sort go back to server paging | Client-side filtering over a larger preloaded window | If lists grow |
+| Optimistic UI | Toggles, statuses, moderation, roles, order transitions | Optimistic create/delete rows (needs client-owned tables) | As needed |
 | Content pages | privacy/terms/about read plain text from `store.settings.pages` | Rich text editor in admin | Step 5 |
 | Admin | All modules live | Rich text for pages/descriptions, CSV export, SQL aggregates for counts | As needed |
 | Phone | Unique E.164 per account; emoji flags (letter pairs on Windows) | SVG flags; OTP login | Later |
 | Staff invites | Supabase built-in SMTP only mails project members → falls back to creating the user silently | Real SMTP/Resend for invites | Deploy readiness |
-| Design fonts | Saved in theme JSON, storefront still picks font by locale | Load theme fonts | Themes B–D |
 | Store domains | Rows created, `verified_at` never set | DNS verification job | When multi-store is paid |
 
 ## Gotchas / open issues
@@ -147,7 +163,10 @@ In progress: nothing. Not started: themes B–D, iyzico, rich text editor, CSV e
 - Base UI Dialog/Select trigger = `render={<Button/>}`; a Close rendering a `<Link>` needs `nativeButton={false}`.
 - OverlayScrollbars body mode skips direction detection: `globals.css` mirrors the document bar under `[dir=rtl]`; hidden Base UI inputs get `margin-left:0` under RTL to avoid a 1px scroll.
 - Two `color-field` components exist (`components/admin/color-field.tsx` used by the wizard, `components/admin/design/color-field.tsx` used by the design editor) — consolidate when touching either.
-- QA scripts live in `node_modules/.qa/*.mjs` (untracked): sign in as testuser, exercise each module with Playwright (Edge channel).
+- QA scripts live in `node_modules/.qa/*.mjs` (untracked): sign in as testuser, exercise each module with Playwright (Edge channel). `speed-qa.mjs` covers tabs/optimistic/themes; `admin-qa.mjs <base>` works against Vercel too.
+- `TabbedPanels` uses `history.replaceState` (Next syncs `useSearchParams`); it must sit inside a Suspense boundary (it does — the page's list child). Panels stay mounted but `hidden`, so forms in inactive tabs keep their state.
+- `optimistic-store` clears a key once the server prop equals the patch; if a server refresh returns a DIFFERENT value than the optimistic one (race), the patch stays until the action's rollback/next reconcile — call `clearOptimistic` in error paths.
+- The old `/admin/settings/{commerce,pages,shipping}` routes are redirect stubs; link to `/admin/settings?tab=…` instead.
 
 ## Running it
 ```

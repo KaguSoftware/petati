@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { SortHeader } from "../shared/sort-header";
-import { StatusBadge } from "../shared/status-badge";
+import { OptimisticStatusBadge } from "../shared/optimistic-status-badge";
 import { FeaturedSwitch, ProductRowActions } from "./product-row-controls";
 
 interface Props {
@@ -55,7 +55,7 @@ export async function ProductsTable({ rows, storeId, locale, currency, lowStockT
         </Link>
       ),
     },
-    { key: "status", header: t("common.status"), cell: (r) => <StatusBadge kind="product" value={r.status} /> },
+    { key: "status", header: t("common.status"), cell: (r) => <OptimisticStatusBadge id={r.id} kind="product" value={r.status} /> },
     { key: "price", header: t("products.price"), cell: (r) => <span className="tabular-nums whitespace-nowrap">{price(r)}</span>, hideBelow: "md" },
     {
       key: "stock",

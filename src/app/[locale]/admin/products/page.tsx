@@ -1,15 +1,16 @@
 import { FolderTree, Plus } from "lucide-react";
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ProductsFilters } from "@/components/admin/products/products-filters";
+import { ProductsFilters, ProductsToolbar } from "@/components/admin/products/products-filters";
 import { ProductsTable } from "@/components/admin/products/products-table";
 import { PageHeader } from "@/components/admin/shared/page-header";
+import { TabbedPanels } from "@/components/admin/shared/tabbed-panels";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { Pagination } from "@/components/shared/pagination";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { requireAdminPage } from "@/lib/admin/context";
-import { currentQuery, parseListParams, pickParam, stringParam, type SearchParams } from "@/lib/admin/list-params";
+import { currentQuery, isPlainList, parseListParams, pickParam, stringParam, type SearchParams } from "@/lib/admin/list-params";
 import { listCategoryOptions, listProducts, productStatusCounts } from "@/lib/admin/products/queries";
 import { PRODUCT_SORTS, PRODUCT_STATUSES } from "@/lib/admin/products/types";
 import { can } from "@/lib/auth/permissions";
@@ -44,6 +45,8 @@ export default async function ProductsPage({ params, searchParams }: Props) {
   );
 }
 
+const BUCKETS = ["all", ...PRODUCT_STATUSES] as const;
+
 async function ProductsList({ locale, searchParams }: { locale: string; searchParams: Props["searchParams"] }) {
   const ctx = await requireAdminPage(locale, "products.read");
   const sp = (await searchParams) as SearchParams;
@@ -51,27 +54,52 @@ async function ProductsList({ locale, searchParams }: { locale: string; searchPa
   const status = pickParam(sp, "status", PRODUCT_STATUSES);
   const categoryId = stringParam(sp, "category", 36);
   const fallback = ctx.store.default_locale;
-  const [{ rows, total }, counts, categories, t] = await Promise.all([
-    listProducts(ctx.store.id, { ...list, status, categoryId, locale: ctx.locale, fallback }),
+  const canWrite = can(ctx.role, "products.write");
+  const tableProps = { storeId: ctx.store.id, locale: ctx.locale, currency: ctx.store.currency, lowStockThreshold: ctx.store.low_stock_threshold, canWrite, sort: { sort: list.sort, dir: list.dir } };
+  const [counts, categories, t, ta] = await Promise.all([
     productStatusCounts(ctx.store.id),
     listCategoryOptions(ctx.store.id, ctx.locale, fallback),
     getTranslations("common"),
+    getTranslations("admin"),
   ]);
+  const labels = { prev: t("previous"), next: t("next") };
+
+  // Fast path: nothing but `status` in the URL → page 1 of every bucket in one wave, tabs switch
+  // client-side. Search/category/page/sort fall back to server-driven paging.
+  if (isPlainList(sp, ["status"])) {
+    const pages = await Promise.all(
+      BUCKETS.map((b) =>
+        counts[b] ? listProducts(ctx.store.id, { ...list, status: b === "all" ? undefined : b, locale: ctx.locale, fallback }) : Promise.resolve({ rows: [], total: 0 }),
+      ),
+    );
+    const panels = BUCKETS.map((b, i) => {
+      const query = { status: b === "all" ? undefined : b };
+      return {
+        value: b,
+        label: b === "all" ? ta("common.all") : ta(`status.product.${b}`),
+        count: counts[b] ?? 0,
+        content: (
+          <>
+            <ProductsTable rows={pages[i].rows} {...tableProps} query={query} />
+            <Pagination page={1} pageSize={list.pageSize} total={pages[i].total} basePath="/admin/products" query={query} labels={labels} />
+          </>
+        ),
+      };
+    });
+    return (
+      <TabbedPanels label={ta("common.status")} param="status" defaultValue="all" initial={status ?? "all"} panels={panels}>
+        <ProductsToolbar categories={categories} />
+      </TabbedPanels>
+    );
+  }
+
+  const { rows, total } = await listProducts(ctx.store.id, { ...list, status, categoryId, locale: ctx.locale, fallback });
   const query = currentQuery(sp, ["q", "status", "category", "sort", "dir"]);
   return (
     <>
       <ProductsFilters counts={counts} status={status} categoryId={categoryId} categories={categories} />
-      <ProductsTable
-        rows={rows}
-        storeId={ctx.store.id}
-        locale={ctx.locale}
-        currency={ctx.store.currency}
-        lowStockThreshold={ctx.store.low_stock_threshold}
-        canWrite={can(ctx.role, "products.write")}
-        sort={{ sort: list.sort, dir: list.dir }}
-        query={query}
-      />
-      <Pagination page={list.page} pageSize={list.pageSize} total={total} basePath="/admin/products" query={query} labels={{ prev: t("previous"), next: t("next") }} />
+      <ProductsTable rows={rows} {...tableProps} query={query} />
+      <Pagination page={list.page} pageSize={list.pageSize} total={total} basePath="/admin/products" query={query} labels={labels} />
     </>
   );
 }

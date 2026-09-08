@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { OrderActions } from "@/components/admin/orders/order-actions";
 import { OrderDetail } from "@/components/admin/orders/order-detail";
 import { PageHeader } from "@/components/admin/shared/page-header";
-import { StatusBadge } from "@/components/admin/shared/status-badge";
+import { OptimisticStatusBadge } from "@/components/admin/shared/optimistic-status-badge";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { requireAdminPage } from "@/lib/admin/context";
 import { getOrder } from "@/lib/admin/orders/queries";
@@ -35,7 +35,7 @@ async function Content({ params }: { params: Props["params"] }) {
         title={
           <span className="flex flex-wrap items-center gap-3">
             <span dir="ltr">{order.number}</span>
-            <StatusBadge kind="order" value={order.status} className="text-sm" />
+            <OptimisticStatusBadge id={order.id} kind="order" value={order.status} className="text-sm" />
           </span>
         }
         description={date.format(new Date(order.placed_at))}

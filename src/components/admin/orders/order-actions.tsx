@@ -2,7 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { startTransition, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -15,7 +15,9 @@ import type { OrderStatus } from "@/lib/db/types";
 import { formatMoney } from "@/lib/money";
 import { FormField } from "../shared/form-field";
 import { MoneyInput } from "../shared/money-input";
+import { clearOptimistic, setOptimistic, useOptimisticRow } from "../shared/optimistic-store";
 import { useActionToast } from "../shared/use-action-toast";
+import { useOptimisticAction } from "../shared/use-optimistic-action";
 
 interface Props {
   storeId: string;
@@ -29,15 +31,18 @@ interface Props {
 
 type DialogKind = "paid" | "ship" | "refund" | "cancel" | null;
 
-export function OrderActions({ storeId, orderId, status, currency, locale, remainingRefundable, canRefund }: Props) {
+export function OrderActions({ storeId, orderId, status: serverStatus, currency, locale, remainingRefundable, canRefund }: Props) {
   const t = useTranslations("admin.orders");
   const tc = useTranslations("admin.common");
   const [dialog, setDialog] = useState<DialogKind>(null);
   const close = () => setDialog(null);
-  const [paidState, paidAction, paidPending] = useActionToast(markPaidAction, { errorNamespace: "admin.orders", onSuccess: close });
-  const [shipState, shipAction, shipPending] = useActionToast(shipOrderAction, { errorNamespace: "admin.orders", onSuccess: close });
+  // Header badge (OptimisticStatusBadge) and this menu share the row entry: transitions show at once.
+  const { status } = useOptimisticRow(orderId, { status: serverStatus });
+  const rollback = () => clearOptimistic(orderId, ["status"]);
+  const [paidState, paidAction, paidPending] = useActionToast(markPaidAction, { errorNamespace: "admin.orders", onSuccess: close, onError: rollback });
+  const [shipState, shipAction, shipPending] = useActionToast(shipOrderAction, { errorNamespace: "admin.orders", onSuccess: close, onError: rollback });
   const [refundState, refundAction, refundPending] = useActionToast(refundOrderAction, { errorNamespace: "admin.orders", onSuccess: close });
-  const [, statusAction, statusPending] = useActionToast(updateOrderStatusAction, { errorNamespace: "admin.orders", onSuccess: close });
+  const { run, pending: statusPending } = useOptimisticAction("admin.orders");
 
   const next = TRANSITIONS[status];
   const items: { key: string; label: string; onSelect: () => void; destructive?: boolean }[] = [];
@@ -53,7 +58,7 @@ export function OrderActions({ storeId, orderId, status, currency, locale, remai
     fd.set("storeId", storeId);
     fd.set("orderId", orderId);
     fd.set("status", to);
-    startTransition(() => statusAction(fd));
+    run(() => updateOrderStatusAction({}, fd), { optimistic: () => setOptimistic(orderId, { status: to }), rollback, onSuccess: close });
   }
 
   if (items.length === 0) return null;
@@ -86,7 +91,7 @@ export function OrderActions({ storeId, orderId, status, currency, locale, remai
       {/* Mark paid */}
       <Dialog open={dialog === "paid"} onOpenChange={(o) => !o && close()}>
         <DialogContent>
-          <form action={paidAction} className="flex flex-col gap-4">
+          <form action={paidAction} onSubmit={() => setOptimistic(orderId, { status: "paid" })} className="flex flex-col gap-4">
             {hidden}
             <DialogHeader>
               <DialogTitle>{t("actions.markPaid")}</DialogTitle>
@@ -110,7 +115,7 @@ export function OrderActions({ storeId, orderId, status, currency, locale, remai
       {/* Ship */}
       <Dialog open={dialog === "ship"} onOpenChange={(o) => !o && close()}>
         <DialogContent>
-          <form action={shipAction} className="flex flex-col gap-4">
+          <form action={shipAction} onSubmit={() => setOptimistic(orderId, { status: "shipped" })} className="flex flex-col gap-4">
             {hidden}
             <DialogHeader>
               <DialogTitle>{t("ship.title")}</DialogTitle>

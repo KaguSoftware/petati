@@ -8,20 +8,46 @@ import type { ProductStatus } from "@/lib/db/types";
 import { StatusTabs } from "../shared/status-tabs";
 import { TableToolbar, useListNavigation } from "../shared/table-toolbar";
 
-interface Props {
-  counts: Partial<Record<ProductStatus | "all", number>>;
-  status?: ProductStatus;
+interface ToolbarProps {
   categoryId?: string;
   categories: CategoryOption[];
   actions?: React.ReactNode;
 }
 
+interface Props extends ToolbarProps {
+  counts: Partial<Record<ProductStatus | "all", number>>;
+  status?: ProductStatus;
+}
+
 const ALL = "__all";
 
-export function ProductsFilters({ counts, status, categoryId, categories, actions }: Props) {
+/** Search + category filter (shared by the preloaded-tabs and the server-filtered list). */
+export function ProductsToolbar({ categoryId, categories, actions }: ToolbarProps) {
   const t = useTranslations("admin");
   const { setParam } = useListNavigation();
   const items = [{ value: ALL, label: t("products.allCategories") }, ...categories.map((c) => ({ value: c.id, label: c.name }))];
+  return (
+    <TableToolbar searchPlaceholder={t("products.searchPlaceholder")} actions={actions}>
+      <Select items={items} modal={false} value={categoryId ?? ALL} onValueChange={(v) => setParam("category", v === ALL || v == null ? null : String(v))}>
+        <SelectTrigger aria-label={t("products.filterCategory")} className="w-full sm:w-52">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent alignItemWithTrigger={false}>
+          {items.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </TableToolbar>
+  );
+}
+
+/** Server-filtered mode (search/category/page active): status tabs navigate. */
+export function ProductsFilters({ counts, status, categoryId, categories, actions }: Props) {
+  const t = useTranslations("admin");
+  const { setParam } = useListNavigation();
   return (
     <div className="flex flex-col gap-3">
       <StatusTabs
@@ -33,20 +59,7 @@ export function ProductsFilters({ counts, status, categoryId, categories, action
         ]}
         onValueChange={(v) => setParam("status", v === "all" ? null : v)}
       />
-      <TableToolbar searchPlaceholder={t("products.searchPlaceholder")} actions={actions}>
-        <Select items={items} modal={false} value={categoryId ?? ALL} onValueChange={(v) => setParam("category", v === ALL || v == null ? null : String(v))}>
-          <SelectTrigger aria-label={t("products.filterCategory")} className="w-full sm:w-52">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent alignItemWithTrigger={false}>
-            {items.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                {item.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </TableToolbar>
+      <ProductsToolbar categoryId={categoryId} categories={categories} actions={actions} />
     </div>
   );
 }

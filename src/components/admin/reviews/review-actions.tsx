@@ -2,17 +2,20 @@
 
 import { Check, Trash2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useTransition } from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { deleteReviewAction, moderateReviewAction } from "@/lib/admin/reviews/actions";
 import type { ReviewStatus } from "@/lib/db/types";
 import { ConfirmDialog } from "../shared/confirm-dialog";
+import { clearOptimistic, setOptimistic, useOptimisticRow } from "../shared/optimistic-store";
+import { StatusBadge } from "../shared/status-badge";
+import { useOptimisticAction } from "../shared/use-optimistic-action";
 
-export function ReviewActions({ storeId, reviewId, status }: { storeId: string; reviewId: string; status: ReviewStatus }) {
+export function ReviewActions({ storeId, reviewId, status: serverStatus }: { storeId: string; reviewId: string; status: ReviewStatus }) {
   const t = useTranslations("admin.reviews");
   const tc = useTranslations("admin.common");
-  const [pending, start] = useTransition();
+  const { status } = useOptimisticRow(reviewId, { status: serverStatus });
+  const { run } = useOptimisticAction();
+  const moderated = status !== serverStatus;
 
   function form() {
     const fd = new FormData();
@@ -21,27 +24,35 @@ export function ReviewActions({ storeId, reviewId, status }: { storeId: string; 
     return fd;
   }
 
-  /** The row leaves this tab once moderated, so the toast is fired here rather than from an effect on the (unmounted) row. */
+  /** Optimistic: the badge flips at once; the row leaves this tab when the server refresh lands. */
   function setStatus(next: "approved" | "rejected") {
     const fd = form();
     fd.set("status", next);
-    start(async () => {
-      const res = await moderateReviewAction({}, fd);
-      if (res.error) toast.error(tc.has(`errors.${res.error}`) ? tc(`errors.${res.error}`) : res.error);
-      else toast.success(t(next === "approved" ? "approvedToast" : "rejectedToast"));
+    run(() => moderateReviewAction({}, fd), {
+      optimistic: () => setOptimistic(reviewId, { status: next }),
+      rollback: () => clearOptimistic(reviewId, ["status"]),
+      success: t(next === "approved" ? "approvedToast" : "rejectedToast"),
     });
+  }
+
+  if (moderated) {
+    return (
+      <div className="flex items-center justify-end">
+        <StatusBadge kind="review" value={status} />
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-1">
       {status !== "approved" && (
-        <Button size="sm" variant="outline" disabled={pending} onClick={() => setStatus("approved")} className="text-emerald-700 dark:text-emerald-300">
+        <Button size="sm" variant="outline" onClick={() => setStatus("approved")} className="text-emerald-700 dark:text-emerald-300">
           <Check data-icon="inline-start" />
           {t("approve")}
         </Button>
       )}
       {status !== "rejected" && (
-        <Button size="sm" variant="outline" disabled={pending} onClick={() => setStatus("rejected")}>
+        <Button size="sm" variant="outline" onClick={() => setStatus("rejected")}>
           <X data-icon="inline-start" />
           {t("reject")}
         </Button>

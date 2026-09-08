@@ -2,7 +2,6 @@
 
 import { Trash2, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { startTransition } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,7 +12,8 @@ import { STORE_ROLES, type StaffMember } from "@/lib/admin/staff/types";
 import { ConfirmDialog } from "../shared/confirm-dialog";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
-import { useActionToast } from "../shared/use-action-toast";
+import { clearOptimistic, setOptimistic, useOptimisticRow } from "../shared/optimistic-store";
+import { useOptimisticAction } from "../shared/use-optimistic-action";
 
 interface Props {
   storeId: string;
@@ -28,7 +28,7 @@ export function StaffTable({ storeId, locale, rows, actor, inviteButton }: Props
   const t = useTranslations("admin.staff");
   const tr = useTranslations("admin.roles");
   const tc = useTranslations("admin.common");
-  const [, roleAction, rolePending] = useActionToast(changeRoleAction, { errorNamespace: "admin.staff" });
+  const { run } = useOptimisticAction("admin.staff");
   const dateFmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
   // Base UI SelectValue renders the raw value unless items carry labels.
   const roleItems = STORE_ROLES.map((r) => ({ value: r, label: tr(r) }));
@@ -38,7 +38,10 @@ export function StaffTable({ storeId, locale, rows, actor, inviteButton }: Props
     fd.set("storeId", storeId);
     fd.set("userId", userId);
     fd.set("role", role);
-    startTransition(() => roleAction(fd));
+    run(() => changeRoleAction({}, fd), {
+      optimistic: () => setOptimistic(userId, { role }),
+      rollback: () => clearOptimistic(userId, ["role"]),
+    });
   }
 
   const columns: Column<StaffMember>[] = [
@@ -65,23 +68,7 @@ export function StaffTable({ storeId, locale, rows, actor, inviteButton }: Props
       key: "role",
       header: t("role"),
       className: "w-44",
-      cell: (m) => {
-        const locked = actor.role !== "owner" && m.userId === actor.id;
-        return (
-          <Select items={roleItems} value={m.role} onValueChange={(v) => v && v !== m.role && changeRole(m.userId, String(v))} disabled={locked || rolePending} modal={false}>
-            <SelectTrigger size="sm" aria-label={t("role")} className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent alignItemWithTrigger={false}>
-              {STORE_ROLES.map((r) => (
-                <SelectItem key={r} value={r}>
-                  {tr(r)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      },
+      cell: (m) => <RoleCell member={m} locked={actor.role !== "owner" && m.userId === actor.id} />,
     },
     { key: "joined", header: t("joined"), hideBelow: "md", className: "text-muted-foreground tabular-nums", cell: (m) => dateFmt.format(new Date(m.joinedAt)) },
     {
@@ -114,6 +101,25 @@ export function StaffTable({ storeId, locale, rows, actor, inviteButton }: Props
       },
     },
   ];
+
+  /** Reads the optimistic role so the select flips the moment a new role is picked. */
+  function RoleCell({ member, locked }: { member: StaffMember; locked: boolean }) {
+    const { role } = useOptimisticRow(member.userId, { role: member.role });
+    return (
+      <Select items={roleItems} value={role} onValueChange={(v) => v && v !== role && changeRole(member.userId, String(v))} disabled={locked} modal={false}>
+            <SelectTrigger size="sm" aria-label={t("role")} className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent alignItemWithTrigger={false}>
+              {STORE_ROLES.map((r) => (
+                <SelectItem key={r} value={r}>
+                  {tr(r)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+    );
+  }
 
   return <DataTable columns={columns} rows={rows} rowKey={(m) => m.userId} empty={<EmptyState icon={Users} title={t("emptyTitle")} description={t("emptyHint")} action={inviteButton} />} />;
 }

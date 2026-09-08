@@ -12,6 +12,17 @@ interface Props {
   current?: OrderStatus;
 }
 
+/** Search + date range (shared by the preloaded-tabs and the server-filtered list). */
+export function OrdersToolbar() {
+  const t = useTranslations("admin");
+  return (
+    <TableToolbar searchPlaceholder={t("orders.searchPlaceholder")}>
+      <DateRangePicker />
+    </TableToolbar>
+  );
+}
+
+/** Server-filtered mode (search/date/page active): status tabs navigate. */
 export function OrdersFilters({ counts, current }: Props) {
   const t = useTranslations("admin");
   const { setParam } = useListNavigation();
@@ -22,9 +33,7 @@ export function OrdersFilters({ counts, current }: Props) {
   return (
     <div className="flex flex-col gap-3">
       <StatusTabs label={t("common.status")} value={current ?? "all"} items={items} onValueChange={(v) => setParam("status", v === "all" ? null : v)} />
-      <TableToolbar searchPlaceholder={t("orders.searchPlaceholder")}>
-        <DateRangePicker />
-      </TableToolbar>
+      <OrdersToolbar />
     </div>
   );
 }

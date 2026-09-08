@@ -48,3 +48,12 @@ export function currentQuery(sp: SearchParams, keys: string[]): Record<string, s
   for (const k of keys) out[k] = first(sp[k]);
   return out;
 }
+
+/**
+ * True when the URL carries nothing but the given keys (e.g. only `status`): the page may then
+ * preload every tab bucket in one wave and switch client-side. Any search/page/sort/date param
+ * turns the list back into server-driven paging.
+ */
+export function isPlainList(sp: SearchParams, allowed: readonly string[]): boolean {
+  return Object.entries(sp).every(([k, v]) => allowed.includes(k) || v === undefined || v === "");
+}

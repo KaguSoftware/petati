@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { startTransition, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
@@ -11,26 +11,29 @@ import { Switch } from "@/components/ui/switch";
 import { Link } from "@/i18n/navigation";
 import { deleteProductAction, setProductStatusAction, toggleFeaturedAction } from "@/lib/admin/products/actions";
 import type { ProductStatus } from "@/lib/db/types";
-import { useActionToast } from "../shared/use-action-toast";
+import { clearOptimistic, setOptimistic, useOptimisticRow } from "../shared/optimistic-store";
+import { useOptimisticAction } from "../shared/use-optimistic-action";
 
-/** Featured toggle in the products table; optimistic, reverts on error. */
+/** Featured toggle in the products table: flips instantly, rolls back if the server rejects. */
 export function FeaturedSwitch({ storeId, productId, checked, disabled }: { storeId: string; productId: string; checked: boolean; disabled?: boolean }) {
   const t = useTranslations("admin.products");
-  const [value, setValue] = useState(checked);
-  const [, action, pending] = useActionToast(toggleFeaturedAction, { errorNamespace: "admin.products" });
+  const row = useOptimisticRow(productId, { is_featured: checked });
+  const { run } = useOptimisticAction("admin.products");
   return (
     <Switch
       size="sm"
-      checked={value}
-      disabled={disabled || pending}
+      checked={row.is_featured}
+      disabled={disabled}
       aria-label={t("featured")}
       onCheckedChange={(next) => {
-        setValue(next);
         const fd = new FormData();
         fd.set("storeId", storeId);
         fd.set("productId", productId);
         if (next) fd.set("is_featured", "on");
-        startTransition(() => action(fd));
+        run(() => toggleFeaturedAction({}, fd), {
+          optimistic: () => setOptimistic(productId, { is_featured: next }),
+          rollback: () => clearOptimistic(productId, ["is_featured"]),
+        });
       }}
     />
   );
@@ -45,9 +48,11 @@ interface RowActionsProps {
 }
 
 /** Per-row menu: edit, status changes, delete (with confirmation). */
-export function ProductRowActions({ storeId, productId, status, slug, locale }: RowActionsProps) {
+export function ProductRowActions({ storeId, productId, status: serverStatus, slug, locale }: RowActionsProps) {
   const t = useTranslations("admin");
-  const [, statusAction, pending] = useActionToast(setProductStatusAction, { errorNamespace: "admin.products" });
+  // The status badge lives in another cell: both read the same optimistic row entry.
+  const { status } = useOptimisticRow(productId, { status: serverStatus });
+  const { run } = useOptimisticAction("admin.products");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -56,7 +61,10 @@ export function ProductRowActions({ storeId, productId, status, slug, locale }: 
     fd.set("storeId", storeId);
     fd.set("productId", productId);
     fd.set("status", next);
-    startTransition(() => statusAction(fd));
+    run(() => setProductStatusAction({}, fd), {
+      optimistic: () => setOptimistic(productId, { status: next }),
+      rollback: () => clearOptimistic(productId, ["status"]),
+    });
   }
   async function remove() {
     setDeleting(true);
@@ -72,7 +80,7 @@ export function ProductRowActions({ storeId, productId, status, slug, locale }: 
   return (
     <>
       <DropdownMenu modal={false}>
-        <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={t("common.actions")} disabled={pending} />}>
+        <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={t("common.actions")} />}>
           <MoreHorizontal />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-44">

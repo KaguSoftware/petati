@@ -1,5 +1,6 @@
 "use client";
 
+import { useLinkStatus } from "next/link";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { AdminNavItem } from "@/lib/auth/permissions";
@@ -34,9 +35,16 @@ export function AdminSidebarNav({ items, onNavigate, className }: Props) {
           >
             <Icon className="size-4 shrink-0" />
             <span className="truncate">{t(item.key)}</span>
+            <PendingDot />
           </Link>
         );
       })}
     </nav>
   );
+}
+
+/** Subtle pulse at the end of a sidebar link while its navigation is pending (rare: pages are prefetched). */
+function PendingDot() {
+  const { pending } = useLinkStatus();
+  return <span aria-hidden className={cn("ms-auto size-1.5 shrink-0 rounded-full bg-current", pending ? "animate-pulse opacity-70" : "opacity-0")} />;
 }

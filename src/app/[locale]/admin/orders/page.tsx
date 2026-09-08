@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { OrdersFilters } from "@/components/admin/orders/orders-filters";
+import { OrdersFilters, OrdersToolbar } from "@/components/admin/orders/orders-filters";
 import { OrdersTable } from "@/components/admin/orders/orders-table";
 import { PageHeader } from "@/components/admin/shared/page-header";
+import { TabbedPanels } from "@/components/admin/shared/tabbed-panels";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { Pagination } from "@/components/shared/pagination";
 import { requireAdminPage } from "@/lib/admin/context";
-import { currentQuery, parseListParams, pickParam, stringParam, type SearchParams } from "@/lib/admin/list-params";
+import { currentQuery, isPlainList, parseListParams, pickParam, stringParam, type SearchParams } from "@/lib/admin/list-params";
 import { listOrders, orderStatusCounts, ORDER_SORTS } from "@/lib/admin/orders/queries";
 import { ORDER_STATUSES } from "@/lib/admin/orders/transitions";
 
@@ -26,6 +27,8 @@ export default async function OrdersPage({ params, searchParams }: Props) {
   );
 }
 
+const BUCKETS = ["all", ...ORDER_STATUSES] as const;
+
 async function OrdersList({ locale, searchParams }: { locale: string; searchParams: Props["searchParams"] }) {
   const ctx = await requireAdminPage(locale, "orders.read");
   const sp = (await searchParams) as SearchParams;
@@ -33,17 +36,44 @@ async function OrdersList({ locale, searchParams }: { locale: string; searchPara
   const status = pickParam(sp, "status", ORDER_STATUSES);
   const from = stringParam(sp, "from", 10);
   const to = stringParam(sp, "to", 10);
-  const [{ rows, total }, counts, t] = await Promise.all([
-    listOrders(ctx.store.id, { ...list, status, from, to }),
-    orderStatusCounts(ctx.store.id),
-    getTranslations("common"),
-  ]);
+
+  // Fast path: no search/date/page/sort → load page 1 of EVERY status bucket in one wave and
+  // switch tabs client-side (instant). Any other filter falls back to server-driven paging.
+  if (isPlainList(sp, ["status"])) {
+    const [counts, ta, tc] = await Promise.all([orderStatusCounts(ctx.store.id), getTranslations("admin"), getTranslations("common")]);
+    const labels = { prev: tc("previous"), next: tc("next") };
+    const pages = await Promise.all(
+      BUCKETS.map((b) => (counts[b] ? listOrders(ctx.store.id, { ...list, status: b === "all" ? undefined : b, from, to }) : Promise.resolve({ rows: [], total: 0 }))),
+    );
+    const panels = BUCKETS.map((b, i) => {
+      const query = { status: b === "all" ? undefined : b };
+      return {
+        value: b,
+        label: b === "all" ? ta("common.all") : ta(`status.order.${b}`),
+        count: counts[b] ?? 0,
+        content: (
+          <>
+            <OrdersTable rows={pages[i].rows} locale={ctx.locale} sort={{ sort: list.sort, dir: list.dir }} query={query} />
+            <Pagination page={1} pageSize={list.pageSize} total={pages[i].total} basePath="/admin/orders" query={query} labels={labels} />
+          </>
+        ),
+      };
+    });
+    return (
+      <TabbedPanels label={ta("common.status")} param="status" defaultValue="all" initial={status ?? "all"} panels={panels}>
+        <OrdersToolbar />
+      </TabbedPanels>
+    );
+  }
+
+  const [{ rows, total }, counts, tc] = await Promise.all([listOrders(ctx.store.id, { ...list, status, from, to }), orderStatusCounts(ctx.store.id), getTranslations("common")]);
+  const labels = { prev: tc("previous"), next: tc("next") };
   const query = currentQuery(sp, ["q", "status", "from", "to", "sort", "dir"]);
   return (
     <>
       <OrdersFilters counts={counts} current={status} />
       <OrdersTable rows={rows} locale={ctx.locale} sort={{ sort: list.sort, dir: list.dir }} query={query} />
-      <Pagination page={list.page} pageSize={list.pageSize} total={total} basePath="/admin/orders" query={query} labels={{ prev: t("previous"), next: t("next") }} />
+      <Pagination page={list.page} pageSize={list.pageSize} total={total} basePath="/admin/orders" query={query} labels={labels} />
     </>
   );
 }

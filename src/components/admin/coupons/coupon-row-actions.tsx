@@ -2,7 +2,7 @@
 
 import { BarChart3, Pencil, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { startTransition, useState } from "react";
+import { useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Link } from "@/i18n/navigation";
@@ -10,27 +10,29 @@ import { deleteCouponAction, toggleCouponAction } from "@/lib/admin/coupons/acti
 import type { CouponRow } from "@/lib/db/types";
 import { cn } from "@/lib/utils";
 import { ConfirmDialog } from "../shared/confirm-dialog";
-import { useActionToast } from "../shared/use-action-toast";
+import { clearOptimistic, setOptimistic, useOptimisticRow } from "../shared/optimistic-store";
+import { useOptimisticAction } from "../shared/use-optimistic-action";
 import { CouponDialog } from "./coupon-dialog";
 
-/** Inline active toggle; optimistic state, reverts on error. */
+/** Inline active toggle: flips instantly, rolls back if the server rejects. */
 export function CouponActiveSwitch({ storeId, coupon }: { storeId: string; coupon: CouponRow }) {
   const t = useTranslations("admin.coupons");
-  const [checked, setChecked] = useState(coupon.is_active);
-  const [, action, pending] = useActionToast(toggleCouponAction, { errorNamespace: "admin.coupons", onSuccess: undefined });
+  const row = useOptimisticRow(coupon.id, { is_active: coupon.is_active });
+  const { run } = useOptimisticAction("admin.coupons");
   return (
     <Switch
       size="sm"
-      checked={checked}
-      disabled={pending}
+      checked={row.is_active}
       aria-label={`${t("active")} · ${coupon.code}`}
       onCheckedChange={(next) => {
-        setChecked(next);
         const fd = new FormData();
         fd.set("storeId", storeId);
         fd.set("couponId", coupon.id);
         fd.set("is_active", next ? "on" : "");
-        startTransition(() => action(fd));
+        run(() => toggleCouponAction({}, fd), {
+          optimistic: () => setOptimistic(coupon.id, { is_active: next }),
+          rollback: () => clearOptimistic(coupon.id, ["is_active"]),
+        });
       }}
     />
   );

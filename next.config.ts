@@ -5,8 +5,13 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
-  // Store logo upload in the create-store wizard (2 MB file + multipart overhead).
-  experimental: { serverActions: { bodySizeLimit: "3mb" } },
+  experimental: {
+    // Store logo upload in the create-store wizard (2 MB file + multipart overhead).
+    serverActions: { bodySizeLimit: "3mb" },
+    // Keep visited admin pages warm in the client router cache so sidebar/back navigations are
+    // instant; server actions call refresh()/updateTag() so mutations still show up immediately.
+    staleTimes: { dynamic: 30, static: 180 },
+  },
   images: {
     remotePatterns: [
       { protocol: "http", hostname: "127.0.0.1" },
