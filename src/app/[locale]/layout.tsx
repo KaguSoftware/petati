@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Vazirmatn } from "next/font/google";
+import { DM_Sans, Inter, Manrope, Playfair_Display, Vazirmatn } from "next/font/google";
 import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -13,6 +13,12 @@ import "../globals.css";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
 const vazirmatn = Vazirmatn({ subsets: ["arabic", "latin"], variable: "--font-vazirmatn" });
+// Optional theme fonts (see src/lib/theme/fonts.ts): declared here so any store may pick them, but
+// not preloaded — the browser only fetches a face once a storefront actually uses it.
+const manrope = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-manrope", preload: false });
+const dmSans = DM_Sans({ subsets: ["latin", "latin-ext"], variable: "--font-dm-sans", preload: false });
+const playfair = Playfair_Display({ subsets: ["latin", "latin-ext"], variable: "--font-playfair", preload: false });
+const themeFontClasses = `${manrope.variable} ${dmSans.variable} ${playfair.variable}`;
 
 export const metadata: Metadata = {
   title: { default: "Petati", template: "%s · Petati" },
@@ -37,7 +43,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     <html
       lang={locale}
       dir={dir}
-      className={`${inter.variable} ${vazirmatn.variable} ${fontClass} h-full antialiased`}
+      className={`${inter.variable} ${vazirmatn.variable} ${themeFontClasses} ${fontClass} h-full antialiased`}
       style={{ ["--font-sans" as string]: fontFamily }}
       data-overlayscrollbars-initialize=""
     >

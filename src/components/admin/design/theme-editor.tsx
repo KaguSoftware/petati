@@ -16,7 +16,7 @@ import { FONT_OPTIONS, RADIUS_PRESETS, THEME_COLOR_KEYS } from "@/lib/admin/desi
 import { SECTION_KEYS, VARIANT_KEYS, themeToCssVars, type SectionKey, type StoreTheme, type VariantKey } from "@/lib/theme/types";
 import { cn } from "@/lib/utils";
 import { useActionToast } from "../shared/use-action-toast";
-import { ColorField } from "./color-field";
+import { ColorField } from "@/components/admin/color-field";
 
 interface Props {
   storeId: string;
@@ -116,7 +116,6 @@ export function ThemeEditor({ storeId, storeName, locale, theme, enabledLocales,
                   </div>
                 ))}
               </div>
-              {/* SCOPE(design): fonts are saved but the storefront does not load them yet. GROWS LATER → per-store next/font. */}
               <p className="text-xs text-muted-foreground">{t("shape.fontNote")}</p>
             </CardContent>
           </Card>
@@ -244,18 +243,16 @@ export function ThemeEditor({ storeId, storeName, locale, theme, enabledLocales,
 function ThemePreview({ theme, storeName, locale }: { theme: StoreTheme; storeName: string; locale: Locale }) {
   const t = useTranslations("admin.design.preview");
   const announcement = theme.announcement[locale] ?? Object.values(theme.announcement).find(Boolean) ?? "";
-  const headingFont = `"${theme.fonts.heading}", var(--font-sans), sans-serif`;
-  const bodyFont = `"${theme.fonts.body}", var(--font-sans), sans-serif`;
   return (
     <div
       data-theme-preview
       dir={locale === "fa" ? "rtl" : "ltr"}
       className="overflow-hidden rounded-xl border bg-background text-foreground shadow-sm"
-      style={{ ...(themeToCssVars(theme) as React.CSSProperties), fontFamily: bodyFont }}
+      style={{ ...(themeToCssVars(theme) as React.CSSProperties), fontFamily: "var(--font-sans)" }}
     >
       {announcement && <div className="bg-primary px-4 py-1.5 text-center text-xs text-primary-foreground">{announcement}</div>}
       <div className="flex items-center justify-between border-b px-4 py-3">
-        <span className="font-semibold" style={{ fontFamily: headingFont }}>
+        <span className="font-semibold" style={{ fontFamily: "var(--heading-font)" }}>
           {storeName}
         </span>
         <span className="flex gap-3 text-xs text-muted-foreground">
@@ -264,7 +261,7 @@ function ThemePreview({ theme, storeName, locale }: { theme: StoreTheme; storeNa
         </span>
       </div>
       <div className="flex flex-col gap-3 px-4 py-6">
-        <h3 className="text-2xl font-semibold tracking-tight" style={{ fontFamily: headingFont }}>
+        <h3 className="text-2xl font-semibold tracking-tight" style={{ fontFamily: "var(--heading-font)" }}>
           {t("heroTitle")}
         </h3>
         <p className="text-sm text-muted-foreground">{t("heroText")}</p>

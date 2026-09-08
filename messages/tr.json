@@ -801,7 +801,6 @@
     },
     "design": {
       "description": "Renkler, biçim, duyuru ve her mağaza bölümünün yerleşimi.",
-      "pickColor": "Renk seç",
       "branding": {
         "logo": "Logo",
         "logoHint": "En fazla 2 MB PNG, JPG, WebP veya SVG. Mağaza başlığında gösterilir.",
@@ -837,7 +836,7 @@
           "heading": "Başlık yazı tipi",
           "body": "Gövde yazı tipi"
         },
-        "fontNote": "Yazı tipi seçimleri şimdi kaydedilir ve ileriki bir sürümde mağazaya uygulanır."
+        "fontNote": "Yazı tipleri mağazaya hemen uygulanır; Farsça metin her zaman Vazirmatn'a döner."
       },
       "announcement": {
         "title": "Duyuru çubuğu",

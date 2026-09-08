@@ -45,7 +45,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
   const totals = computeTotals(fixtureCart, { id: "r", store_id: "s", name: { en: "Standard" }, rate: 4990, free_over: 200000, countries: null, min_days: 2, max_days: 5, is_active: true, sort_order: 0 }, { tax_rate_bp: 2000, prices_include_tax: true });
 
   return (
-    <div data-storefront className="flex min-h-screen flex-col bg-background text-foreground" style={themeToCssVars(DEFAULT_THEME) as React.CSSProperties}>
+    <div data-storefront className="flex min-h-screen flex-col bg-background font-sans text-foreground" style={themeToCssVars(DEFAULT_THEME) as React.CSSProperties}>
       <StoreProvider value={store}>
         {renderSection("announcementBar", v, { text: "Free shipping on orders over ₺2.000" })}
         {renderSection("navbar", v, {

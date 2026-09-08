@@ -801,7 +801,6 @@
     },
     "design": {
       "description": "Colours, shape, announcement and the layout of every storefront section.",
-      "pickColor": "Pick a colour",
       "branding": {
         "logo": "Logo",
         "logoHint": "PNG, JPG, WebP or SVG up to 2 MB. Shown in the storefront header.",
@@ -837,7 +836,7 @@
           "heading": "Heading font",
           "body": "Body font"
         },
-        "fontNote": "Font choices are saved now and will be applied to the storefront in a later release."
+        "fontNote": "Fonts apply to the storefront immediately; Persian text always falls back to Vazirmatn."
       },
       "announcement": {
         "title": "Announcement bar",

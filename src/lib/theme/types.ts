@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { fontStack } from "./fonts";
 
 /** Every storefront section that has four interchangeable variants. */
 export const SECTION_KEYS = [
@@ -119,5 +120,8 @@ export function themeToCssVars(theme: StoreTheme): Record<string, string> {
     "--secondary-foreground": c.foreground,
     "--ring": c.primary,
     "--radius": theme.radius,
+    // Fonts: the storefront wrapper carries `font-sans`, headings read `--font-heading` (globals.css).
+    "--font-sans": fontStack(theme.fonts.body),
+    "--heading-font": fontStack(theme.fonts.heading),
   };
 }

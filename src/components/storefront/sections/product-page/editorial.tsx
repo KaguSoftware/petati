@@ -1,0 +1,59 @@
+import { Link } from "@/i18n/navigation";
+import { ProductImage } from "@/components/storefront/shared/product-image";
+import { RatingStars } from "@/components/storefront/shared/rating-stars";
+import type { ProductPageProps } from "../types";
+
+export function ProductPageEditorial({ product, labels, purchasePanel, reviewsSection, wishlistSlot }: ProductPageProps) {
+  const [main, ...rest] = product.images;
+  return (
+    <main className="mx-auto max-w-7xl px-4 py-10">
+      <nav className="mb-6 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+        {product.categories.map((c, i) => (
+          <span key={c.slug}>
+            {i > 0 && (
+              <span aria-hidden className="mx-2">
+                /
+              </span>
+            )}
+            <Link href={`/c/${c.slug}`} className="transition-colors hover:text-foreground">
+              {c.name}
+            </Link>
+          </span>
+        ))}
+      </nav>
+      <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="flex flex-col gap-3 lg:col-span-7">
+          <div className="relative">
+            <ProductImage src={main?.url ?? null} alt={main?.alt ?? product.name} className="aspect-[4/5] rounded-none" sizes="(min-width: 1024px) 58vw, 100vw" priority />
+            {wishlistSlot && <div className="absolute end-3 top-3">{wishlistSlot}</div>}
+          </div>
+          {rest.length > 0 && (
+            <ul className="grid grid-cols-4 gap-3">
+              {rest.map((img) => (
+                <li key={img.url}>
+                  <ProductImage src={img.url} alt={img.alt} className="aspect-[4/5] rounded-none" sizes="14vw" />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="flex flex-col gap-8 self-start lg:sticky lg:top-24 lg:col-span-5">
+          <div className="flex flex-col gap-3">
+            {product.brand && <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{product.brand}</p>}
+            <h1 className="font-serif text-3xl font-medium tracking-tight text-balance md:text-4xl">{product.name}</h1>
+            {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={16} className="opacity-70" />}
+            {product.shortDescription && <p className="max-w-prose font-serif text-lg italic text-muted-foreground">{product.shortDescription}</p>}
+          </div>
+          <div className="border border-foreground/15 p-5">{purchasePanel}</div>
+          {product.description && (
+            <section className="border-t border-foreground/15 pt-6">
+              <h2 className="mb-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">{labels.description}</h2>
+              <div className="max-w-prose text-sm leading-relaxed whitespace-pre-line text-muted-foreground">{product.description}</div>
+            </section>
+          )}
+        </div>
+      </div>
+      <section className="mt-16 border-t border-foreground/15 pt-10">{reviewsSection}</section>
+    </main>
+  );
+}

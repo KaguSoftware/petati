@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { SECTION_KEYS, themeColorsSchema, VARIANT_KEYS } from "@/lib/theme/types";
 
-/** Fonts the design editor may pick. SCOPE(design): stored only; the storefront does not load them yet. GROWS LATER → next/font per store. */
-export const FONT_OPTIONS = ["Inter", "Vazirmatn", "Manrope", "DM Sans", "Playfair Display"] as const;
-export type FontOption = (typeof FONT_OPTIONS)[number];
+import { FONT_OPTIONS } from "@/lib/theme/fonts";
+
+export { FONT_OPTIONS, type FontOption } from "@/lib/theme/fonts";
 
 /** Corner radius presets (CSS length applied to `--radius`). */
 export const RADIUS_PRESETS = [
