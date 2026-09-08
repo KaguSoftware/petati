@@ -13,7 +13,7 @@ import { lookupDefaultLocale, lookupSlugByHostname } from "@/lib/tenant/proxy-lo
  *   4. rewrite storefront paths to /<locale>/s/<slug>/... (admin paths are left alone)
  */
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.[a-z0-9]+$).*)"],
+  matcher: ["/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.[a-z0-9]+$).*)"],
 };
 
 const SHARED_PREFIXES = ["/admin", "/auth", "/preview"]; // never rewritten into a store
