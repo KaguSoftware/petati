@@ -4,6 +4,7 @@ import { isLocale } from "@/i18n/config";
 import { DEFAULT_THEME, NAVBAR_VARS, VARIANT_KEYS, themeToCssVars, type VariantKey } from "@/lib/theme/types";
 import { cn } from "@/lib/utils";
 import { buildSectionPreviews, PREVIEW_STORE_SLUG } from "@/lib/theme/preview";
+import { fixtureHeroSlides } from "@/lib/theme/fixtures";
 import { gridCombo } from "@/lib/theme/preview-compose";
 import { StoreProvider } from "@/components/storefront/store-provider";
 
@@ -26,13 +27,14 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
   const storeName = "Petati";
   const [ta, p] = await Promise.all([
     getTranslations("admin"),
-    buildSectionPreviews({ locale, storeName, logoUrl: null, currency, announcement: "Free shipping on orders over ₺2.000", gridSize: 8 }),
+    buildSectionPreviews({ locale, storeName, logoUrl: null, currency, announcement: "Free shipping on orders over ₺2.000", heroSlides: fixtureHeroSlides, gridSize: 8 }),
   ]);
   const store = { id: PREVIEW_STORE_SLUG, slug: PREVIEW_STORE_SLUG, name: storeName, currency, locale, enabledLocales: ["en", "tr", "fa"], logoUrl: null };
 
   return (
-    <div data-storefront className={cn("@container flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[v])} style={themeToCssVars(DEFAULT_THEME, locale) as React.CSSProperties}>
-      <StoreProvider value={store}>
+    <div className="@container">
+      <div data-storefront className={cn("flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[v])} style={themeToCssVars(DEFAULT_THEME, locale) as React.CSSProperties}>
+        <StoreProvider value={store}>
         {p.announcementBar[v]}
         {p.navbar[v]}
         <Label text={`${ta("nav.design")} · ${v} · hero`} />
@@ -48,9 +50,10 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
         <Label text="checkout" />
         {p.checkout[v]}
         <Label text="newsletter + footer" />
-        {p.newsletter[v]}
-        {p.footer[v]}
-      </StoreProvider>
+          {p.newsletter[v]}
+          {p.footer[v]}
+        </StoreProvider>
+      </div>
     </div>
   );
 }

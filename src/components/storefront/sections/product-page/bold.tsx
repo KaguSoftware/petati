@@ -1,11 +1,10 @@
 import { Link } from "@/i18n/navigation";
-import { ProductImage } from "@/components/storefront/shared/product-image";
+import { ProductGallery } from "@/components/storefront/shared/product-gallery";
 import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import type { ProductPageProps } from "../types";
 
 /** Wide stage: one wide photo across the top with the thumbnails beside it, then details in two columns inside a dark band. */
 export function ProductPageBold({ product, labels, purchasePanel, reviewsSection, wishlistSlot }: ProductPageProps) {
-  const [main, ...rest] = product.images;
   return (
     <main className="pb-8">
       <div className="mx-auto max-w-7xl px-gutter pt-6">
@@ -19,21 +18,17 @@ export function ProductPageBold({ product, labels, purchasePanel, reviewsSection
             </span>
           ))}
         </nav>
-        <div className="grid gap-3 @tablet:grid-cols-[1fr_auto]">
-          <div className="relative border-4 border-foreground">
-            <ProductImage src={main?.url ?? null} alt={main?.alt ?? product.name} className="aspect-[4/3] @tablet:aspect-[16/9]" sizes="(min-width: 1280px) 1280px, 100vw" priority />
-            {wishlistSlot && <div className="absolute end-3 top-3">{wishlistSlot}</div>}
-          </div>
-          {rest.length > 0 && (
-            <ul className="flex gap-3 overflow-x-auto contain-inline-size @tablet:w-28 @tablet:flex-col @tablet:overflow-visible @tablet:contain-none">
-              {rest.map((img) => (
-                <li key={img.url} className="w-24 shrink-0 border-2 border-foreground @tablet:w-full">
-                  <ProductImage src={img.url} alt={img.alt} className="aspect-square" sizes="112px" />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <ProductGallery
+          images={product.images}
+          fallbackAlt={product.name}
+          labels={{ previous: labels.previousImage, next: labels.nextImage, imageOf: labels.imageOf }}
+          stageClassName="aspect-[4/3] border-4 border-foreground @tablet:aspect-[16/9]"
+          sizes="(min-width: 1280px) 1280px, 100vw"
+          thumbs="side"
+          thumbClassName="border-2 border-foreground"
+          activeThumbClassName="ring-2 ring-accent ring-offset-2 ring-offset-background"
+          overlay={wishlistSlot && <div className="absolute end-3 top-3 z-10">{wishlistSlot}</div>}
+        />
       </div>
       <div className="mt-8 bg-foreground text-background">
         <div className="mx-auto grid max-w-7xl gap-8 px-gutter py-10 @desktop:grid-cols-2 @desktop:gap-14 @tablet:py-14">

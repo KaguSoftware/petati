@@ -15,6 +15,7 @@ import { ReviewForm } from "@/components/storefront/shared/review-form";
 import { computeTotals } from "@/lib/checkout/totals";
 import { formatMoney } from "@/lib/money";
 import { fixtureCart, fixtureCategories, fixtureHeroImage, fixtureProduct, fixtureProducts, fixtureReviews, fixtureTopCategories } from "./fixtures";
+import type { ResolvedHeroSlide } from "./hero";
 import { gridCombo, type SectionPreviews } from "./preview-compose";
 import { renderSection } from "./registry";
 import { PREVIEW_STORE_SLUG } from "./preview-slug";
@@ -27,8 +28,8 @@ export interface PreviewInput {
   currency: string;
   /** Announcement text; empty renders nothing (the bar variants return null). */
   announcement: string;
-  /** Resolved hero copy; missing parts fall back to the `home` messages. */
-  hero?: { title?: string; subtitle?: string; imageUrl?: string | null };
+  /** Resolved hero slides; none (or missing parts of the first) fall back to the `home` messages and the fixture photo. */
+  heroSlides?: ResolvedHeroSlide[];
   /** Products per grid preview (16 combos are rendered, so keep it small). */
   gridSize?: number;
 }
@@ -54,11 +55,15 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
     { id: "r", store_id: "s", name: { en: "Standard" }, rate: 4990, free_over: 200000, cost: 3500, countries: null, min_days: 2, max_days: 5, is_active: true, sort_order: 0 },
     { tax_rate_bp: 2000, prices_include_tax: true },
   );
-  const hero = {
-    title: input.hero?.title ?? t("heroTitle"),
-    subtitle: input.hero?.subtitle ?? t("heroSubtitle"),
-    imageUrl: input.hero?.imageUrl ?? fixtureHeroImage,
-  };
+  const configured = input.heroSlides ?? [];
+  const heroSlides = (configured.length ? configured : [{ imageUrl: null, link: null }]).map((s, i) => ({
+    title: s.title ?? (i === 0 ? t("heroTitle") : ""),
+    subtitle: s.subtitle ?? (i === 0 ? t("heroSubtitle") : ""),
+    ctaLabel: t("shopNow"),
+    ctaHref: s.link ?? "/shop",
+    imageUrl: s.imageUrl ?? (i === 0 ? fixtureHeroImage : null),
+  }));
+  const heroLabels = { previous: t("previousSlide"), next: t("nextSlide"), slideOf: t.raw("slideOf") as string };
   const gridProducts = fixtureProducts.slice(0, gridSize);
   const each = <T,>(f: (v: VariantKey) => T) => Object.fromEntries(VARIANT_KEYS.map((v) => [v, f(v)])) as Record<VariantKey, T>;
   const reviewsProps = () => ({
@@ -103,7 +108,7 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
         cartSlot: <CartButtonFallback />,
       }),
     ),
-    hero: each((v) => renderSection("hero", v, { ...hero, ctaLabel: t("shopNow"), ctaHref: "/shop" })),
+    hero: each((v) => renderSection("hero", v, { slides: heroSlides, labels: heroLabels, autoplay: false })),
     categoryBanner: each((v) => renderSection("categoryBanner", v, { title: t("browseCategories"), categories: fixtureTopCategories })),
     productGrid,
     productPage: each((v) =>
@@ -111,7 +116,16 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
         product: fixtureProduct,
         currency,
         locale,
-        labels: { description: tp("description"), sku: tp("sku"), reviews: tp("reviews"), inStock: tp("inStock"), outOfStock: tp("outOfStock") },
+        labels: {
+          description: tp("description"),
+          sku: tp("sku"),
+          reviews: tp("reviews"),
+          inStock: tp("inStock"),
+          outOfStock: tp("outOfStock"),
+          previousImage: tp("previousImage"),
+          nextImage: tp("nextImage"),
+          imageOf: tp.raw("imageOf") as string,
+        },
         purchasePanel: <AddToCartPanel product={fixtureProduct} storeSlug={PREVIEW_STORE_SLUG} currency={currency} locale={locale} />,
         reviewsSection: renderSection("reviews", v, reviewsProps()),
       }),
@@ -172,7 +186,7 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
     footer: each((v) =>
       renderSection("footer", v, {
         storeName,
-        tagline: hero.subtitle,
+        tagline: heroSlides[0].subtitle,
         categories: fixtureTopCategories,
         contactEmail: "hello@petati.local",
         contactPhone: "+90 555 000 0000",

@@ -18,17 +18,23 @@ export default async function StoreHome({ params }: PageProps<"/[locale]/s/[stor
     getProducts(store.id, locale, fallback, { sort: "newest", pageSize: 8 }),
   ]);
 
-  const hero = resolveHero(store.hero, locale, fallback);
+  // No slides configured yet: one default slide. No uploaded photo on the first slide: borrow the
+  // first featured photo (the full-bleed hero falls back to a gradient when null).
+  const configured = resolveHero(store.hero, locale, fallback);
+  const borrowed = featured.items[0]?.imageUrl ?? newest.items[0]?.imageUrl ?? null;
+  const slides = (configured.length ? configured : [{ imageUrl: null, link: null }]).map((s, i) => ({
+    title: s.title ?? (i === 0 ? t("heroTitle") : ""),
+    subtitle: s.subtitle ?? (i === 0 ? (store.tagline ?? t("heroSubtitle")) : ""),
+    ctaLabel: t("shopNow"),
+    ctaHref: s.link ?? "/shop",
+    imageUrl: s.imageUrl ?? (i === 0 ? borrowed : null),
+  }));
 
   return (
     <main>
       {renderSection("hero", store.theme.sections.hero, {
-        title: hero.title ?? t("heroTitle"),
-        subtitle: hero.subtitle ?? store.tagline ?? t("heroSubtitle"),
-        ctaLabel: t("shopNow"),
-        ctaHref: "/shop",
-        // No uploaded hero yet: borrow the first featured photo (the full-bleed hero falls back to a gradient when null).
-        imageUrl: hero.imageUrl ?? featured.items[0]?.imageUrl ?? newest.items[0]?.imageUrl ?? null,
+        slides,
+        labels: { previous: t("previousSlide"), next: t("nextSlide"), slideOf: t.raw("slideOf") as string },
       })}
       {renderSection("categoryBanner", store.theme.sections.categoryBanner, {
         title: t("browseCategories"),

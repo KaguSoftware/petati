@@ -59,8 +59,7 @@ export function PreviewFrame({ device, theme, dir, locale, children, label, clas
       <div
         inert
         dir={dir}
-        data-storefront
-        className={cn("@container pointer-events-none select-none bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[theme.sections.navbar])}
+        className="@container pointer-events-none select-none bg-background font-sans text-foreground"
         style={{
           width,
           zoom: scale ?? 1,
@@ -68,7 +67,10 @@ export function PreviewFrame({ device, theme, dir, locale, children, label, clas
           ...(themeToCssVars(theme, locale ?? (dir === "rtl" ? "fa" : "en")) as CSSProperties),
         }}
       >
-        {children}
+        {/* Same split as the storefront root: the navbar's `@tablet:` variables must live below the container. */}
+        <div data-storefront className={cn("flex flex-col *:w-full", NAVBAR_VARS[theme.sections.navbar])}>
+          {children}
+        </div>
       </div>
     </div>
   );

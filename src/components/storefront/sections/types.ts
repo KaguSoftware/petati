@@ -26,12 +26,21 @@ export interface NavbarProps {
   localeSlot: ReactNode;
 }
 
-export interface HeroProps {
+export interface HeroSlideProps {
   title: string;
   subtitle: string;
   ctaLabel: string;
   ctaHref: string;
   imageUrl: string | null;
+}
+
+export interface HeroProps {
+  /** At least one slide; two or more make every hero layout a carousel. */
+  slides: HeroSlideProps[];
+  /** `slideOf` is a template with `{n}` and `{total}` placeholders. */
+  labels: { previous: string; next: string; slideOf: string };
+  /** Auto-advance (default true); previews pass false. */
+  autoplay?: boolean;
 }
 
 export interface CategoryBannerProps {
@@ -64,7 +73,17 @@ export interface ProductPageProps {
   product: ProductDetail;
   currency: string;
   locale: string;
-  labels: { description: string; sku: string; reviews: string; inStock: string; outOfStock: string };
+  labels: {
+    description: string;
+    sku: string;
+    reviews: string;
+    inStock: string;
+    outOfStock: string;
+    previousImage: string;
+    nextImage: string;
+    /** template with `{n}` and `{total}` placeholders */
+    imageOf: string;
+  };
   purchasePanel: ReactNode;
   reviewsSection: ReactNode;
   wishlistSlot?: ReactNode;

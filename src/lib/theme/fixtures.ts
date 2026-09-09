@@ -1,5 +1,6 @@
 import type { CategoryData, ProductCardData, ProductDetail, ReviewData } from "@/lib/catalog/types";
 import type { CartSummary } from "@/lib/cart/cart";
+import type { ResolvedHeroSlide } from "./hero";
 
 /**
  * Deterministic demo data for rendering storefront sections without a database: used by the
@@ -9,6 +10,12 @@ const img = (seed: string, w = 900, h = 900) => `https://picsum.photos/seed/${se
 
 /** A wide fixture photo for heroes when the store has none (full-bleed heroes crop square photos badly). */
 export const fixtureHeroImage = img("petati-hero", 2400, 1000);
+
+/** Two slides for the dev harness, so every hero layout is exercised as a carousel (text of slide 1 comes from the `home` messages). */
+export const fixtureHeroSlides: ResolvedHeroSlide[] = [
+  { imageUrl: fixtureHeroImage, link: null },
+  { title: "New arrivals every week", subtitle: "Fresh toys, treats and gear for cats and dogs.", imageUrl: img("petati-hero-2", 2400, 1000), link: "/shop?sort=newest" },
+];
 
 export const fixtureCategories: CategoryData[] = [
   { id: "c1", slug: "toys", name: "Toys", description: null, imageUrl: img("toys", 800, 600), parentId: null },

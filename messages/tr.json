@@ -42,13 +42,19 @@
     "featured": "Öne çıkan ürünler",
     "newArrivals": "Yeni gelenler",
     "browseCategories": "Kategorilere göz at",
-    "viewAll": "Tümünü gör"
+    "viewAll": "Tümünü gör",
+    "previousSlide": "Önceki slayt",
+    "nextSlide": "Sonraki slayt",
+    "slideOf": "Slayt {n} / {total}"
   },
   "product": {
     "addToCart": "Sepete ekle",
     "outOfStock": "Stokta yok",
     "lowStock": "Sadece {count} adet kaldı",
     "inStock": "Stokta",
+    "previousImage": "Önceki görsel",
+    "nextImage": "Sonraki görsel",
+    "imageOf": "Görsel {n} / {total}",
     "price": "Fiyat",
     "quantity": "Adet",
     "description": "Açıklama",
@@ -1128,16 +1134,26 @@
       },
       "hero": {
         "title": "Hero",
-        "description": "Ana sayfanın üstündeki büyük görsel. Yaklaşık 2400 × 1000 piksel, 5 MB'a kadar JPG veya WebP bir fotoğraf kullanın. Aşağıdaki hero düzeni nasıl gösterileceğini belirler.",
-        "image": "Hero görseli",
-        "noImage": "Henüz görsel yok: ana sayfa ilk öne çıkan ürünün fotoğrafını kullanır.",
+        "description": "Ana sayfanın üstündeki büyük görsel. Tek slayt düz bir hero'dur; daha fazlasını ekleyince her hero düzeni slaytlar arasında geçiş yapan bir karusele dönüşür. Yaklaşık 2400 × 1000 piksel, 5 MB'a kadar JPG veya WebP geniş fotoğraflar kullanın.",
+        "image": "Slayt görseli",
+        "noImage": "Görsel yok: ilk slayt ilk öne çıkan ürünün fotoğrafını kullanır; diğer slaytlar marka renklerini gösterir.",
         "upload": "Görsel yükle",
         "replace": "Görseli değiştir",
         "headline": "Başlık",
         "subtitle": "Alt başlık",
         "headlinePlaceholder": "Evcil dostunuzun sevdiği her şey",
         "subtitlePlaceholder": "Oyuncak, mama, yatak ve aksesuarlar kapınıza gelsin.",
-        "fallbackNote": "Boş alanlar mağaza sloganına ve varsayılan metne döner."
+        "slide": "Slayt {n}",
+        "addSlide": "Slayt ekle",
+        "removeSlide": "Slaytı kaldır",
+        "moveUp": "Yukarı taşı",
+        "moveDown": "Aşağı taşı",
+        "link": "Düğme bağlantısı",
+        "linkPlaceholder": "/shop",
+        "linkNote": "Bu sitedeki bir yol, ör. /c/dog-food veya /p/rope-tug-toy. Boş bırakılırsa mağaza açılır.",
+        "maxSlides": "En fazla {max} slayt.",
+        "empty": "Henüz slayt yok: ana sayfa varsayılan hero'yu gösterir.",
+        "fallbackNote": "İlk slaytın boş alanları mağaza sloganına ve varsayılan metne döner."
       }
     },
     "settings": {

@@ -1,11 +1,10 @@
 import { Link } from "@/i18n/navigation";
-import { ProductImage } from "@/components/storefront/shared/product-image";
+import { ProductGallery } from "@/components/storefront/shared/product-gallery";
 import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import type { ProductPageProps } from "../types";
 
 /** Gallery + panel: a big rounded photo with a thumbnail strip, the buy panel sticky beside it. */
 export function ProductPageMinimal({ product, labels, purchasePanel, reviewsSection, wishlistSlot }: ProductPageProps) {
-  const [main, ...rest] = product.images;
   return (
     <main className="mx-auto max-w-7xl px-gutter py-8 @desktop:py-12">
       <nav className="mb-5 text-sm text-muted-foreground">
@@ -19,21 +18,16 @@ export function ProductPageMinimal({ product, labels, purchasePanel, reviewsSect
         ))}
       </nav>
       <div className="grid gap-10 @tablet:grid-cols-[1.15fr_1fr] @desktop:gap-14">
-        <div className="flex flex-col gap-3">
-          <div className="relative overflow-hidden rounded-xl">
-            <ProductImage src={main?.url ?? null} alt={main?.alt ?? product.name} className="aspect-square @tablet:aspect-[4/5]" sizes="(min-width: 768px) 55vw, 100vw" priority />
-            {wishlistSlot && <div className="absolute end-3 top-3">{wishlistSlot}</div>}
-          </div>
-          {rest.length > 0 && (
-            <ul className="flex gap-3 overflow-x-auto pb-1 contain-inline-size">
-              {rest.map((img) => (
-                <li key={img.url} className="w-20 shrink-0 @tablet:w-24">
-                  <ProductImage src={img.url} alt={img.alt} className="aspect-square rounded-lg" sizes="96px" />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <ProductGallery
+          images={product.images}
+          fallbackAlt={product.name}
+          labels={{ previous: labels.previousImage, next: labels.nextImage, imageOf: labels.imageOf }}
+          stageClassName="aspect-square rounded-xl @tablet:aspect-[4/5]"
+          sizes="(min-width: 768px) 55vw, 100vw"
+          thumbs="row"
+          thumbClassName="rounded-lg"
+          overlay={wishlistSlot && <div className="absolute end-3 top-3 z-10">{wishlistSlot}</div>}
+        />
         <div className="flex flex-col gap-6 self-start @desktop:sticky @desktop:top-24">
           <div className="flex flex-col gap-2">
             {product.brand && (

@@ -58,15 +58,22 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
   `[data-storefront]` (inputs/selects 2.75rem, search 2.5rem; buttons: `xl` for primary CTAs, `lg` secondary,
   `icon-lg` = 2.5rem). Fonts are locale-aware: an Arabic-script theme font is preceded by its Latin pair on en/tr
   (`fontStack(name, locale)`), which is what keeps Latin text centred in buttons. Navbars set `--navbar-h`/`--hero-pull`
-  via `NAVBAR_VARS`; the full-bleed hero declares `data-hero-overlay` and slides under the bar, and overlay-capable bars
+  via `NAVBAR_VARS` on `[data-storefront]`, which sits INSIDE a separate `@container` wrapper (a container query never matches the
+  element that declares it, so `@tablet:` variables on the container itself silently stayed at their phone values → 8 px white strip
+  above the full-bleed hero under the floating/editorial bars; fixed 2026-09-09 in the storefront root, `PreviewFrame` and the harness); the full-bleed hero declares `data-hero-overlay` and slides under the bar, and overlay-capable bars
   (`data-navbar-overlay` + `NavScrollState`) go transparent at the top of the page. RTL: user content uses `bidi-auto`,
   phone numbers sit in `<bdi dir="ltr">`, steppers are `dir="ltr"`, display headings get `line-height: 1.3` under RTL.
   Wordmarks size with `cqw`, never `vw`. Screenshot loop: `scratchpad/audit-shots.mjs` (+ `audit-extra`, `audit-admin`,
   `nav-shots`, `quick-shots`; run with `MSYS_NO_PATHCONV=1`) and three reviewer agents per pass.
 - **Account sections follow the fast-admin rule (2026-09-09)**: `account/layout.tsx` loads orders, addresses, wishlist and profile in ONE query wave (inside Suspense) and renders all four panels; `AccountPanels` (client) switches them with local state + `history.pushState`, which Next mirrors into `usePathname` (Back/Forward and deep links keep working). The `/account/*` pages are empty deep-link stubs. Measured: ~80 ms per switch, zero requests.
-- Hero content (image + per-locale headline/subtitle) lives in `stores.settings` (`hero_image`, `hero_title`,
-  `hero_subtitle`), read through `src/lib/theme/hero.ts` (`Store.hero`), edited on the Design page and saved by
-  `saveThemeAction` together with the theme. New image URLs must be inside `store-media/<storeId>/`.
+- Hero content is a SLIDE LIST in `stores.settings.hero_slides` (`[{image, title{locale}, subtitle{locale}, link}]`, max 8), read through
+  `src/lib/theme/hero.ts` (`Store.hero.slides`); rows that only have the legacy `hero_image`/`hero_title`/`hero_subtitle` read as one slide and
+  saving mirrors slide 1 back into those keys. One slide = plain hero; 2+ = every hero layout becomes a cross-fade carousel
+  (`shared/hero-carousel.tsx` + `shared/use-carousel.ts`: swipe, arrow keys, dots, 6 s autoplay paused on hover/focus/reduced-motion,
+  RTL-aware; only slide 1 renders an `<h1>`). Edited on the Design page (`HeroCard`: add/remove/reorder, upload, per-locale copy,
+  same-site `link`), saved by `saveThemeAction`; new image URLs must be inside `store-media/<storeId>/`. Admin previews pass
+  `autoplay: false`. Product pages use `shared/product-gallery.tsx` (same hook: stage cross-fade, thumbnails, hover arrows, `n / total`).
+  `slideOf`/`imageOf` labels are `{n}`/`{total}` templates read with `t.raw` and filled client-side.
 - Permission matrix lives only in `src/lib/auth/permissions.ts`. Server actions check it before using
   the service-role client.
 - Payment providers implement `src/lib/payments/provider.ts`. `manual` is live; `iyzico` is a stub.
@@ -103,6 +110,7 @@ Done (build, typecheck, lint, 25 pgTAP tests green; every flow below verified wi
 - **Deployment**: https://petati.vercel.app is live against the cloud project (env vars set in the Vercel dashboard); all admin routes render there with zero console errors (multi-store routes 404 by design, flag off).
 - **Visual QA pass (2026-09-09, after the owner's review)**: root cause found and fixed (flex-column root shrink-wrapped every `mx-auto` page/section → truncated cards, off-centre checkout/cart/product/account); English/Turkish now render in a Latin face (Vazirmatn only leads on `fa`), which removed the "text sits high" look; shop-sized controls (44 px inputs, `xl` CTAs, 40 px icon buttons); one `px-gutter` inset everywhere; navbar over the full-bleed hero (transparent at top, solid on scroll) and decongested/centred navbars with a search field that never truncates; visible wishlist heart for everyone (guests → sign-in); RTL isolation (`bidi-auto`, `<bdi>` phone numbers, LTR steppers, looser Persian heading leading); cart lines centred, tax row reads "Includes tax" when prices include tax; checkout summary first on phones; account shell redone (card + icon nav / segmented row); drawer rail, admin save bar only when dirty, navbar previews drawn over the hero. Verified with two full screenshot audits (276 shots), the three reviewer agents, qa/admin-qa/design-qa scripts and a production build.
 - **Storefront restyle + honest design picker (2026-09-09)**: live (minimal) language = full-bleed hero with overlay copy, overlay category tiles 3-up, overlay product cards 3-up desktop / 1-up mobile, category page banner. Every section has four structurally different layouts (48 files rewritten). Admin Design: each option is the REAL section rendered with fixture data inside a zoomed `@container` frame (`PreviewFrame`), desktop/mobile toggle, colours/fonts/radius live; the side "Live preview" is the home page composed from the chosen layouts; hero card (upload + per-locale copy); wizard preset cards show composed previews. Verified: harness at 390/1280 en+fa no overflow, admin-qa/qa scripts green, build green. Design page document (52 pre-rendered nodes) measured on `next start` 2026-09-09: 891 KB raw / 69 KB gzip / 42 KB brotli, DOMContentLoaded ≈ 300 ms warm (`node_modules/.qa/design-size.mjs`), so previews stay pre-rendered; revisit lazy loading only if that grows.
+- **Hero carousel + product gallery + navbar gap (2026-09-09)**: hero is now a slide list (see Conventions) with a carousel in all four layouts; the product page gallery actually works (thumbnails switch the stage, swipe, keys, counter) in minimal/bold/playful (editorial stays a stacked lookbook); the 8 px white strip above the hero under the floating/editorial navbars is gone (`@container` moved to a wrapper). Verified: `carousel-qa.mjs` (geometry at 390/768/1280, 4 layouts × en/fa: dots, keys, swipe, click guard, inert, one h1; gallery thumbs/arrows/keys/counter), `hero-admin-qa.mjs` (sign in, add slides with uploads, save, live 2-slide carousel with autoplay, restore; `--clear` empties the list), `carousel-shots.mjs` screenshot sweep reviewed, lint/typecheck/production build green. The live test store was left with ZERO slides (as found); three test banners remain as orphans in `store-media/<id>/hero/`.
 In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS verification, Google OAuth secret paste (owner), SMTP for staff invites.
 
 ## File map (key files)
@@ -125,7 +133,8 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 - `src/lib/account/{queries,actions}.ts` — orders/addresses/wishlist/reviews/profile for shoppers.
 - `src/lib/email/send.ts`, `src/emails/order-confirmation.tsx` — Resend or console fallback.
 - `src/components/storefront/sections/types.ts` — the props contract every variant must honour; `<section>/{minimal,bold,editorial,playful}.tsx` are the four implementations, all wired in `src/lib/theme/registry.tsx`.
-- `src/lib/theme/{preview.tsx,preview-compose.ts,client-registry.ts,hero.ts,fixtures.ts}` — `buildSectionPreviews` (server: every section × variant with fixtures, 16 grid×card combos), `composeHome`, client-renderable hero/announcement registries (live typing in the editor), hero settings helpers.
+- `src/lib/theme/{preview.tsx,preview-compose.ts,client-registry.ts,hero.ts,fixtures.ts}` — `buildSectionPreviews` (server: every section × variant with fixtures, 16 grid×card combos; harness gets `fixtureHeroSlides`), `composeHome`, client-renderable hero/announcement registries (live typing in the editor), hero slide model + settings read/write.
+- `src/components/storefront/shared/{use-carousel.ts,hero-carousel.tsx,product-gallery.tsx}` — carousel behaviour hook, the hero carousel (tones/controls per layout) and the product photo gallery.
 - `src/components/admin/design/{theme-editor,section-picker,preview-frame,hero-card,logo-uploader}.tsx` — the Design page; `PreviewFrame` = zoomed `@container` box with the draft's CSS vars, `inert`.
 - `src/lib/theme/fonts.ts` — font allow-list + CSS stacks (see Conventions).
 - `src/lib/admin/brands/*`, `src/components/admin/products/brand-{list,dialog}.tsx` — brands admin; storefront brand pages under `src/app/[locale]/s/[store]/{brands,b/[slug]}/`, `shared/brand-mark.tsx`, `shared/category-nav.ts` (drawer tree).
@@ -219,6 +228,8 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 - Product QA: `rope-tug-toy` shows "Out of stock" on the live store now (earlier QA orders drained it); `orders-qa.mjs` uses `royal-canin-kitten`.
 - The client's app icon reads "petitati" (and the mailbox is petitati.ist@gmail.com) while the store/site is named "Petati" everywhere — confirm the spelling with the client before the logo lands.
 - `getClaims()` refreshes an expired session through `getSession()` regardless of `autoRefreshToken`, so the proxy still rotates cookies; the JWKS is cached process-wide by auth-js (`GLOBAL_JWKS`).
+
+- `next dev` can wedge with `Jest worker encountered 2 child process exceptions` (every request 500s, log at `.next/dev/logs/next-development.log`); it refuses a second instance in the same dir, so stop the PID it names and start again.
 
 ## Running it
 ```

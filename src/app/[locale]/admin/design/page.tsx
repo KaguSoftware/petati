@@ -32,7 +32,7 @@ async function Content({ locale }: { locale: string }) {
     logoUrl: store.logo_url,
     currency: store.currency,
     announcement: store.theme.announcement[ctx.locale] ?? "",
-    hero: resolveHero(store.hero, ctx.locale, store.default_locale),
+    heroSlides: resolveHero(store.hero, ctx.locale, store.default_locale),
   });
   // Dev-only harness (the route 404s in production); decided on the server so the client never checks NODE_ENV.
   const previewHref = process.env.NODE_ENV !== "production" ? `/${ctx.locale}/preview/${store.theme.sections.hero}` : null;

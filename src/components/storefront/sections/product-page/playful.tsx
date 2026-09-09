@@ -1,11 +1,10 @@
 import { Link } from "@/i18n/navigation";
-import { ProductImage } from "@/components/storefront/shared/product-image";
+import { ProductGallery } from "@/components/storefront/shared/product-gallery";
 import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import { cn } from "@/lib/utils";
 import type { ProductPageProps } from "../types";
 
 export function ProductPagePlayful({ product, labels, purchasePanel, reviewsSection, wishlistSlot }: ProductPageProps) {
-  const [main, ...rest] = product.images;
   return (
     <main className="mx-auto max-w-7xl px-gutter py-8">
       <nav className="mb-6 flex flex-wrap gap-2 text-sm">
@@ -16,21 +15,17 @@ export function ProductPagePlayful({ product, labels, purchasePanel, reviewsSect
         ))}
       </nav>
       <div className="grid gap-10 @tablet:grid-cols-2">
-        <div className="flex flex-col gap-4">
-          <div className="relative overflow-hidden rounded-3xl shadow-lg shadow-primary/10 ring-1 ring-foreground/5">
-            <ProductImage src={main?.url ?? null} alt={main?.alt ?? product.name} className="aspect-square" sizes="(min-width: 768px) 50vw, 100vw" priority />
-            {wishlistSlot && <div className="absolute end-4 top-4">{wishlistSlot}</div>}
-          </div>
-          {rest.length > 0 && (
-            <ul className="grid grid-cols-4 gap-3">
-              {rest.map((img) => (
-                <li key={img.url}>
-                  <ProductImage src={img.url} alt={img.alt} className="aspect-square rounded-2xl ring-1 ring-foreground/5" sizes="12vw" />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <ProductGallery
+          images={product.images}
+          fallbackAlt={product.name}
+          labels={{ previous: labels.previousImage, next: labels.nextImage, imageOf: labels.imageOf }}
+          stageClassName="aspect-square rounded-3xl shadow-lg shadow-primary/10 ring-1 ring-foreground/5"
+          sizes="(min-width: 768px) 50vw, 100vw"
+          thumbs="grid"
+          thumbClassName="rounded-2xl ring-1 ring-foreground/5"
+          className="gap-4"
+          overlay={wishlistSlot && <div className="absolute end-4 top-4 z-10">{wishlistSlot}</div>}
+        />
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-2">

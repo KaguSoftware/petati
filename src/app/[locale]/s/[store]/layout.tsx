@@ -13,13 +13,16 @@ export default async function StoreLayout({ children, params }: LayoutProps<"/[l
   const ctx = await storeContext(params);
   const { store, locale } = ctx;
 
+  // `@container` lives on an outer box: a container query never matches the element that declares
+  // it, so the navbar's `@tablet:` variables must sit on a descendant of the container.
   return (
-    <div
-      data-storefront
-      className={cn("@container flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[store.theme.sections.navbar])}
-      style={themeToCssVars(store.theme, locale) as React.CSSProperties}
-    >
-      <StoreProvider
+    <div className="@container">
+      <div
+        data-storefront
+        className={cn("flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[store.theme.sections.navbar])}
+        style={themeToCssVars(store.theme, locale) as React.CSSProperties}
+      >
+        <StoreProvider
         value={{
           id: store.id,
           slug: store.slug,
@@ -30,8 +33,9 @@ export default async function StoreLayout({ children, params }: LayoutProps<"/[l
           logoUrl: store.logo_url,
         }}
       >
-        <StoreChrome ctx={ctx}>{children}</StoreChrome>
-      </StoreProvider>
+          <StoreChrome ctx={ctx}>{children}</StoreChrome>
+        </StoreProvider>
+      </div>
     </div>
   );
 }

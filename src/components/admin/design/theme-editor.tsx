@@ -18,7 +18,7 @@ import { FONT_OPTIONS, RADIUS_PRESETS, THEME_COLOR_KEYS } from "@/lib/admin/desi
 import { renderAnnouncementBar, renderHero } from "@/lib/theme/client-registry";
 import { fixtureHeroImage } from "@/lib/theme/fixtures";
 import { fontFamily } from "@/lib/theme/fonts";
-import type { HeroContent } from "@/lib/theme/hero";
+import { EMPTY_SLIDE, type HeroContent } from "@/lib/theme/hero";
 import { composeHome, gridCombo, type SectionPreviews } from "@/lib/theme/preview-compose";
 import { PREVIEW_STORE_SLUG } from "@/lib/theme/preview-slug";
 import { type SectionKey, type StoreTheme, type VariantKey } from "@/lib/theme/types";
@@ -70,13 +70,15 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
 
   // Hero and announcement are rendered here, on the client, so typing shows up live in every frame.
   const announcementText = draft.theme.announcement[locale] ?? Object.values(draft.theme.announcement).find(Boolean) ?? "";
-  const heroProps = {
-    title: draft.hero.title[locale] ?? Object.values(draft.hero.title).find(Boolean) ?? th("heroTitle"),
-    subtitle: draft.hero.subtitle[locale] ?? Object.values(draft.hero.subtitle).find(Boolean) ?? th("heroSubtitle"),
+  const heroSlides = (draft.hero.slides.length ? draft.hero.slides : [EMPTY_SLIDE]).map((s, i) => ({
+    title: s.title[locale] ?? Object.values(s.title).find(Boolean) ?? (i === 0 ? th("heroTitle") : ""),
+    subtitle: s.subtitle[locale] ?? Object.values(s.subtitle).find(Boolean) ?? (i === 0 ? th("heroSubtitle") : ""),
     ctaLabel: th("shopNow"),
-    ctaHref: "/shop",
-    imageUrl: draft.hero.imageUrl ?? fixtureHeroImage,
-  };
+    ctaHref: s.link ?? "/shop",
+    imageUrl: s.imageUrl ?? (i === 0 ? fixtureHeroImage : null),
+  }));
+  // Frames are inert pictures: no auto-advance, so a dozen previews do not each run a timer.
+  const heroProps = { slides: heroSlides, labels: { previous: th("previousSlide"), next: th("nextSlide"), slideOf: th.raw("slideOf") as string }, autoplay: false };
   const nodeFor = (section: SectionKey, v: VariantKey): ReactNode => {
     switch (section) {
       case "hero":

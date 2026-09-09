@@ -35,7 +35,16 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/s/[st
     product,
     currency: store.currency,
     locale,
-    labels: { description: t("description"), sku: t("sku"), reviews: t("reviews"), inStock: t("inStock"), outOfStock: t("outOfStock") },
+    labels: {
+      description: t("description"),
+      sku: t("sku"),
+      reviews: t("reviews"),
+      inStock: t("inStock"),
+      outOfStock: t("outOfStock"),
+      previousImage: t("previousImage"),
+      nextImage: t("nextImage"),
+      imageOf: t.raw("imageOf") as string,
+    },
     purchasePanel: <AddToCartPanel product={product} storeSlug={store.slug} currency={store.currency} locale={locale} />,
     wishlistSlot: (
       <Suspense>

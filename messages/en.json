@@ -42,13 +42,19 @@
     "featured": "Featured products",
     "newArrivals": "New arrivals",
     "browseCategories": "Browse categories",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "slideOf": "Slide {n} of {total}"
   },
   "product": {
     "addToCart": "Add to cart",
     "outOfStock": "Out of stock",
     "lowStock": "Only {count} left",
     "inStock": "In stock",
+    "previousImage": "Previous image",
+    "nextImage": "Next image",
+    "imageOf": "Image {n} of {total}",
     "price": "Price",
     "quantity": "Quantity",
     "description": "Description",
@@ -1128,16 +1134,26 @@
       },
       "hero": {
         "title": "Hero",
-        "description": "The big picture at the top of the home page. Use a wide photo, about 2400 × 1000 pixels, JPG or WebP up to 5 MB. The hero layout below decides how it is shown.",
-        "image": "Hero image",
-        "noImage": "No image yet: the home page borrows the first featured product photo.",
+        "description": "The big picture at the top of the home page. One slide is a plain hero; add more and every hero layout becomes a carousel that fades between them. Use wide photos, about 2400 × 1000 pixels, JPG or WebP up to 5 MB.",
+        "image": "Slide image",
+        "noImage": "No image: the first slide borrows the first featured product photo; other slides show the brand colours.",
         "upload": "Upload image",
         "replace": "Replace image",
         "headline": "Headline",
         "subtitle": "Subtitle",
         "headlinePlaceholder": "Everything your pet loves",
         "subtitlePlaceholder": "Toys, food, beds and accessories, delivered to your door.",
-        "fallbackNote": "Empty fields fall back to the store tagline and the default wording."
+        "slide": "Slide {n}",
+        "addSlide": "Add slide",
+        "removeSlide": "Remove slide",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "link": "Button link",
+        "linkPlaceholder": "/shop",
+        "linkNote": "A path on this site, e.g. /c/dog-food or /p/rope-tug-toy. Empty opens the shop.",
+        "maxSlides": "Up to {max} slides.",
+        "empty": "No slides yet: the home page shows the default hero.",
+        "fallbackNote": "Empty fields on the first slide fall back to the store tagline and the default wording."
       }
     },
     "settings": {

@@ -7,7 +7,7 @@ import type { ActionState } from "@/lib/admin/types";
 import { jsonField, optionalText, parseForm, uuidField } from "@/lib/admin/validate";
 import { env } from "@/lib/env";
 import { storeCacheTag } from "@/lib/tenant/store";
-import { heroFromSettings, heroPatchSchema, heroToSettings, mergeHero } from "@/lib/theme/hero";
+import { heroFromInput, heroFromSettings, heroInputSchema, heroToSettings } from "@/lib/theme/hero";
 import { parseTheme } from "@/lib/theme/types";
 import { themePatchSchema } from "./constants";
 
@@ -21,9 +21,9 @@ function ownMediaUrl(storeId: string, url: string | null | undefined) {
  * row. The storefront caches the store row, so its tags are refreshed.
  */
 export async function saveThemeAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  const parsed = parseForm(z.object({ storeId: uuidField, theme: jsonField(themePatchSchema), hero: jsonField(heroPatchSchema).optional() }), formData);
+  const parsed = parseForm(z.object({ storeId: uuidField, theme: jsonField(themePatchSchema), hero: jsonField(heroInputSchema).optional() }), formData);
   if (!parsed.data) return { error: "invalid", fieldErrors: parsed.fieldErrors };
-  const { storeId, theme: patch, hero: heroPatch } = parsed.data;
+  const { storeId, theme: patch, hero: heroInput } = parsed.data;
   try {
     const { db } = await adminMutation(storeId, "store.design");
     const { data: store } = await db
@@ -41,12 +41,15 @@ export async function saveThemeAction(_prev: ActionState, formData: FormData): P
       announcement: patch.announcement ?? current.announcement,
     });
     const settings = store.settings ?? {};
-    const currentHero = heroFromSettings(settings);
+    const hero = heroInput ? heroFromInput(heroInput) : null;
     // A NEW image must live in this store's media folder; a seeded/scripted URL that is already stored may stay.
-    if (heroPatch?.imageUrl && heroPatch.imageUrl !== currentHero.imageUrl && !ownMediaUrl(storeId, heroPatch.imageUrl)) {
-      return { error: "invalid", fieldErrors: { hero: "invalid" } };
+    if (hero) {
+      const stored = new Set(heroFromSettings(settings).slides.map((s) => s.imageUrl));
+      if (hero.slides.some((s) => s.imageUrl && !stored.has(s.imageUrl) && !ownMediaUrl(storeId, s.imageUrl))) {
+        return { error: "invalid", fieldErrors: { hero: "invalid" } };
+      }
     }
-    const update = heroPatch ? { theme: next, settings: { ...settings, ...heroToSettings(mergeHero(currentHero, heroPatch)) } } : { theme: next };
+    const update = hero ? { theme: next, settings: { ...settings, ...heroToSettings(hero) } } : { theme: next };
     const { error } = await db.from("stores").update(update).eq("id", storeId);
     if (error) throw error;
     updateTag(storeCacheTag(store.slug));
