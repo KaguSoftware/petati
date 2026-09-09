@@ -9,6 +9,7 @@ import { boolField, intField, jsonField, moneyField, multi, optionalIntField, op
 import { catalogTag } from "@/lib/catalog/queries";
 import type { Translated } from "@/lib/db/types";
 import { storeCacheTag } from "@/lib/tenant/store";
+import { footerFromInput, footerInputSchema, footerToSettings } from "@/lib/theme/footer";
 import { CONTENT_PAGES, CURRENCIES, EMAIL_FROM_RE } from "./constants";
 
 const localeEnum = z.enum(locales);
@@ -135,6 +136,28 @@ export async function updatePagesAction(_prev: ActionState, formData: FormData):
     const merged: Record<string, Record<string, string>> = { ...existing };
     for (const page of CONTENT_PAGES) merged[page] = { ...(existing[page] ?? {}), ...(pages[page] ?? {}) };
     const { error } = await db.from("stores").update({ settings: { ...settings, pages: merged } }).eq("id", storeId);
+    if (error) throw error;
+    invalidateStore(store.slug);
+    return { ok: true };
+  } catch (err) {
+    return { error: actionError(err) };
+  }
+}
+
+/**
+ * Contact & footer content (address, hours, social links, trust strip, payment badges) as one JSON
+ * payload, validated by `footerInputSchema` and merged into the stores.settings jsonb.
+ */
+export async function updateFooterAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = parseForm(z.object({ storeId: uuidField, footer: jsonField(footerInputSchema) }), formData);
+  if (!parsed.data) return { error: "invalid", fieldErrors: parsed.fieldErrors };
+  const { storeId, footer } = parsed.data;
+  try {
+    const { db } = await adminMutation(storeId, "store.settings");
+    const store = await loadStore(db, storeId);
+    if (!store) return { error: "notFound" };
+    const settings = { ...(store.settings ?? {}), ...footerToSettings(footerFromInput(footer)) };
+    const { error } = await db.from("stores").update({ settings }).eq("id", storeId);
     if (error) throw error;
     invalidateStore(store.slug);
     return { ok: true };

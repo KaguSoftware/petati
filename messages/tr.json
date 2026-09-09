@@ -33,7 +33,8 @@
     "search": "Ürün ara",
     "menu": "Menü",
     "closeMenu": "Menüyü kapat",
-    "brands": "Markalar"
+    "brands": "Markalar",
+    "call": "Bizi arayın"
   },
   "home": {
     "heroTitle": "Evcil dostunuzun sevdiği her şey",
@@ -182,7 +183,47 @@
     "rights": "Tüm hakları saklıdır.",
     "subscribed": "Abone olduğunuz için teşekkürler!",
     "emailPlaceholder": "E-posta adresiniz",
-    "newsletterSubtitle": "Yeni ürünler ve kampanyalar doğrudan gelen kutunuza."
+    "newsletterSubtitle": "Yeni ürünler ve kampanyalar doğrudan gelen kutunuza.",
+    "shop": "Mağaza",
+    "info": "Bilgi",
+    "followUs": "Bizi takip edin",
+    "address": "Adres",
+    "hours": "Çalışma saatleri",
+    "account": "Hesabım",
+    "weAccept": "Kabul edilen ödemeler",
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "x": "X"
+    },
+    "payments": {
+      "visa": "Visa",
+      "mastercard": "Mastercard",
+      "troy": "Troy",
+      "iyzico": "iyzico",
+      "cash_on_delivery": "Kapıda ödeme",
+      "bank_transfer": "Havale/EFT"
+    },
+    "trust": {
+      "shipping": {
+        "title": "Hızlı kargo",
+        "text": "Siparişler 1–2 iş günü içinde kargoya verilir."
+      },
+      "payment": {
+        "title": "Güvenli ödeme",
+        "text": "Ödeme bilgileriniz korunur."
+      },
+      "returns": {
+        "title": "Kolay iade",
+        "text": "14 gün içinde iade edebilirsiniz."
+      },
+      "support": {
+        "title": "Yardımsever destek",
+        "text": "Bir mesaj kadar yakınız."
+      }
+    }
   },
   "admin": {
     "title": "Yönetim",
@@ -1116,19 +1157,19 @@
         "footer": {
           "minimal": {
             "name": "Dört sütun",
-            "description": "Mağaza, kategoriler ve iletişim sütunlar hâlinde."
+            "description": "Marka, mağaza, bilgi ve iletişim sütunları; güven şeridi ve ödeme rozetleriyle."
           },
           "bold": {
             "name": "Marka adı",
-            "description": "Koyu altbilgide dev mağaza adı ve tek sıra bağlantı."
+            "description": "Koyu altbilgide dev mağaza adı: bir yanda iletişim, diğer yanda bağlantı sıraları."
           },
           "editorial": {
-            "name": "Ortalanmış",
-            "description": "Her şey ortada, bağlantılar noktayla ayrılmış."
+            "name": "Ortalanmış başlık",
+            "description": "Her şey ortada: noktayla ayrılmış bağlantılar, iletişim satırı ve çalışma saatleri."
           },
           "playful": {
             "name": "Yuvarlak üst",
-            "description": "Çip biçimli bağlantılı yuvarlak bir panel."
+            "description": "Çip bağlantılar, iletişim kartı ve yuvarlak sosyal düğmelerle yuvarlak bir panel."
           }
         }
       },
@@ -1157,13 +1198,14 @@
       }
     },
     "settings": {
-      "description": "Mağaza kimliği, ticaret kuralları, içerik sayfaları ve kargo.",
+      "description": "Mağaza kimliği, ticaret kuralları, içerik sayfaları, kargo ve altbilgi.",
       "nav": {
         "label": "Ayar bölümleri",
         "general": "Genel",
         "commerce": "Ticaret",
         "pages": "Sayfalar",
-        "shipping": "Kargo"
+        "shipping": "Kargo",
+        "footer": "İletişim ve altbilgi"
       },
       "general": {
         "identity": "Kimlik",
@@ -1183,7 +1225,8 @@
         "defaultLocale": "Varsayılan dil",
         "enabledLocales": "Kullanılabilir diller",
         "enabledLocalesHint": "Müşteriler bu diller arasında geçiş yapabilir. Varsayılan dil kapatılamaz.",
-        "default": "varsayılan"
+        "default": "varsayılan",
+        "contactFooterHint": "Adres, çalışma saatleri ve sosyal bağlantılar İletişim ve altbilgi sekmesinde."
       },
       "commerce": {
         "pricing": "Fiyat ve vergi",
@@ -1251,6 +1294,44 @@
       "fieldErrors": {
         "defaultLocaleMustBeEnabled": "Varsayılan dil, kullanılabilir dillerden biri olmalıdır.",
         "maxBeforeMin": "En çok gün, en az günden küçük olamaz."
+      },
+      "footer": {
+        "title": "İletişim ve altbilgi",
+        "description": "Altbilgide gösterilen adres, çalışma saatleri, sosyal bağlantılar, güven şeridi ve ödeme rozetleri.",
+        "addressHours": "Adres ve çalışma saatleri",
+        "addressHoursHint": "Dil başına; satır sonları korunur.",
+        "address": "Adres",
+        "addressPlaceholder": "Cadde, no\nSemt, Şehir",
+        "hours": "Çalışma saatleri",
+        "hoursPlaceholder": "Pzt–Cmt 9:00–19:00\nPazar kapalı",
+        "social": "Sosyal bağlantılar",
+        "socialHint": "Tam https:// bağlantıları. WhatsApp için wa.me bağlantısı da olur.",
+        "trust": "Güven şeridi",
+        "trustHint": "Altbilginin üstünde dört kısa vaat (kargo, ödeme, iade, destek). Varsayılanları kullanmak için listeyi boş bırakın.",
+        "trustEnabled": "Güven şeridini göster",
+        "item": "Öğe {n}",
+        "addItem": "Öğe ekle",
+        "removeItem": "Öğeyi kaldır",
+        "moveUp": "Yukarı taşı",
+        "moveDown": "Aşağı taşı",
+        "icon": "Simge",
+        "icons": {
+          "truck": "Kamyon",
+          "shield-check": "Kalkan",
+          "rotate-ccw": "İade oku",
+          "headset": "Kulaklık",
+          "badge-percent": "İndirim rozeti",
+          "gift": "Hediye"
+        },
+        "itemTitle": "Başlık",
+        "itemText": "Metin",
+        "payments": "Ödeme yöntemleri",
+        "paymentsHint": "Altbilgide küçük rozetler olarak gösterilir.",
+        "errors": {
+          "https": "https:// ile başlayan bir bağlantı kullanın.",
+          "invalidUrl": "Geçerli bir bağlantı girin.",
+          "socialHost": "Bu bağlantı o ağa ait değil."
+        }
       }
     },
     "staff": {

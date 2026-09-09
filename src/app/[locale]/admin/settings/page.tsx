@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CommerceForm } from "@/components/admin/settings/commerce-form";
 import { DomainsCard } from "@/components/admin/settings/domains-card";
+import { FooterForm } from "@/components/admin/settings/footer-form";
 import { GeneralForm } from "@/components/admin/settings/general-form";
 import { PagesForm } from "@/components/admin/settings/pages-form";
 import { PaymentsCard } from "@/components/admin/settings/payments-card";
@@ -82,6 +83,15 @@ async function Content({ locale }: { locale: string }) {
       content: (
         <div className="max-w-3xl">
           <PagesForm storeId={store.id} locale={ctx.locale} enabledLocales={store.enabled_locales} pages={pages} />
+        </div>
+      ),
+    },
+    {
+      value: "footer",
+      label: t("footer"),
+      content: (
+        <div className="max-w-3xl">
+          <FooterForm storeId={store.id} locale={ctx.locale} enabledLocales={store.enabled_locales} footer={store.footer} />
         </div>
       ),
     },

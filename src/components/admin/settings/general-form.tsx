@@ -55,7 +55,9 @@ export function GeneralForm({ store }: { store: StoreGeneral }) {
       <Card>
         <CardHeader>
           <CardTitle>{t("contact")}</CardTitle>
-          <CardDescription>{t("contactHint")}</CardDescription>
+          <CardDescription>
+            {t("contactHint")} {t("contactFooterHint")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <FormField name="contact_email" label={t("contactEmail")} errors={errors}>

@@ -1,5 +1,6 @@
 import type { CategoryData, ProductCardData, ProductDetail, ReviewData } from "@/lib/catalog/types";
 import type { CartSummary } from "@/lib/cart/cart";
+import type { FooterContent } from "./footer";
 import type { ResolvedHeroSlide } from "./hero";
 
 /**
@@ -10,6 +11,17 @@ const img = (seed: string, w = 900, h = 900) => `https://picsum.photos/seed/${se
 
 /** A wide fixture photo for heroes when the store has none (full-bleed heroes crop square photos badly). */
 export const fixtureHeroImage = img("petati-hero", 2400, 1000);
+
+/** Complete contact/footer content so the design picker shows every footer layout filled in. */
+export const fixtureFooterContent: FooterContent = {
+  address: { en: "Bağdat Cd. No:123\nKadıköy, İstanbul", tr: "Bağdat Cd. No:123\nKadıköy, İstanbul", fa: "خیابان بغداد، پلاک ۱۲۳\nکادیکوی، استانبول" },
+  hours: { en: "Mon–Sat 9:00–19:00\nSun closed", tr: "Pzt–Cmt 9:00–19:00\nPazar kapalı", fa: "دوشنبه تا شنبه ۹:۰۰ تا ۱۹:۰۰\nیکشنبه تعطیل" },
+  social: { instagram: "https://instagram.com/petati", whatsapp: "https://wa.me/902125550000", telegram: "https://t.me/petati" },
+  trustEnabled: true,
+  trustItems: [],
+  payments: ["visa", "mastercard", "troy", "cash_on_delivery"],
+};
+export const fixtureContactPhone = "+90 212 555 00 00";
 
 /** Two slides for the dev harness, so every hero layout is exercised as a carousel (text of slide 1 comes from the `home` messages). */
 export const fixtureHeroSlides: ResolvedHeroSlide[] = [

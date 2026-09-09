@@ -33,7 +33,8 @@
     "search": "Search products",
     "menu": "Menu",
     "closeMenu": "Close menu",
-    "brands": "Brands"
+    "brands": "Brands",
+    "call": "Call us"
   },
   "home": {
     "heroTitle": "Everything your pet loves",
@@ -182,7 +183,47 @@
     "rights": "All rights reserved.",
     "subscribed": "Thanks for subscribing!",
     "emailPlaceholder": "Your email",
-    "newsletterSubtitle": "New arrivals and offers, straight to your inbox."
+    "newsletterSubtitle": "New arrivals and offers, straight to your inbox.",
+    "shop": "Shop",
+    "info": "Information",
+    "followUs": "Follow us",
+    "address": "Address",
+    "hours": "Opening hours",
+    "account": "My account",
+    "weAccept": "We accept",
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "x": "X"
+    },
+    "payments": {
+      "visa": "Visa",
+      "mastercard": "Mastercard",
+      "troy": "Troy",
+      "iyzico": "iyzico",
+      "cash_on_delivery": "Cash on delivery",
+      "bank_transfer": "Bank transfer"
+    },
+    "trust": {
+      "shipping": {
+        "title": "Fast shipping",
+        "text": "Orders ship within 1–2 business days."
+      },
+      "payment": {
+        "title": "Secure payment",
+        "text": "Your payment details stay protected."
+      },
+      "returns": {
+        "title": "Easy returns",
+        "text": "14 days to change your mind."
+      },
+      "support": {
+        "title": "Friendly support",
+        "text": "We are a message away."
+      }
+    }
   },
   "admin": {
     "title": "Admin",
@@ -1116,19 +1157,19 @@
         "footer": {
           "minimal": {
             "name": "Four columns",
-            "description": "Store, categories and contact in columns."
+            "description": "Brand, shop, info and contact columns with a trust strip and payment badges."
           },
           "bold": {
             "name": "Wordmark",
-            "description": "A giant store name on a dark footer with one row of links."
+            "description": "A giant store name on a dark footer: contact on one side, link rows on the other."
           },
           "editorial": {
-            "name": "Centred",
-            "description": "Everything centred, links separated by dots."
+            "name": "Centred masthead",
+            "description": "Everything centred: dot-separated links, a contact line and opening hours."
           },
           "playful": {
             "name": "Rounded top",
-            "description": "A rounded panel with chip-style links."
+            "description": "A rounded panel with chip links, a contact card and round social buttons."
           }
         }
       },
@@ -1157,13 +1198,14 @@
       }
     },
     "settings": {
-      "description": "Store identity, commerce rules, content pages and shipping.",
+      "description": "Store identity, commerce rules, content pages, shipping and the footer.",
       "nav": {
         "label": "Settings sections",
         "general": "General",
         "commerce": "Commerce",
         "pages": "Pages",
-        "shipping": "Shipping"
+        "shipping": "Shipping",
+        "footer": "Contact & footer"
       },
       "general": {
         "identity": "Identity",
@@ -1183,7 +1225,8 @@
         "defaultLocale": "Default language",
         "enabledLocales": "Available languages",
         "enabledLocalesHint": "Shoppers can switch between these languages. The default cannot be turned off.",
-        "default": "default"
+        "default": "default",
+        "contactFooterHint": "Address, opening hours and social links live in the Contact & footer tab."
       },
       "commerce": {
         "pricing": "Pricing & tax",
@@ -1251,6 +1294,44 @@
       "fieldErrors": {
         "defaultLocaleMustBeEnabled": "The default language must be one of the available languages.",
         "maxBeforeMin": "Maximum days must be at least the minimum."
+      },
+      "footer": {
+        "title": "Contact & footer",
+        "description": "Address, opening hours, social links, the trust strip and payment badges shown in the footer.",
+        "addressHours": "Address & opening hours",
+        "addressHoursHint": "Per language; line breaks are kept.",
+        "address": "Address",
+        "addressPlaceholder": "Street, number\nDistrict, City",
+        "hours": "Opening hours",
+        "hoursPlaceholder": "Mon–Sat 9:00–19:00\nSun closed",
+        "social": "Social links",
+        "socialHint": "Full https:// links. WhatsApp accepts wa.me links.",
+        "trust": "Trust strip",
+        "trustHint": "Four small promises above the footer (shipping, payment, returns, support). Leave the list empty to use the defaults.",
+        "trustEnabled": "Show the trust strip",
+        "item": "Item {n}",
+        "addItem": "Add item",
+        "removeItem": "Remove item",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "icon": "Icon",
+        "icons": {
+          "truck": "Truck",
+          "shield-check": "Shield",
+          "rotate-ccw": "Returns arrow",
+          "headset": "Headset",
+          "badge-percent": "Discount badge",
+          "gift": "Gift"
+        },
+        "itemTitle": "Title",
+        "itemText": "Text",
+        "payments": "Payment methods",
+        "paymentsHint": "Shown as small badges in the footer.",
+        "errors": {
+          "https": "Use an https:// link.",
+          "invalidUrl": "Enter a valid link.",
+          "socialHost": "This link does not belong to that network."
+        }
       }
     },
     "staff": {

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { CategoryData, ProductCardData, ProductDetail, ReviewData } from "@/lib/catalog/types";
 import type { CartSummary } from "@/lib/cart/cart";
 import type { Totals } from "@/lib/checkout/totals";
+import type { PaymentMethod, SocialKey, TrustIcon } from "@/lib/theme/footer";
 import type { VariantKey } from "@/lib/theme/types";
 
 /**
@@ -19,7 +20,9 @@ export interface NavbarProps {
   logoUrl: string | null;
   /** the whole active tree; variants show top-level links on desktop and nest children in the drawer */
   categories: Pick<CategoryData, "id" | "slug" | "name" | "parentId">[];
-  labels: { home: string; shop: string; brands: string; search: string; menu: string; closeMenu: string; categories: string };
+  labels: { home: string; shop: string; brands: string; search: string; menu: string; closeMenu: string; categories: string; call: string };
+  /** shown by layouts that have room for it (stacked bar at wide) */
+  contactPhone: string | null;
   /** dynamic slots rendered by the page inside Suspense */
   cartSlot: ReactNode;
   accountSlot: ReactNode;
@@ -136,13 +139,25 @@ export interface NewsletterProps {
   formSlot: ReactNode;
 }
 
+export interface FooterLink {
+  href: string;
+  label: string;
+}
+
 export interface FooterProps {
   storeName: string;
+  logoUrl: string | null;
   tagline: string | null;
-  categories: Pick<CategoryData, "slug" | "name">[];
-  contactEmail: string | null;
-  contactPhone: string | null;
-  labels: { categories: string; contact: string; rights: string; about: string; privacy: string; terms: string };
+  /** Shop, Brands, then the top-level categories (capped). */
+  shopLinks: FooterLink[];
+  /** About, My account, Privacy, Terms. */
+  infoLinks: FooterLink[];
+  contact: { email: string | null; phone: string | null; address: string | null; hours: string | null };
+  social: { key: SocialKey; href: string; label: string }[];
+  /** null = the trust strip is switched off; otherwise up to four resolved items. */
+  trustItems: { icon: TrustIcon; title: string; text: string }[] | null;
+  payments: { id: PaymentMethod; label: string }[];
+  labels: { shop: string; info: string; contact: string; followUs: string; address: string; hours: string; weAccept: string; rights: string };
   localeSlot: ReactNode;
   year: number;
 }

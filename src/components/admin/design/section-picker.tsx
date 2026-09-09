@@ -18,7 +18,7 @@ interface Props {
 }
 
 /** Sections whose previews are long: cap the frame so four options still fit on a screen or two. */
-const MAX_HEIGHT: Partial<Record<SectionKey, number>> = { announcementBar: 420, navbar: 420, productPage: 760, cartDrawer: 640, checkout: 720, reviews: 560, productGrid: 720 };
+const MAX_HEIGHT: Partial<Record<SectionKey, number>> = { announcementBar: 420, navbar: 420, productPage: 760, cartDrawer: 640, checkout: 720, reviews: 560, productGrid: 720, footer: 760 };
 
 /**
  * One section at a time (list on the side), four layout options drawn for real. Every section's

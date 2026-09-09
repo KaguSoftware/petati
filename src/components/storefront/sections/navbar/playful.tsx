@@ -3,13 +3,15 @@ import { categoryNavItems } from "@/components/storefront/shared/category-nav";
 import { MobileNav } from "@/components/storefront/shared/mobile-nav";
 import { SearchForm } from "@/components/storefront/shared/search-form";
 import { StoreLogo } from "@/components/storefront/shared/store-logo";
+import { Search } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { NavbarProps } from "../types";
 
 const navLink =
   "inline-flex shrink-0 items-center rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all hover:bg-background hover:text-foreground hover:shadow-sm focus-visible:bg-background focus-visible:text-foreground focus-visible:shadow-sm focus-visible:outline-none";
 
-/** A floating capsule: the whole header lives in a rounded pill that hovers over the page, with a pill nav inside. */
+/** Category budget: Shop + Brands until @wide, then categories #1–#3 (the drawer lists them all); icon-only search at @tablet, the field from @desktop. A floating capsule: the whole header lives in a rounded pill that hovers over the page, with a pill nav inside. */
 export function NavbarPlayful({ storeName, logoUrl, categories, labels, cartSlot, accountSlot, localeSlot }: NavbarProps) {
   const primary = [
     { href: "/", label: labels.home },
@@ -18,7 +20,7 @@ export function NavbarPlayful({ storeName, logoUrl, categories, labels, cartSlot
   ];
   const categoryTree = categoryNavItems(categories);
   const categoryLinks = categoryTree.map(({ href, label }) => ({ href, label }));
-  const brand = <StoreLogo storeName={storeName} logoUrl={logoUrl} className="[&>span:first-child]:rounded-full [&_img]:rounded-full" />;
+  const brand = <StoreLogo storeName={storeName} logoUrl={logoUrl} markClassName="rounded-full" />;
 
   return (
     <header className="sticky top-0 z-40 pt-3 px-gutter">
@@ -48,15 +50,18 @@ export function NavbarPlayful({ storeName, logoUrl, categories, labels, cartSlot
               {labels.brands}
             </Link>
             {categoryLinks.map((l, i) => (
-              <Link key={l.href} href={l.href} className={cn(navLink, i >= 2 ? "hidden" : i >= 1 ? "hidden @wide:inline-flex" : "hidden @desktop:inline-flex")}>
+              <Link key={l.href} href={l.href} className={cn(navLink, i >= 3 ? "hidden" : "hidden @wide:inline-flex")}>
                 {l.label}
               </Link>
             ))}
           </div>
         </nav>
         <div className="ms-auto flex items-center gap-0.5 @tablet:gap-1">
-          <SearchForm placeholder={labels.search} className="hidden w-48 @tablet:block @wide:w-52 @tablet:me-1" />
-          <div className="hidden @wide:block">{localeSlot}</div>
+          <Link href="/shop" aria-label={labels.search} className={cn(buttonVariants({ variant: "ghost", size: "icon-lg" }), "hidden @tablet:inline-flex @desktop:hidden")}>
+            <Search className="size-5" />
+          </Link>
+          <SearchForm placeholder={labels.search} className="hidden w-48 shrink-0 @desktop:block @desktop:me-1 @wide:w-52" />
+          <div className="hidden @desktop:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>

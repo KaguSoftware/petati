@@ -14,7 +14,9 @@ import { NewsletterForm } from "@/components/storefront/shared/newsletter-form";
 import { ReviewForm } from "@/components/storefront/shared/review-form";
 import { computeTotals } from "@/lib/checkout/totals";
 import { formatMoney } from "@/lib/money";
-import { fixtureCart, fixtureCategories, fixtureHeroImage, fixtureProduct, fixtureProducts, fixtureReviews, fixtureTopCategories } from "./fixtures";
+import { buildFooterProps } from "@/components/storefront/footer-props";
+import { fixtureCart, fixtureCategories, fixtureContactPhone, fixtureFooterContent, fixtureHeroImage, fixtureProduct, fixtureProducts, fixtureReviews, fixtureTopCategories } from "./fixtures";
+import { resolveFooter } from "./footer";
 import type { ResolvedHeroSlide } from "./hero";
 import { gridCombo, type SectionPreviews } from "./preview-compose";
 import { renderSection } from "./registry";
@@ -75,6 +77,18 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
     formSlot: (<ReviewForm storeSlug={PREVIEW_STORE_SLUG} productId="00000000-0000-4000-8000-000000000009" />) as ReactNode,
   });
 
+  const footerProps = await buildFooterProps({
+    storeName,
+    logoUrl,
+    tagline: heroSlides[0].subtitle,
+    email: "hello@petati.local",
+    phone: fixtureContactPhone,
+    categories: fixtureTopCategories,
+    resolved: resolveFooter(fixtureFooterContent, locale, "en"),
+    localeSlot: <LocaleSwitcher />,
+    year: 2026,
+  });
+
   const productGrid = {} as SectionPreviews["productGrid"];
   for (const grid of VARIANT_KEYS) {
     for (const card of VARIANT_KEYS) {
@@ -102,7 +116,8 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
         storeName,
         logoUrl,
         categories: fixtureCategories,
-        labels: { home: tn("home"), shop: tn("shop"), brands: tn("brands"), search: tn("search"), menu: tn("menu"), closeMenu: tn("closeMenu"), categories: tn("categories") },
+        labels: { home: tn("home"), shop: tn("shop"), brands: tn("brands"), search: tn("search"), menu: tn("menu"), closeMenu: tn("closeMenu"), categories: tn("categories"), call: tn("call") },
+        contactPhone: fixtureContactPhone,
         localeSlot: <LocaleSwitcher variant="compact" />,
         accountSlot: <AccountButtonFallback />,
         cartSlot: <CartButtonFallback />,
@@ -183,17 +198,6 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
     ),
     reviews: each((v) => renderSection("reviews", v, reviewsProps())),
     newsletter: each((v) => renderSection("newsletter", v, { title: tf("newsletter"), subtitle: tf("newsletterSubtitle"), formSlot: <NewsletterForm storeSlug={PREVIEW_STORE_SLUG} /> })),
-    footer: each((v) =>
-      renderSection("footer", v, {
-        storeName,
-        tagline: heroSlides[0].subtitle,
-        categories: fixtureTopCategories,
-        contactEmail: "hello@petati.local",
-        contactPhone: "+90 555 000 0000",
-        labels: { categories: tn("categories"), contact: tf("contact"), rights: tf("rights"), about: tf("about"), privacy: tf("privacy"), terms: tf("terms") },
-        localeSlot: <LocaleSwitcher />,
-        year: 2026,
-      }),
-    ),
+    footer: each((v) => renderSection("footer", v, footerProps)),
   };
 }

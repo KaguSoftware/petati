@@ -6,9 +6,9 @@ set client_min_messages to warning;
 
 -- ---------- store ----------
 insert into public.stores (id, slug, name, tagline, currency, default_locale, enabled_locales, contact_email,
-                           email_from, tax_rate_bp, low_stock_threshold, created_by, settings, theme)
+                           contact_phone, email_from, tax_rate_bp, low_stock_threshold, created_by, settings, theme)
 values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything your pet loves',
-        'TRY', 'en', '{en,tr,fa}', 'hello@petati.local', 'Petati <noreply@petati.local>', 2000, 5,
+        'TRY', 'en', '{en,tr,fa}', 'hello@petati.local', '+90 212 555 00 00', 'Petati <noreply@petati.local>', 2000, 5,
         null,  -- created_by; the dev-users seed links the demo owner locally
         -- Home hero (Design page → Hero). The seed photo is a placeholder; a real store uploads to store-media/<id>/hero/.
         '{
@@ -28,7 +28,13 @@ values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything
               "subtitle": {"en": "Fresh toys, treats and gear for cats and dogs.", "tr": "Kediler ve köpekler için yeni oyuncaklar, ödüller ve ekipman.", "fa": "اسباب‌بازی، تشویقی و لوازم تازه برای گربه‌ها و سگ‌ها."},
               "link": "/shop?sort=newest"
             }
-          ]
+          ],
+          "address": {"en": "Bağdat Cd. No:123\nKadıköy, İstanbul", "tr": "Bağdat Cd. No:123\nKadıköy, İstanbul", "fa": "خیابان بغداد، پلاک ۱۲۳\nکادیکوی، استانبول"},
+          "opening_hours": {"en": "Mon–Sat 9:00–19:00\nSun closed", "tr": "Pzt–Cmt 9:00–19:00\nPazar kapalı", "fa": "دوشنبه تا شنبه ۹:۰۰ تا ۱۹:۰۰\nیکشنبه تعطیل"},
+          "social_links": {"instagram": "https://instagram.com/petati", "whatsapp": "https://wa.me/902125550000"},
+          "trust_enabled": true,
+          "trust_items": [],
+          "payment_methods": ["visa", "mastercard", "troy", "cash_on_delivery"]
         }'::jsonb,
         '{
           "sections": {

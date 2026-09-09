@@ -12,6 +12,7 @@ import type { NavbarProps } from "../types";
 const navLink =
   "inline-flex shrink-0 items-center rounded-full px-3 py-1.5 text-sm whitespace-nowrap text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground focus-visible:outline-none";
 
+/** Classic bar. Category budget: Shop + Brands until @wide, then categories #1–#3 (the drawer lists them all); the search field never truncates its placeholder. */
 export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot, accountSlot, localeSlot }: NavbarProps) {
   const primary = [
     { href: "/", label: labels.home },
@@ -54,7 +55,7 @@ export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot
             {labels.brands}
           </Link>
           {categoryLinks.map((l, i) => (
-            <Link key={l.href} href={l.href} className={cn(navLink, i >= 2 ? "hidden" : i >= 1 ? "hidden @wide:inline-flex" : "hidden @desktop:inline-flex")}>
+            <Link key={l.href} href={l.href} className={cn(navLink, i >= 3 ? "hidden" : "hidden @wide:inline-flex")}>
               {l.label}
             </Link>
           ))}
@@ -64,8 +65,8 @@ export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot
           <Link href="/shop" aria-label={labels.search} className={cn(buttonVariants({ variant: "ghost", size: "icon-lg" }), "hidden @tablet:inline-flex @desktop:hidden")}>
             <Search className="size-5" />
           </Link>
-          <SearchForm placeholder={labels.search} className="hidden w-48 @desktop:block @wide:w-52 @desktop:me-1" />
-          <div className="hidden @wide:block">{localeSlot}</div>
+          <SearchForm placeholder={labels.search} className="hidden w-48 shrink-0 @desktop:block @desktop:me-1 @wide:w-52" />
+          <div className="hidden @desktop:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>

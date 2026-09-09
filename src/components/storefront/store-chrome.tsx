@@ -2,9 +2,11 @@ import { Suspense } from "react";
 import { cacheLife } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { renderSection } from "@/lib/theme/registry";
+import { resolveFooter } from "@/lib/theme/footer";
 import { getCategories } from "@/lib/catalog/queries";
 import type { StoreContext } from "@/lib/tenant/context";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { buildFooterProps } from "./footer-props";
 import { AccountButton, AccountButtonFallback } from "./shared/account-button";
 import { CartButton, CartButtonFallback } from "./shared/cart-button";
 
@@ -18,13 +20,19 @@ async function copyrightYear(): Promise<number> {
 /** Announcement bar + navbar + footer around every storefront page, using the store's variants. */
 export async function StoreChrome({ ctx, children }: { ctx: StoreContext; children: React.ReactNode }) {
   const { store, locale, fallback } = ctx;
-  const [t, tf, categories, year] = await Promise.all([
-    getTranslations("nav"),
-    getTranslations("footer"),
-    getCategories(store.id, locale, fallback),
-    copyrightYear(),
-  ]);
+  const [t, categories, year] = await Promise.all([getTranslations("nav"), getCategories(store.id, locale, fallback), copyrightYear()]);
   const topLevel = categories.filter((c) => !c.parentId);
+  const footerProps = await buildFooterProps({
+    storeName: store.name,
+    logoUrl: store.logo_url,
+    tagline: store.tagline,
+    email: store.contact_email,
+    phone: store.contact_phone,
+    categories: topLevel,
+    resolved: resolveFooter(store.footer, locale, fallback),
+    localeSlot: <LocaleSwitcher enabled={store.enabled_locales} />,
+    year,
+  });
 
   return (
     <>
@@ -43,7 +51,9 @@ export async function StoreChrome({ ctx, children }: { ctx: StoreContext; childr
           menu: t("menu"),
           closeMenu: t("closeMenu"),
           categories: t("categories"),
+          call: t("call"),
         },
+        contactPhone: store.contact_phone,
         localeSlot: <LocaleSwitcher enabled={store.enabled_locales} variant="compact" />,
         accountSlot: (
           <Suspense fallback={<AccountButtonFallback />}>
@@ -57,23 +67,7 @@ export async function StoreChrome({ ctx, children }: { ctx: StoreContext; childr
         ),
       })}
       <div className="flex flex-1 flex-col *:w-full">{children}</div>
-      {renderSection("footer", store.theme.sections.footer, {
-        storeName: store.name,
-        tagline: store.tagline,
-        categories: topLevel,
-        contactEmail: store.contact_email,
-        contactPhone: store.contact_phone,
-        labels: {
-          categories: t("categories"),
-          contact: tf("contact"),
-          rights: tf("rights"),
-          about: tf("about"),
-          privacy: tf("privacy"),
-          terms: tf("terms"),
-        },
-        localeSlot: <LocaleSwitcher enabled={store.enabled_locales} />,
-        year,
-      })}
+      {renderSection("footer", store.theme.sections.footer, footerProps)}
     </>
   );
 }
