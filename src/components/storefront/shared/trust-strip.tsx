@@ -24,9 +24,9 @@ const PANEL: Record<TrustTone, { wrap: string; panel: string; icon: string; titl
   line: {
     wrap: "border-b",
     panel: "flex items-start gap-3",
-    icon: "grid size-10 shrink-0 place-items-center rounded-full bg-muted text-primary",
-    title: "text-sm font-medium",
-    text: "text-xs text-muted-foreground",
+    icon: "grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary",
+    title: "text-sm font-semibold leading-tight",
+    text: "text-xs text-muted-foreground leading-snug",
   },
   dark: {
     wrap: "border-b-2 border-background/20",
@@ -57,7 +57,7 @@ export function TrustStrip({ items, tone, className }: Props) {
   const s = PANEL[tone];
   return (
     <div className={cn(s.wrap, className)}>
-      <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-gutter py-6 @desktop:grid-cols-4 @desktop:gap-6">
+      <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-x-3 gap-y-4 px-gutter py-5 @tablet:gap-5 @tablet:py-6 @desktop:grid-cols-4 @desktop:gap-6">
         {items.map((item, i) => {
           const Icon = ICONS[item.icon] ?? Truck;
           return (

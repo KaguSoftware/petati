@@ -6,12 +6,12 @@ import { StoreLogo } from "@/components/storefront/shared/store-logo";
 import { TrustStrip } from "@/components/storefront/shared/trust-strip";
 import type { FooterLink, FooterProps } from "../types";
 
-const link = "w-fit text-muted-foreground transition-colors hover:text-foreground";
+const link = "w-fit text-muted-foreground transition-colors hover:text-primary";
 
 function Column({ title, links }: { title: string; links: FooterLink[] }) {
   return (
-    <nav aria-label={title} className="flex flex-col gap-2 text-sm">
-      <p className="font-medium">{title}</p>
+    <nav aria-label={title} className="flex flex-col gap-2.5 text-sm">
+      <p className="font-semibold">{title}</p>
       {links.map((l) => (
         <Link key={l.href} href={l.href} className={link}>
           {l.label}
@@ -21,13 +21,16 @@ function Column({ title, links }: { title: string; links: FooterLink[] }) {
   );
 }
 
-/** Four columns: brand + social, shop links, information links and the contact block; trust strip above, payment badges below. */
+/**
+ * Trust strip, then brand + social, the two link columns side by side (even on phones) and the
+ * contact block; payment badges and the locale switcher on the bottom bar.
+ */
 export function FooterMinimal({ storeName, logoUrl, tagline, shopLinks, infoLinks, contact, social, trustItems, payments, labels, localeSlot, year }: FooterProps) {
   return (
-    <footer className="border-t">
+    <footer className="border-t bg-muted/40">
       <TrustStrip items={trustItems} tone="line" />
-      <div className="mx-auto grid max-w-7xl gap-10 px-gutter py-12 @phablet:grid-cols-2 @desktop:grid-cols-[1.4fr_1fr_1fr_1.3fr] @desktop:gap-8 @desktop:py-16">
-        <div className="flex flex-col gap-4 @phablet:col-span-2 @desktop:col-span-1">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-10 px-gutter py-12 @desktop:grid-cols-[1.4fr_1fr_1fr_1.3fr] @desktop:gap-8 @desktop:py-16">
+        <div className="col-span-2 flex flex-col gap-4 @desktop:col-span-1">
           <StoreLogo storeName={storeName} logoUrl={logoUrl} className="self-start" />
           {tagline && <p className="bidi-auto max-w-sm text-sm text-muted-foreground">{tagline}</p>}
           {social.length > 0 && (
@@ -39,8 +42,8 @@ export function FooterMinimal({ storeName, logoUrl, tagline, shopLinks, infoLink
         </div>
         <Column title={labels.shop} links={shopLinks} />
         <Column title={labels.info} links={infoLinks} />
-        <div className="flex flex-col gap-2 @phablet:col-span-2 @desktop:col-span-1">
-          <p className="text-sm font-medium">{labels.contact}</p>
+        <div className="col-span-2 flex flex-col gap-2.5 @desktop:col-span-1">
+          <p className="text-sm font-semibold">{labels.contact}</p>
           <ContactBlock contact={contact} labels={labels} />
         </div>
       </div>

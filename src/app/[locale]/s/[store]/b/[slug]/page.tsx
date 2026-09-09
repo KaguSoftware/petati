@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { storeContext } from "@/lib/tenant/context";
 import { getBrands } from "@/lib/catalog/queries";
 import { BrandMark } from "@/components/storefront/shared/brand-mark";
-import { Results } from "../../shop/page";
+import { PageShell } from "@/components/storefront/shared/page-shell";
+import { Results, ResultsSkeleton } from "../../shop/page";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/s/[store]/b/[slug]">): Promise<Metadata> {
   const ctx = await storeContext(params);
@@ -21,14 +22,14 @@ export default async function BrandPage({ params, searchParams }: PageProps<"/[l
   if (!brand) notFound();
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-gutter pt-6 pb-16 md:pt-8 md:pb-24">
-      <div className="mb-8 flex items-center gap-5">
-        <BrandMark name={brand.name} logoUrl={brand.logoUrl} size={80} />
-        <h1 className="text-3xl font-semibold tracking-tight">{brand.name}</h1>
+    <PageShell>
+      <div className="flex items-center gap-4 @tablet:gap-5">
+        <BrandMark name={brand.name} logoUrl={brand.logoUrl} size={72} />
+        <h1 className="bidi-auto text-3xl font-semibold tracking-tight @tablet:text-4xl">{brand.name}</h1>
       </div>
-      <Suspense fallback={<p className="text-muted-foreground">…</p>}>
+      <Suspense fallback={<ResultsSkeleton />}>
         <Results ctx={ctx} searchParams={searchParams} brandSlug={slug} />
       </Suspense>
-    </main>
+    </PageShell>
   );
 }

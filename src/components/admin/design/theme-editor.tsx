@@ -132,7 +132,7 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
       </form>
 
       <div className="flex flex-col gap-6">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)] lg:items-start">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)] lg:items-start">
           <div className="flex min-w-0 flex-col gap-6">
             <HeroCard storeId={storeId} locale={locale} locales={textLocales} hero={draft.hero} onChange={(h) => setDraft((d) => ({ ...d, hero: h }))} />
 
@@ -258,7 +258,7 @@ export function ThemeEditor({ storeId, storeName, currency, locale, theme, hero,
           </div>
 
           {/* Live preview: the home page assembled from the chosen layouts */}
-          <div className="flex flex-col gap-3 lg:sticky lg:top-4">
+          <div className="flex min-w-0 flex-col gap-3 lg:sticky lg:top-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-sm font-medium">{t("preview.title")}</h2>
               <div className="flex flex-wrap items-center gap-1">

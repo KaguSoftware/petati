@@ -14,7 +14,7 @@ import { CheckoutFormConnected } from "@/components/storefront/checkout/checkout
 export default async function CheckoutPage({ params }: PageProps<"/[locale]/s/[store]/checkout">) {
   const ctx = await storeContext(params);
   return (
-    <Suspense fallback={<div className="mx-auto max-w-6xl px-gutter py-10 text-muted-foreground">…</div>}>
+    <Suspense fallback={<div className="mx-auto w-full max-w-7xl px-gutter py-8 text-muted-foreground @desktop:py-12">…</div>}>
       <CheckoutContent ctx={ctx} />
     </Suspense>
   );

@@ -60,7 +60,7 @@ export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) 
       <input type="hidden" name="quantity" value={qty} />
 
       {variant && (
-        <Price amount={variant.price} compareAt={variant.compareAtPrice} currency={currency} locale={locale} className="text-2xl" />
+        <Price amount={variant.price} compareAt={variant.compareAtPrice} currency={currency} locale={locale} className="text-3xl" />
       )}
 
       {product.options.map((opt) => (
@@ -75,7 +75,7 @@ export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) 
                   type="button"
                   onClick={() => setSelected((s) => ({ ...s, [opt.id]: val.id }))}
                   className={cn(
-                    "min-w-10 rounded-md border px-3 py-1.5 text-sm transition",
+                    "min-w-10 rounded-md border bg-background px-3 py-1.5 text-sm transition",
                     active ? "border-primary bg-primary text-primary-foreground" : "hover:border-foreground",
                   )}
                   style={val.swatch ? { backgroundColor: active ? undefined : val.swatch } : undefined}
@@ -89,7 +89,7 @@ export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) 
       ))}
 
       <div className="flex items-center gap-3">
-        <div dir="ltr" className="inline-flex h-11 items-center rounded-lg border">
+        <div dir="ltr" className="inline-flex h-11 items-center rounded-lg border bg-background">
           <button type="button" aria-label="-" className="grid size-11 place-items-center rounded-s-lg transition-colors hover:bg-muted" onClick={() => setQty((q) => Math.max(1, q - 1))}>
             <Minus className="size-4" />
           </button>

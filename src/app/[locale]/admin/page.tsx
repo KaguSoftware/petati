@@ -33,7 +33,7 @@ async function Content({ locale }: { locale: string }) {
     <>
       <KpiGrid data={data} locale={ctx.locale} />
       <SalesBars data={data} locale={ctx.locale} />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <RecentOrders data={data} locale={ctx.locale} />
         <LowStockList data={data} />
       </div>

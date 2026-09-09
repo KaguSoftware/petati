@@ -1,13 +1,13 @@
 import type { NewsletterProps } from "../types";
 
-/** A soft band with centred copy and the form. */
+/** A brand-coloured band with centred copy and the form. */
 export function NewsletterMinimal({ title, subtitle, formSlot }: NewsletterProps) {
   return (
-    <section className="border-t bg-muted/40">
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-gutter py-14 text-center @desktop:py-20">
-        <h2 className="text-2xl font-semibold tracking-tight @tablet:text-3xl">{title}</h2>
-        <p className="max-w-md text-muted-foreground">{subtitle}</p>
-        <div className="mt-2 w-full max-w-md">{formSlot}</div>
+    <section className="bg-primary text-primary-foreground">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-gutter py-14 text-center @desktop:py-20">
+        <h2 className="bidi-auto text-2xl font-semibold tracking-tight text-balance @tablet:text-3xl">{title}</h2>
+        <p className="bidi-auto max-w-md text-primary-foreground/85">{subtitle}</p>
+        <div className="mt-3 w-full max-w-md [&_input]:border-transparent [&_input]:bg-background [&_input]:text-foreground [&_input]:shadow-sm [&_button]:bg-background [&_button]:text-primary [&_button]:shadow-sm [&_button:hover]:bg-background/90">{formSlot}</div>
       </div>
     </section>
   );

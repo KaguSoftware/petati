@@ -51,7 +51,7 @@ export function AccountNav({ labels, active, onSelect, signOut }: { labels: Labe
   return (
     <>
       {/* Phone / tablet */}
-      <nav aria-label={labels.orders} className="-mx-1 overflow-x-auto px-1 pb-1 md:hidden [scrollbar-width:none]">
+      <nav aria-label={labels.orders} className="-mx-1 overflow-x-auto px-1 pb-1 @tablet:hidden [scrollbar-width:none]">
         <div className="inline-flex w-max min-w-full items-center gap-1 rounded-xl bg-muted/70 p-1">
           {ITEMS.map(({ key, Icon }) => {
             const isActive = active === key;
@@ -76,7 +76,7 @@ export function AccountNav({ labels, active, onSelect, signOut }: { labels: Labe
       </nav>
 
       {/* Desktop */}
-      <nav aria-label={labels.orders} className="hidden flex-col gap-0.5 md:flex">
+      <nav aria-label={labels.orders} className="hidden flex-col gap-0.5 @tablet:flex">
         {ITEMS.map(({ key, Icon }) => {
           const isActive = active === key;
           return (

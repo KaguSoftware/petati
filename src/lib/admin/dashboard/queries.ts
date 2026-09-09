@@ -55,7 +55,16 @@ export async function getDashboard(storeId: string, opts: { currency: string; lo
     }
   }
 
-  const days = (sales.data ?? []).map((d) => ({ ...d, orders_count: Number(d.orders_count ?? 0), gross: Number(d.gross ?? 0), paid_gross: Number(d.paid_gross ?? 0), refunds: Number(d.refunds ?? 0), cogs: Number(d.cogs ?? 0) }));
+  // Zero-fill every day of the window so the chart is a time axis, not a list of days with sales.
+  const byDay = new Map((sales.data ?? []).map((d) => [String(d.day).slice(0, 10), d]));
+  const span = opts.days ?? 30;
+  const days: DailySales[] = Array.from({ length: span }, (_, i) => {
+    const date = new Date(since);
+    date.setDate(since.getDate() + i);
+    const day = isoDate(date);
+    const d = byDay.get(day);
+    return { day, orders_count: Number(d?.orders_count ?? 0), gross: Number(d?.gross ?? 0), paid_gross: Number(d?.paid_gross ?? 0), refunds: Number(d?.refunds ?? 0), cogs: Number(d?.cogs ?? 0) };
+  });
   return {
     currency: opts.currency,
     sales: opts.finance

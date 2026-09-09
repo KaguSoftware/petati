@@ -49,7 +49,7 @@ export function PreviewFrame({ device, theme, dir, locale, children, label, clas
       ref={outer}
       role="img"
       aria-label={label}
-      className={cn("isolate w-full overflow-hidden bg-muted", className)}
+      className={cn("isolate w-full max-w-full overflow-hidden bg-muted contain-inline-size", className)}
       style={{
         // Placeholder box until the first measurement, then the zoomed content sets the height.
         aspectRatio: measured ? undefined : `${width} / ${Math.round(width * (device === "mobile" ? 1.2 : 0.55))}`,

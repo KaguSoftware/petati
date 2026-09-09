@@ -29,7 +29,7 @@ export function SectionPicker({ theme, dir, locale, device, onPick, nodeFor }: P
   const [active, setActive] = useState<SectionKey>("navbar");
 
   return (
-    <div className="grid gap-4 md:grid-cols-[13rem_minmax(0,1fr)]">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-[13rem_minmax(0,1fr)]">
       <nav aria-label={t("sections.picker")} className="-mx-1 flex flex-row gap-1 overflow-x-auto px-1 pb-1 md:flex-col md:overflow-visible md:pb-0">
         {SECTION_KEYS.map((key) => (
           <button
@@ -54,7 +54,7 @@ export function SectionPicker({ theme, dir, locale, device, onPick, nodeFor }: P
             value={theme.sections[key]}
             onValueChange={(v) => v && onPick(key, v as VariantKey)}
             aria-label={t(`sections.keys.${key}`)}
-            className={cn("grid gap-4", device === "mobile" ? "sm:grid-cols-2" : "grid-cols-1")}
+            className={cn("grid grid-cols-1 gap-4", device === "mobile" && "sm:grid-cols-2")}
           >
             {VARIANT_KEYS.map((v) => {
               const selected = theme.sections[key] === v;
@@ -62,7 +62,7 @@ export function SectionPicker({ theme, dir, locale, device, onPick, nodeFor }: P
                 <label
                   key={v}
                   className={cn(
-                    "flex cursor-pointer flex-col gap-2 rounded-xl border p-2.5 transition-colors hover:bg-muted/40",
+                    "flex min-w-0 cursor-pointer flex-col gap-2 rounded-xl border p-2.5 transition-colors hover:bg-muted/40",
                     selected && "border-primary bg-primary/5 ring-2 ring-primary/25",
                   )}
                 >

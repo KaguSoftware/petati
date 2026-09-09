@@ -1,4 +1,5 @@
-import { PackageOpen } from "lucide-react";
+import { Heart, PackageOpen } from "lucide-react";
+import { EmptyState } from "@/components/storefront/shared/empty-state";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
@@ -21,7 +22,7 @@ import { PasswordForm, ProfileForm } from "./profile-forms";
  * moving between sections costs zero requests (the same rule the admin follows).
  */
 
-const heading = "text-xl font-semibold tracking-tight md:text-2xl";
+const heading = "text-xl font-semibold tracking-tight @tablet:text-2xl";
 
 export async function OrdersPanel({ orders, locale }: { orders: Pick<OrderRow, "id" | "number" | "placed_at" | "status" | "total" | "currency">[]; locale: Locale }) {
   const [t, ts, tn] = await Promise.all([getTranslations("account"), getTranslations("orderStatus"), getTranslations("nav")]);
@@ -29,17 +30,18 @@ export async function OrdersPanel({ orders, locale }: { orders: Pick<OrderRow, "
     <div className="flex flex-col gap-4">
       <h2 className={heading}>{t("orders")}</h2>
       {orders.length === 0 ? (
-        <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed px-6 py-14 text-center">
-          <span aria-hidden className="grid size-14 place-items-center rounded-full bg-muted text-muted-foreground">
-            <PackageOpen className="size-7" />
-          </span>
-          <p className="text-muted-foreground">{t("noOrders")}</p>
-          <Link href="/shop" className={buttonVariants({ variant: "outline", size: "lg" })}>
-            {tn("shop")}
-          </Link>
-        </div>
+        <EmptyState
+          icon={PackageOpen}
+          title={t("noOrdersTitle")}
+          description={t("noOrders")}
+          action={
+            <Link href="/shop" className={buttonVariants({ size: "xl" })}>
+              {tn("shop")}
+            </Link>
+          }
+        />
       ) : (
-        <ul className="divide-y rounded-lg border">
+        <ul className="divide-y rounded-xl border">
           {orders.map((o) => (
             <li key={o.id}>
               <Link href={`/order/${o.id}`} className="flex items-center justify-between gap-3 p-4 text-sm hover:bg-muted/50">
@@ -71,13 +73,24 @@ export async function AddressesPanel({ ctx, addresses }: { ctx: StoreContext; ad
 }
 
 export async function WishlistPanel({ ctx, products }: { ctx: StoreContext; products: ProductCardData[] }) {
-  const t = await getTranslations("account");
+  const [t, tn] = await Promise.all([getTranslations("account"), getTranslations("nav")]);
   return (
     <div className="flex flex-col gap-4">
       <h2 className={heading}>{t("wishlist")}</h2>
-      <div className="mx-gutter-bleed">
-        <ProductGridWithWishlist ctx={ctx} products={products} emptyLabel={t("wishlistEmpty")} />
-      </div>
+      {products.length === 0 ? (
+        <EmptyState
+          icon={Heart}
+          title={t("wishlistEmptyTitle")}
+          description={t("wishlistEmpty")}
+          action={
+            <Link href="/shop" className={buttonVariants({ size: "xl" })}>
+              {tn("shop")}
+            </Link>
+          }
+        />
+      ) : (
+        <ProductGridWithWishlist ctx={ctx} products={products} bare emptyLabel="" />
+      )}
     </div>
   );
 }

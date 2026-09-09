@@ -4,32 +4,49 @@ import { ProductImage } from "@/components/storefront/shared/product-image";
 import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import type { ProductCardProps } from "../types";
 
-/** The photo is the whole card; name, brand and price sit on a scrim along the bottom edge. */
+/**
+ * Classic shop card: a square photo on the theme's muted tile, then brand, name and price below
+ * in the page's own ink. Badges sit on the photo's start corner, the wishlist heart on the end
+ * corner (outside the link, so it stays a separate control).
+ */
 export function ProductCardMinimal({ product, currency, locale, labels, wishlistSlot }: ProductCardProps) {
+  const onSale = product.compareAtPrice !== null && product.compareAtPrice > product.price;
+  const savings = onSale ? Math.round((1 - product.price / (product.compareAtPrice as number)) * 100) : 0;
   return (
-    <article className="group relative overflow-hidden rounded-xl bg-muted text-white">
-      <Link href={`/p/${product.slug}`} className="block outline-none focus-visible:ring-4 focus-visible:ring-ring/50">
-        <ProductImage
-          src={product.imageUrl}
-          alt={product.imageAlt}
-          className="aspect-[4/3] transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none @phablet:aspect-[4/5]"
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-        />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-[72%] bg-linear-to-t from-black/85 via-black/50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-4 [text-shadow:0_1px_2px_rgb(0_0_0/.45)] @tablet:p-5">
-          {product.brand && <p className="truncate text-[11px] font-medium tracking-wide text-white/75 uppercase">{product.brand}</p>}
-          <h3 className="bidi-auto line-clamp-2 text-lg leading-snug font-semibold text-balance @tablet:text-xl">{product.name}</h3>
-          <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
-            <Price amount={product.price} compareAt={product.compareAtPrice} currency={currency} locale={locale} className="text-base [&>span]:text-white [&_s]:text-white/70" />
-            {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} className="[&_span:last-child]:text-white/70" />}
+    <article className="group relative flex h-full flex-col">
+      <Link href={`/p/${product.slug}`} className="flex flex-1 flex-col gap-3 rounded-xl outline-none focus-visible:ring-4 focus-visible:ring-ring/50">
+        <div className="relative overflow-hidden rounded-xl bg-muted">
+          <ProductImage
+            src={product.imageUrl}
+            alt={product.imageAlt}
+            className="aspect-square transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none"
+            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+          />
+          {!product.inStock && <div aria-hidden className="absolute inset-0 bg-background/45" />}
+          <div className="absolute start-2.5 top-2.5 flex flex-col items-start gap-1.5 @tablet:start-3 @tablet:top-3">
+            {product.isNew && product.inStock && (
+              <span className="rounded-full bg-accent px-2.5 py-1 text-[11px] leading-none font-semibold text-accent-foreground">{labels.new}</span>
+            )}
+            {onSale && savings >= 5 && product.inStock && (
+              <span className="rounded-full bg-primary px-2.5 py-1 text-[11px] leading-none font-semibold text-primary-foreground tabular-nums" dir="ltr">
+                {`-${savings}%`}
+              </span>
+            )}
+            {!product.inStock && (
+              <span className="rounded-full bg-foreground/80 px-2.5 py-1 text-[11px] leading-none font-medium text-background">{labels.outOfStock}</span>
+            )}
           </div>
         </div>
-        <div className="absolute start-3 top-3 flex min-h-10 flex-col items-start justify-center gap-1.5">
-          {product.isNew && <span className="rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-foreground">{labels.new}</span>}
-          {!product.inStock && <span className="rounded-full bg-black/70 px-2.5 py-0.5 text-[11px] font-medium text-white">{labels.outOfStock}</span>}
+        <div className="flex flex-1 flex-col gap-1 px-0.5">
+          {product.brand && <p className="truncate text-xs text-muted-foreground">{product.brand}</p>}
+          <h3 className="bidi-auto line-clamp-2 text-[15px] leading-snug font-medium text-balance">{product.name}</h3>
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1 pt-1">
+            <Price amount={product.price} compareAt={product.compareAtPrice} currency={currency} locale={locale} className="text-base" />
+            {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={13} />}
+          </div>
         </div>
       </Link>
-      {wishlistSlot && <div className="absolute end-3 top-3">{wishlistSlot}</div>}
+      {wishlistSlot && <div className="absolute end-2.5 top-2.5 @tablet:end-3 @tablet:top-3">{wishlistSlot}</div>}
     </article>
   );
 }

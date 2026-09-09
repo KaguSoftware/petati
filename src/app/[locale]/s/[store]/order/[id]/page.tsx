@@ -7,6 +7,7 @@ import { getOrderForViewer } from "@/lib/account/queries";
 import { formatMoney } from "@/lib/money";
 import { pickJson } from "@/lib/catalog/types";
 import { Badge } from "@/components/ui/badge";
+import { PageShell } from "@/components/storefront/shared/page-shell";
 import { ProductImage } from "@/components/storefront/shared/product-image";
 
 export default async function OrderPage({ params, searchParams }: PageProps<"/[locale]/s/[store]/order/[id]">) {
@@ -14,7 +15,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/[l
   const { id } = await params;
   if (!z.string().uuid().safeParse(id).success) notFound();
   return (
-    <Suspense fallback={<div className="mx-auto max-w-3xl px-gutter py-10 text-muted-foreground">…</div>}>
+    <Suspense fallback={<div className="mx-auto w-full max-w-7xl px-gutter py-8 text-muted-foreground @desktop:py-12">…</div>}>
       <OrderContent ctx={ctx} id={id} searchParams={searchParams} />
     </Suspense>
   );
@@ -28,16 +29,16 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
   const a = order.shipping_address;
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-gutter py-10">
+    <PageShell width="narrow">
       {sp.placed === "1" && (
-        <div className="mb-6 rounded-lg border border-primary/30 bg-primary/5 p-4">
+        <div className="rounded-xl bg-primary/10 p-4">
           <p className="font-medium">{t("thanks")}</p>
           <p className="text-sm text-muted-foreground">{t("paymentPending")}</p>
         </div>
       )}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="text-2xl font-semibold tracking-tight @tablet:text-3xl">
             {t("title")} {order.number}
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -47,7 +48,7 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
         <Badge variant={order.status === "cancelled" ? "destructive" : "secondary"}>{ts(order.status)}</Badge>
       </div>
 
-      <section className="rounded-lg border">
+      <section className="rounded-xl border">
         <ul className="divide-y">
           {order.order_items.map((i) => (
             <li key={i.id} className="flex items-center gap-3 p-3 text-sm">
@@ -72,7 +73,7 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
       </section>
 
       {a && (
-        <section className="mt-6 grid gap-6 text-sm sm:grid-cols-2">
+        <section className="grid gap-6 text-sm @phablet:grid-cols-2">
           <div>
             <h2 className="mb-1 font-medium">{t("shippingTo")}</h2>
             <address className="not-italic text-muted-foreground">
@@ -90,6 +91,6 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
           </div>
         </section>
       )}
-    </main>
+    </PageShell>
   );
 }

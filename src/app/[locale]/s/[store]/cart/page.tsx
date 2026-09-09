@@ -12,7 +12,7 @@ import { CouponForm } from "@/components/storefront/shared/coupon-form";
 export default async function CartPage({ params }: PageProps<"/[locale]/s/[store]/cart">) {
   const ctx = await storeContext(params);
   return (
-    <Suspense fallback={<div className="mx-auto max-w-6xl px-gutter py-10 text-muted-foreground">…</div>}>
+    <Suspense fallback={<div className="mx-auto w-full max-w-7xl px-gutter py-8 text-muted-foreground @desktop:py-12">…</div>}>
       <CartContent ctx={ctx} />
     </Suspense>
   );
@@ -37,6 +37,7 @@ async function CartContent({ ctx }: { ctx: StoreContext }) {
     labels: {
         title: t("title"),
         empty: t("empty"),
+        emptyTitle: t("emptyTitle"),
         subtotal: t("subtotal"),
         discount: t("discount"),
         shipping: t("shipping"),

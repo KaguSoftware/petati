@@ -5,9 +5,26 @@ import { getTranslations } from "next-intl/server";
 import type { ProductGridProps } from "../types";
 
 /** Carousel: one row that scrolls sideways and snaps to each card. */
-export async function ProductGridPlayful({ title, products, currency, locale, cardVariant, emptyLabel, wishlistSlots, viewAllHref, viewAllLabel }: ProductGridProps) {
+export async function ProductGridPlayful({ title, products, currency, locale, cardVariant, emptyLabel, emptyAction, wishlistSlots, viewAllHref, viewAllLabel, bare }: ProductGridProps) {
   const t = await getTranslations("product");
   const labels = { new: t("new"), outOfStock: t("outOfStock") };
+  if (products.length === 0 && !emptyLabel) return null;
+  const body =
+    products.length === 0 ? (
+      <div className="flex flex-col items-center gap-4 rounded-3xl bg-muted py-12 text-center">
+        <p className="text-muted-foreground">{emptyLabel}</p>
+        {emptyAction}
+      </div>
+    ) : (
+      <ul className="bleed-gutter flex snap-x snap-mandatory gap-4 overflow-x-auto pt-2 pb-6 contain-inline-size [scrollbar-width:thin] [mask-image:linear-gradient(to_right,black_92%,transparent)] rtl:[mask-image:linear-gradient(to_left,black_92%,transparent)]">
+        {products.map((p) => (
+          <li key={p.id} className="w-[82%] shrink-0 snap-start @phablet:w-[46%] @desktop:w-[31.5%]">
+            {renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}
+          </li>
+        ))}
+      </ul>
+    );
+  if (bare) return body;
   return (
     <section className="mx-auto max-w-7xl px-gutter py-10 @tablet:py-14">
       {(title || viewAllHref) && (
@@ -26,17 +43,7 @@ export async function ProductGridPlayful({ title, products, currency, locale, ca
           )}
         </div>
       )}
-      {products.length === 0 ? (
-        <p className="rounded-3xl bg-muted py-12 text-center text-muted-foreground">{emptyLabel}</p>
-      ) : (
-        <ul className="bleed-gutter flex snap-x snap-mandatory gap-4 overflow-x-auto pt-2 pb-6 contain-inline-size [scrollbar-width:thin] [mask-image:linear-gradient(to_right,black_92%,transparent)] rtl:[mask-image:linear-gradient(to_left,black_92%,transparent)]">
-          {products.map((p) => (
-            <li key={p.id} className="w-[82%] shrink-0 snap-start @phablet:w-[46%] @desktop:w-[31.5%]">
-              {renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}
-            </li>
-          ))}
-        </ul>
-      )}
+      {body}
     </section>
   );
 }

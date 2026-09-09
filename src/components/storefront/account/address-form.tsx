@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CountrySelect } from "@/components/forms/country-select";
 import { LatinInput, type LatinKind } from "@/components/forms/latin-input";
+import { EmptyState } from "@/components/storefront/shared/empty-state";
+import { MapPin } from "lucide-react";
 import { deleteAddressAction, saveAddressAction, type SimpleState } from "@/lib/account/actions";
 import type { AddressRow } from "@/lib/db/types";
 
@@ -17,10 +19,21 @@ export function AddressList({ storeSlug, addresses, defaultCountry }: { storeSlu
 
   return (
     <div className="flex flex-col gap-4">
-      {addresses.length === 0 && !editing && <p className="text-muted-foreground">{t("noAddresses")}</p>}
+      {addresses.length === 0 && !editing && (
+        <EmptyState
+          icon={MapPin}
+          title={t("noAddressesTitle")}
+          description={t("noAddresses")}
+          action={
+            <Button size="xl" onClick={() => setEditing("new")}>
+              {t("addAddress")}
+            </Button>
+          }
+        />
+      )}
       <ul className="grid gap-3 @phablet:grid-cols-2">
         {addresses.map((a) => (
-          <li key={a.id} className="flex flex-col gap-2 rounded-lg border p-4 text-sm">
+          <li key={a.id} className="flex flex-col gap-2 rounded-xl border p-4 text-sm">
             <div className="flex items-center justify-between">
               <span className="font-medium">{a.label ?? a.city}</span>
               {a.is_default && <span className="text-xs text-muted-foreground">{t("defaultAddress")}</span>}
@@ -42,7 +55,11 @@ export function AddressList({ storeSlug, addresses, defaultCountry }: { storeSlu
       {editing ? (
         <AddressForm storeSlug={storeSlug} address={editing === "new" ? null : editing} defaultCountry={defaultCountry} onDone={() => setEditing(null)} />
       ) : (
-        <Button size="lg" className="self-start" onClick={() => setEditing("new")}>{t("addAddress")}</Button>
+        addresses.length > 0 && (
+          <Button size="lg" className="self-start" onClick={() => setEditing("new")}>
+            {t("addAddress")}
+          </Button>
+        )
       )}
     </div>
   );
@@ -59,7 +76,7 @@ function AddressForm({ storeSlug, address, defaultCountry, onDone }: { storeSlug
   }, {} as SimpleState);
 
   return (
-    <form action={action} className="grid gap-4 rounded-lg border p-4 @phablet:grid-cols-2">
+    <form action={action} className="grid gap-4 rounded-xl bg-muted/60 p-4 @phablet:grid-cols-2">
       <input type="hidden" name="storeSlug" value={storeSlug} />
       {address && <input type="hidden" name="id" value={address.id} />}
       <F name="label" label={ta("label")} value={address?.label} />

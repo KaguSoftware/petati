@@ -4,9 +4,24 @@ import { getTranslations } from "next-intl/server";
 import type { ProductGridProps } from "../types";
 
 /** Dense catalogue: tight gaps, four across on desktop, under a heavy title band. */
-export async function ProductGridBold({ title, products, currency, locale, cardVariant, emptyLabel, wishlistSlots, viewAllHref, viewAllLabel }: ProductGridProps) {
+export async function ProductGridBold({ title, products, currency, locale, cardVariant, emptyLabel, emptyAction, wishlistSlots, viewAllHref, viewAllLabel, bare }: ProductGridProps) {
   const t = await getTranslations("product");
   const labels = { new: t("new"), outOfStock: t("outOfStock") };
+  if (products.length === 0 && !emptyLabel) return null;
+  const body =
+    products.length === 0 ? (
+      <div className="flex flex-col items-center gap-4 border-4 border-foreground py-16 text-center">
+        <p className="text-lg font-bold tracking-wide uppercase">{emptyLabel}</p>
+        {emptyAction}
+      </div>
+    ) : (
+      <ul className="grid grid-cols-2 gap-2 @tablet:grid-cols-3 @desktop:grid-cols-4 @desktop:gap-3">
+        {products.map((p) => (
+          <li key={p.id}>{renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}</li>
+        ))}
+      </ul>
+    );
+  if (bare) return body;
   return (
     <section className="py-10 @tablet:py-14">
       {(title || viewAllHref) && (
@@ -21,17 +36,7 @@ export async function ProductGridBold({ title, products, currency, locale, cardV
           </div>
         </div>
       )}
-      <div className="mx-auto max-w-7xl px-gutter pt-4">
-        {products.length === 0 ? (
-          <p className="border-4 border-foreground py-16 text-center text-lg font-bold tracking-wide uppercase">{emptyLabel}</p>
-        ) : (
-          <ul className="grid grid-cols-2 gap-2 @tablet:grid-cols-3 @desktop:grid-cols-4 @desktop:gap-3">
-            {products.map((p) => (
-              <li key={p.id}>{renderSection("productCard", cardVariant, { product: p, currency, locale, labels, wishlistSlot: wishlistSlots?.[p.id] })}</li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <div className="mx-auto max-w-7xl px-gutter pt-4">{body}</div>
     </section>
   );
 }

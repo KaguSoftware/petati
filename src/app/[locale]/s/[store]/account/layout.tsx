@@ -8,6 +8,7 @@ import { getMyAddresses, getMyOrders, getMyWishlistProducts } from "@/lib/accoun
 import { AccountPanels } from "@/components/storefront/account/account-panels";
 import { AddressesPanel, OrdersPanel, ProfilePanel, WishlistPanel } from "@/components/storefront/account/panels";
 import { Button } from "@/components/ui/button";
+import { PageShell } from "@/components/storefront/shared/page-shell";
 
 /**
  * Account shell. Loads every section's data in ONE query wave and renders all four panels; the
@@ -19,22 +20,21 @@ export default async function AccountLayout({ children, params }: LayoutProps<"/
   setRequestLocale(locale);
   const t = await getTranslations("account");
   return (
-    <main className="mx-auto w-full max-w-6xl px-gutter pt-6 pb-16 md:pt-10 md:pb-24">
-      <h1 className="mb-5 text-3xl font-semibold tracking-tight md:mb-8 md:text-4xl">{t("title")}</h1>
+    <PageShell title={t("title")}>
       {/* Session + data are request-bound: they render inside Suspense so the shell can prerender. */}
       <Suspense fallback={<AccountSkeleton />}>
         <AccountContent params={params}>{children}</AccountContent>
       </Suspense>
-    </main>
+    </PageShell>
   );
 }
 
 function AccountSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-[16rem_minmax(0,1fr)] md:gap-10" aria-hidden>
+    <div className="grid grid-cols-1 gap-6 @tablet:grid-cols-[16rem_minmax(0,1fr)] @tablet:gap-10" aria-hidden>
       <div className="flex flex-col gap-4">
-        <div className="hidden h-[4.25rem] animate-pulse rounded-xl bg-muted md:block" />
-        <div className="h-12 animate-pulse rounded-xl bg-muted md:h-64" />
+        <div className="hidden h-[4.25rem] animate-pulse rounded-xl bg-muted @tablet:block" />
+        <div className="h-12 animate-pulse rounded-xl bg-muted @tablet:h-64" />
       </div>
       <div className="flex flex-col gap-4">
         <div className="h-8 w-40 animate-pulse rounded-md bg-muted" />
@@ -67,7 +67,7 @@ async function AccountContent({ params, children }: { params: LayoutProps<"/[loc
     </form>
   );
   const userCard = (
-    <div className="hidden items-center gap-3 rounded-xl border p-3 md:flex">
+    <div className="hidden items-center gap-3 rounded-xl bg-muted/60 p-3 @tablet:flex">
       <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-full bg-primary text-base font-semibold text-primary-foreground">
         {initial}
       </span>

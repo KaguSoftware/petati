@@ -41,7 +41,7 @@ export interface HeroProps {
   /** At least one slide; two or more make every hero layout a carousel. */
   slides: HeroSlideProps[];
   /** `slideOf` is a template with `{n}` and `{total}` placeholders. */
-  labels: { previous: string; next: string; slideOf: string };
+  labels: { previous: string; next: string; slideOf: string; secondary?: string };
   /** Auto-advance (default true); previews pass false. */
   autoplay?: boolean;
 }
@@ -57,7 +57,12 @@ export interface ProductGridProps {
   currency: string;
   locale: string;
   cardVariant: VariantKey;
+  /** Empty-state copy; an empty string hides the section entirely. */
   emptyLabel: string;
+  /** Optional call to action under the empty-state copy (e.g. "Clear filters"). */
+  emptyAction?: ReactNode;
+  /** Render only the grid (no section container, title or "view all"): for pages that own their container. */
+  bare?: boolean;
   /** product id → wishlist toggle node (only when signed in) */
   wishlistSlots?: Record<string, ReactNode>;
   viewAllHref?: string;
@@ -100,6 +105,7 @@ export interface CartViewProps {
   labels: {
     title: string;
     empty: string;
+    emptyTitle: string;
     subtotal: string;
     discount: string;
     shipping: string;
@@ -129,7 +135,7 @@ export interface ReviewsProps {
   ratingAvg: number;
   ratingCount: number;
   locale: string;
-  labels: { title: string; empty: string; verified: string };
+  labels: { title: string; empty: string; emptyTitle: string; verified: string };
   formSlot: ReactNode | null;
 }
 

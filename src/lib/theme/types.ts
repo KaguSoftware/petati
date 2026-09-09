@@ -102,11 +102,11 @@ function stripUndefined<T extends object>(obj: T): Partial<T> {
 
 /**
  * Per-navbar-layout CSS variables set on the storefront root: `--navbar-h` (height of the sticky
- * bar, for scroll margins) and `--hero-pull` (how far a full-bleed hero may slide under the bar;
- * 0 for the stacked layout, whose dark category strip must not cover the photo).
+ * bar, for scroll margins) and `--hero-pull` (how far a full-bleed hero may slide under the bar, INCLUDING the
+ * bar's 1px bottom border; 0 for the stacked layout, whose dark category strip must not cover the photo).
  */
 export const NAVBAR_VARS: Record<VariantKey, string> = {
-  minimal: "[--navbar-h:4rem] [--hero-pull:4rem]",
+  minimal: "[--navbar-h:4rem] [--hero-pull:calc(4rem_+_1px)]",
   bold: "[--navbar-h:4rem] [--hero-pull:0px] @tablet:[--navbar-h:7.75rem]",
   editorial: "[--navbar-h:4rem] [--hero-pull:4rem] @tablet:[--navbar-h:5rem] @tablet:[--hero-pull:5rem]",
   playful: "[--navbar-h:4.25rem] [--hero-pull:4.25rem] @tablet:[--navbar-h:4.75rem] @tablet:[--hero-pull:4.75rem]",

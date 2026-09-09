@@ -14,7 +14,7 @@ export function OverlayScroll({ axis = "y", className, ...rest }: Props) {
     <OverlayScrollbarsComponent
       defer
       element="div"
-      className={cn("min-h-0", className)}
+      className={cn("min-h-0 min-w-0", className)}
       options={{
         scrollbars: { theme: "os-theme-petati", autoHide: "leave", autoHideDelay: 600 },
         overflow: { x: axis === "y" ? "hidden" : "scroll", y: axis === "x" ? "hidden" : "scroll" },

@@ -46,7 +46,8 @@
     "viewAll": "View all",
     "previousSlide": "Previous slide",
     "nextSlide": "Next slide",
-    "slideOf": "Slide {n} of {total}"
+    "slideOf": "Slide {n} of {total}",
+    "shopByBrand": "Shop by brand"
   },
   "product": {
     "addToCart": "Add to cart",
@@ -61,7 +62,7 @@
     "description": "Description",
     "reviews": "Reviews",
     "writeReview": "Write a review",
-    "noReviews": "No reviews yet.",
+    "noReviews": "Bought this? Tell other pet parents what you think.",
     "selectOption": "Select {option}",
     "sku": "SKU",
     "addToWishlist": "Add to wishlist",
@@ -71,11 +72,12 @@
     "reviewTitle": "Title (optional)",
     "reviewBody": "Your review",
     "verifiedPurchase": "Verified purchase",
-    "signInToReview": "Sign in to write a review."
+    "signInToReview": "Sign in to write a review.",
+    "noReviewsTitle": "Be the first to review"
   },
   "cart": {
     "title": "Your cart",
-    "empty": "Your cart is empty.",
+    "empty": "Add a few things you like and they will show up here.",
     "subtotal": "Subtotal",
     "shipping": "Shipping",
     "discount": "Discount",
@@ -89,7 +91,8 @@
     "couponInvalid": "This coupon is not valid.",
     "freeShipping": "Free",
     "freeShippingOver": "Free shipping on orders over {amount}",
-    "taxIncluded": "Includes tax"
+    "taxIncluded": "Includes tax",
+    "emptyTitle": "Your cart is empty"
   },
   "checkout": {
     "title": "Checkout",
@@ -125,10 +128,10 @@
     "addresses": "Addresses",
     "wishlist": "Wishlist",
     "profile": "Profile",
-    "noOrders": "You have no orders yet.",
+    "noOrders": "Your orders will appear here once you place one.",
     "orderStatus": "Status",
-    "wishlistEmpty": "Your wishlist is empty.",
-    "noAddresses": "No saved addresses yet.",
+    "wishlistEmpty": "Tap the heart on a product to save it for later.",
+    "noAddresses": "Save an address to check out faster next time.",
     "defaultAddress": "Default address",
     "editAddress": "Edit",
     "deleteAddress": "Delete",
@@ -139,7 +142,10 @@
     "password": "Password",
     "newPassword": "New password",
     "saved": "Saved.",
-    "phone": "Phone"
+    "phone": "Phone",
+    "noOrdersTitle": "No orders yet",
+    "wishlistEmptyTitle": "Nothing saved yet",
+    "noAddressesTitle": "No addresses yet"
   },
   "auth": {
     "signIn": "Sign in",
@@ -1372,18 +1378,22 @@
   "shop": {
     "title": "Shop",
     "results": "{count} products",
-    "noResults": "No products found.",
+    "noResults": "Try another search or clear the filters to see everything.",
     "sort": "Sort",
     "sort_newest": "Newest",
     "sort_price_asc": "Price: low to high",
     "sort_price_desc": "Price: high to low",
     "sort_rating": "Top rated",
     "brand": "Brand",
-    "allBrands": "All brands"
+    "allBrands": "All brands",
+    "noResultsTitle": "No products match",
+    "clearFilters": "Clear filters",
+    "browseAll": "Browse the shop"
   },
   "brands": {
     "title": "Brands",
-    "empty": "No brands yet."
+    "empty": "Brands will appear here as products are added.",
+    "emptyTitle": "No brands yet"
   },
   "category": {
     "subcategories": "Subcategories"

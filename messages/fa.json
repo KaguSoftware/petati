@@ -46,7 +46,8 @@
     "viewAll": "مشاهده همه",
     "previousSlide": "اسلاید قبلی",
     "nextSlide": "اسلاید بعدی",
-    "slideOf": "اسلاید {n} از {total}"
+    "slideOf": "اسلاید {n} از {total}",
+    "shopByBrand": "خرید بر اساس برند"
   },
   "product": {
     "addToCart": "افزودن به سبد",
@@ -61,7 +62,7 @@
     "description": "توضیحات",
     "reviews": "نظرات",
     "writeReview": "ثبت نظر",
-    "noReviews": "هنوز نظری ثبت نشده است.",
+    "noReviews": "این محصول را خریده‌اید؟ نظرتان را با دیگران به اشتراک بگذارید.",
     "selectOption": "انتخاب {option}",
     "sku": "کد کالا",
     "addToWishlist": "افزودن به علاقه‌مندی‌ها",
@@ -71,11 +72,12 @@
     "reviewTitle": "عنوان (اختیاری)",
     "reviewBody": "نظر شما",
     "verifiedPurchase": "خرید تأییدشده",
-    "signInToReview": "برای ثبت نظر وارد شوید."
+    "signInToReview": "برای ثبت نظر وارد شوید.",
+    "noReviewsTitle": "اولین نظر را شما بنویسید"
   },
   "cart": {
     "title": "سبد خرید شما",
-    "empty": "سبد خرید شما خالی است.",
+    "empty": "چند محصول دلخواه اضافه کنید تا اینجا نمایش داده شوند.",
     "subtotal": "جمع جزء",
     "shipping": "هزینه ارسال",
     "discount": "تخفیف",
@@ -89,7 +91,8 @@
     "couponInvalid": "این کد تخفیف معتبر نیست.",
     "freeShipping": "رایگان",
     "freeShippingOver": "ارسال رایگان برای سفارش‌های بالای {amount}",
-    "taxIncluded": "شامل مالیات"
+    "taxIncluded": "شامل مالیات",
+    "emptyTitle": "سبد خرید شما خالی است"
   },
   "checkout": {
     "title": "تسویه حساب",
@@ -125,10 +128,10 @@
     "addresses": "آدرس‌ها",
     "wishlist": "علاقه‌مندی‌ها",
     "profile": "پروفایل",
-    "noOrders": "هنوز سفارشی ندارید.",
+    "noOrders": "سفارش‌های شما پس از ثبت اینجا نمایش داده می‌شوند.",
     "orderStatus": "وضعیت",
-    "wishlistEmpty": "لیست علاقه‌مندی‌های شما خالی است.",
-    "noAddresses": "آدرسی ذخیره نشده است.",
+    "wishlistEmpty": "روی قلب هر محصول بزنید تا برای بعد ذخیره شود.",
+    "noAddresses": "یک آدرس ذخیره کنید تا دفعه بعد سریع‌تر خرید کنید.",
     "defaultAddress": "آدرس پیش‌فرض",
     "editAddress": "ویرایش",
     "deleteAddress": "حذف",
@@ -139,7 +142,10 @@
     "password": "رمز عبور",
     "newPassword": "رمز عبور جدید",
     "saved": "ذخیره شد.",
-    "phone": "تلفن"
+    "phone": "تلفن",
+    "noOrdersTitle": "هنوز سفارشی ندارید",
+    "wishlistEmptyTitle": "هنوز چیزی ذخیره نکرده‌اید",
+    "noAddressesTitle": "هنوز آدرسی ندارید"
   },
   "auth": {
     "signIn": "ورود",
@@ -1372,18 +1378,22 @@
   "shop": {
     "title": "فروشگاه",
     "results": "{count} محصول",
-    "noResults": "محصولی پیدا نشد.",
+    "noResults": "عبارت دیگری را جستجو کنید یا فیلترها را پاک کنید.",
     "sort": "مرتب‌سازی",
     "sort_newest": "جدیدترین",
     "sort_price_asc": "قیمت: کم به زیاد",
     "sort_price_desc": "قیمت: زیاد به کم",
     "sort_rating": "بالاترین امتیاز",
     "brand": "برند",
-    "allBrands": "همه برندها"
+    "allBrands": "همه برندها",
+    "noResultsTitle": "محصولی مطابق جستجو نیست",
+    "clearFilters": "پاک کردن فیلترها",
+    "browseAll": "مشاهده فروشگاه"
   },
   "brands": {
     "title": "برندها",
-    "empty": "هنوز برندی ثبت نشده است."
+    "empty": "با اضافه شدن محصولات، برندها اینجا نمایش داده می‌شوند.",
+    "emptyTitle": "هنوز برندی نیست"
   },
   "category": {
     "subcategories": "زیردسته‌ها"

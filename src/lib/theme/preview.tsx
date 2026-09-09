@@ -65,7 +65,7 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
     ctaHref: s.link ?? "/shop",
     imageUrl: s.imageUrl ?? (i === 0 ? fixtureHeroImage : null),
   }));
-  const heroLabels = { previous: t("previousSlide"), next: t("nextSlide"), slideOf: t.raw("slideOf") as string };
+  const heroLabels = { previous: t("previousSlide"), next: t("nextSlide"), slideOf: t.raw("slideOf") as string, secondary: tn("brands") };
   const gridProducts = fixtureProducts.slice(0, gridSize);
   const each = <T,>(f: (v: VariantKey) => T) => Object.fromEntries(VARIANT_KEYS.map((v) => [v, f(v)])) as Record<VariantKey, T>;
   const reviewsProps = () => ({
@@ -73,7 +73,7 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
     ratingAvg: 4.5,
     ratingCount: 12,
     locale,
-    labels: { title: tp("reviews"), empty: tp("noReviews"), verified: tp("verifiedPurchase") },
+    labels: { title: tp("reviews"), empty: tp("noReviews"), emptyTitle: tp("noReviewsTitle"), verified: tp("verifiedPurchase") },
     formSlot: (<ReviewForm storeSlug={PREVIEW_STORE_SLUG} productId="00000000-0000-4000-8000-000000000009" />) as ReactNode,
   });
 
@@ -153,7 +153,7 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
         locale,
         labels: {
           title: tc("title"),
-          empty: tc("empty"),
+          empty: tc("empty"), emptyTitle: tc("emptyTitle"),
           subtotal: tc("subtotal"),
           discount: tc("discount"),
           shipping: tc("shipping"),

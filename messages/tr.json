@@ -46,7 +46,8 @@
     "viewAll": "Tümünü gör",
     "previousSlide": "Önceki slayt",
     "nextSlide": "Sonraki slayt",
-    "slideOf": "Slayt {n} / {total}"
+    "slideOf": "Slayt {n} / {total}",
+    "shopByBrand": "Markaya göre alışveriş"
   },
   "product": {
     "addToCart": "Sepete ekle",
@@ -61,7 +62,7 @@
     "description": "Açıklama",
     "reviews": "Değerlendirmeler",
     "writeReview": "Değerlendirme yaz",
-    "noReviews": "Henüz değerlendirme yok.",
+    "noReviews": "Bu ürünü aldınız mı? Diğer sahiplere düşüncenizi anlatın.",
     "selectOption": "{option} seçin",
     "sku": "Stok kodu",
     "addToWishlist": "Favorilere ekle",
@@ -71,11 +72,12 @@
     "reviewTitle": "Başlık (isteğe bağlı)",
     "reviewBody": "Değerlendirmeniz",
     "verifiedPurchase": "Onaylı alışveriş",
-    "signInToReview": "Değerlendirme yazmak için giriş yapın."
+    "signInToReview": "Değerlendirme yazmak için giriş yapın.",
+    "noReviewsTitle": "İlk değerlendirmeyi siz yazın"
   },
   "cart": {
     "title": "Sepetiniz",
-    "empty": "Sepetiniz boş.",
+    "empty": "Beğendiğiniz ürünleri ekleyin, burada görünsünler.",
     "subtotal": "Ara toplam",
     "shipping": "Kargo",
     "discount": "İndirim",
@@ -89,7 +91,8 @@
     "couponInvalid": "Bu kupon geçerli değil.",
     "freeShipping": "Ücretsiz",
     "freeShippingOver": "{amount} üzeri siparişlerde ücretsiz kargo",
-    "taxIncluded": "KDV dahil"
+    "taxIncluded": "KDV dahil",
+    "emptyTitle": "Sepetiniz boş"
   },
   "checkout": {
     "title": "Ödeme",
@@ -125,10 +128,10 @@
     "addresses": "Adresler",
     "wishlist": "Favoriler",
     "profile": "Profil",
-    "noOrders": "Henüz siparişiniz yok.",
+    "noOrders": "Sipariş verdiğinizde burada görünecek.",
     "orderStatus": "Durum",
-    "wishlistEmpty": "Favori listeniz boş.",
-    "noAddresses": "Kayıtlı adres yok.",
+    "wishlistEmpty": "Bir ürünün kalbine dokunarak sonrası için kaydedin.",
+    "noAddresses": "Bir adres kaydedin, bir sonraki alışveriş daha hızlı olsun.",
     "defaultAddress": "Varsayılan adres",
     "editAddress": "Düzenle",
     "deleteAddress": "Sil",
@@ -139,7 +142,10 @@
     "password": "Şifre",
     "newPassword": "Yeni şifre",
     "saved": "Kaydedildi.",
-    "phone": "Telefon"
+    "phone": "Telefon",
+    "noOrdersTitle": "Henüz sipariş yok",
+    "wishlistEmptyTitle": "Henüz kayıtlı ürün yok",
+    "noAddressesTitle": "Henüz adres yok"
   },
   "auth": {
     "signIn": "Giriş yap",
@@ -1372,18 +1378,22 @@
   "shop": {
     "title": "Mağaza",
     "results": "{count} ürün",
-    "noResults": "Ürün bulunamadı.",
+    "noResults": "Başka bir arama deneyin ya da filtreleri temizleyin.",
     "sort": "Sırala",
     "sort_newest": "En yeni",
     "sort_price_asc": "Fiyat: düşükten yükseğe",
     "sort_price_desc": "Fiyat: yüksekten düşüğe",
     "sort_rating": "En çok beğenilen",
     "brand": "Marka",
-    "allBrands": "Tüm markalar"
+    "allBrands": "Tüm markalar",
+    "noResultsTitle": "Eşleşen ürün yok",
+    "clearFilters": "Filtreleri temizle",
+    "browseAll": "Mağazaya göz at"
   },
   "brands": {
     "title": "Markalar",
-    "empty": "Henüz marka yok."
+    "empty": "Ürünler eklendikçe markalar burada görünecek.",
+    "emptyTitle": "Henüz marka yok"
   },
   "category": {
     "subcategories": "Alt kategoriler"

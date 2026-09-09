@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { Tags } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { storeContext } from "@/lib/tenant/context";
 import { getBrands } from "@/lib/catalog/queries";
 import { Link } from "@/i18n/navigation";
+import { buttonVariants } from "@/components/ui/button";
 import { BrandMark } from "@/components/storefront/shared/brand-mark";
+import { EmptyState } from "@/components/storefront/shared/empty-state";
+import { PageShell } from "@/components/storefront/shared/page-shell";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/s/[store]/brands">): Promise<Metadata> {
   await storeContext(params);
@@ -14,28 +18,36 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/s/[store
 /** Brand index: a tile per active brand linking to /b/<slug>. */
 export default async function BrandsPage({ params }: PageProps<"/[locale]/s/[store]/brands">) {
   const ctx = await storeContext(params);
-  const [t, brands] = await Promise.all([getTranslations("brands"), getBrands(ctx.store.id)]);
+  const [t, tn, brands] = await Promise.all([getTranslations("brands"), getTranslations("nav"), getBrands(ctx.store.id)]);
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-gutter pt-6 pb-16 md:pt-8 md:pb-24">
-      <h1 className="mb-6 text-3xl font-semibold tracking-tight">{t("title")}</h1>
+    <PageShell title={t("title")}>
       {brands.length === 0 ? (
-        <p className="text-muted-foreground">{t("empty")}</p>
+        <EmptyState
+          icon={Tags}
+          title={t("emptyTitle")}
+          description={t("empty")}
+          action={
+            <Link href="/shop" className={buttonVariants({ size: "xl" })}>
+              {tn("shop")}
+            </Link>
+          }
+        />
       ) : (
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-3 @phablet:grid-cols-3 @tablet:gap-4 @desktop:grid-cols-4">
           {brands.map((b) => (
             <li key={b.id}>
               <Link
                 href={`/b/${b.slug}`}
-                className="flex h-full flex-col items-center gap-3 rounded-xl border border-border bg-background p-5 text-center transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                className="flex h-full flex-col items-center gap-3 rounded-xl bg-muted/60 p-5 text-center transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
               >
-                <BrandMark name={b.name} logoUrl={b.logoUrl} size={72} />
-                <span className="font-medium">{b.name}</span>
+                <BrandMark name={b.name} logoUrl={b.logoUrl} size={72} className="bg-background" />
+                <span className="bidi-auto font-medium">{b.name}</span>
               </Link>
             </li>
           ))}
         </ul>
       )}
-    </main>
+    </PageShell>
   );
 }

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ImageOff } from "lucide-react";
+import { PawPrint } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ProductImage({
@@ -17,8 +17,8 @@ export function ProductImage({
 }) {
   if (!src) {
     return (
-      <div className={cn("flex items-center justify-center bg-muted text-muted-foreground", className)}>
-        <ImageOff className="size-8" />
+      <div className={cn("flex items-center justify-center bg-muted text-primary/25", className)}>
+        <PawPrint aria-hidden className="size-[28%] max-h-16 max-w-16" strokeWidth={1.5} />
       </div>
     );
   }

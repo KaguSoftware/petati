@@ -12,7 +12,7 @@ export function HeroMinimal({ slides, labels, autoplay }: HeroProps) {
     <section data-hero-overlay className="relative isolate overflow-hidden bg-foreground text-white" style={{ marginTop: "calc(var(--hero-pull, 0px) * -1)" }}>
       <HeroCarousel
         slides={slides.map((s, i) => (
-          <Slide key={i} {...s} first={i === 0} />
+          <Slide key={i} {...s} first={i === 0} secondaryLabel={labels.secondary} secondaryHref="/brands" />
         ))}
         labels={labels}
         autoplay={autoplay}
@@ -24,10 +24,10 @@ export function HeroMinimal({ slides, labels, autoplay }: HeroProps) {
   );
 }
 
-function Slide({ title, subtitle, ctaLabel, ctaHref, imageUrl, first }: HeroSlideProps & { first: boolean }) {
+function Slide({ title, subtitle, ctaLabel, ctaHref, imageUrl, first, secondaryLabel, secondaryHref }: HeroSlideProps & { first: boolean; secondaryLabel?: string; secondaryHref: string }) {
   const Heading = first ? "h1" : "p";
   return (
-    <div className="relative aspect-[4/5] max-h-[46rem] w-full @tablet:aspect-[16/7]">
+    <div className="relative aspect-[5/6] max-h-[42rem] w-full @tablet:aspect-[16/9] @tablet:min-h-[28rem] @desktop:aspect-[21/9]">
       {imageUrl ? (
         <Image src={imageUrl} alt="" fill sizes="100vw" priority={first} className="object-cover" />
       ) : (
@@ -40,12 +40,26 @@ function Slide({ title, subtitle, ctaLabel, ctaHref, imageUrl, first }: HeroSlid
       <div aria-hidden className="absolute inset-0 bg-linear-to-t from-black/80 via-black/35 to-transparent" />
       <div aria-hidden className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/55 to-transparent" />
       <div className="absolute inset-x-0 bottom-0">
-        <div className="mx-auto flex max-w-7xl flex-col items-start gap-4 px-gutter pb-12 @tablet:gap-5 @tablet:pb-16 @desktop:pb-20">
-          {title && <Heading className="bidi-auto max-w-2xl text-4xl font-semibold tracking-tight text-balance [text-shadow:0_2px_12px_rgb(0_0_0/.35)] @tablet:text-6xl">{title}</Heading>}
+        <div className="mx-auto flex max-w-7xl flex-col items-start gap-4 px-gutter pb-14 @tablet:gap-5 @tablet:pb-16 @desktop:pb-20">
+          {title && (
+            <Heading className="bidi-auto max-w-2xl text-[2.5rem] leading-[1.05] font-semibold tracking-tight text-balance [text-shadow:0_2px_12px_rgb(0_0_0/.35)] @tablet:text-6xl">
+              {title}
+            </Heading>
+          )}
           {subtitle && <p className="bidi-auto max-w-xl text-base text-white/90 [text-shadow:0_1px_6px_rgb(0_0_0/.4)] @tablet:text-lg">{subtitle}</p>}
-          <Link href={ctaHref} className={cn(buttonVariants({ size: "xl" }), "bg-white text-foreground hover:bg-white/90")}>
-            {ctaLabel}
-          </Link>
+          <div className="mt-1 flex flex-wrap items-center gap-3">
+            <Link href={ctaHref} className={cn(buttonVariants({ size: "xl" }), "min-w-36 shadow-lg shadow-black/20")}>
+              {ctaLabel}
+            </Link>
+            {secondaryLabel && (
+              <Link
+                href={secondaryHref}
+                className={cn(buttonVariants({ variant: "outline", size: "xl" }), "border-white/60 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-foreground")}
+              >
+                {secondaryLabel}
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>

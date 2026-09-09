@@ -1,5 +1,8 @@
+import { ShoppingBag } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
+import { EmptyState } from "@/components/storefront/shared/empty-state";
+import { PageShell } from "@/components/storefront/shared/page-shell";
 import { Price } from "@/components/storefront/shared/price";
 import { ProductImage } from "@/components/storefront/shared/product-image";
 import { formatMoney } from "@/lib/money";
@@ -8,17 +11,20 @@ import type { CartViewProps } from "../types";
 export function CartViewMinimal({ cart, totals, currency, locale, labels, lineControls, couponSlot, checkoutHref, shopHref }: CartViewProps) {
   const money = (n: number) => formatMoney(n, currency, locale);
   return (
-    <main className="mx-auto max-w-6xl px-gutter py-10">
-      <h1 className="mb-8 text-3xl font-semibold tracking-tight">{labels.title}</h1>
+    <PageShell title={labels.title}>
       {cart.lines.length === 0 ? (
-        <div className="flex flex-col items-center gap-4 py-16 text-center">
-          <p className="text-muted-foreground">{labels.empty}</p>
-          <Link href={shopHref} className={buttonVariants({ variant: "outline", size: "lg" })}>
-            {labels.continueShopping}
-          </Link>
-        </div>
+        <EmptyState
+          icon={ShoppingBag}
+          title={labels.emptyTitle}
+          description={labels.empty}
+          action={
+            <Link href={shopHref} className={buttonVariants({ size: "xl" })}>
+              {labels.continueShopping}
+            </Link>
+          }
+        />
       ) : (
-        <div className="grid gap-10 @desktop:grid-cols-[1fr_360px]">
+        <div className="grid gap-10 @desktop:grid-cols-[minmax(0,1fr)_360px]">
           <ul className="divide-y">
             {cart.lines.map((l) => (
               <li key={l.id} className="flex items-center gap-4 py-5">
@@ -38,7 +44,7 @@ export function CartViewMinimal({ cart, totals, currency, locale, labels, lineCo
               </li>
             ))}
           </ul>
-          <aside className="flex h-fit flex-col gap-4 rounded-lg border p-5">
+          <aside className="flex h-fit flex-col gap-4 rounded-2xl bg-muted/60 p-5 @desktop:sticky @desktop:top-24">
             {couponSlot}
             <dl className="flex flex-col gap-2 text-sm">
               <Row label={labels.subtotal} value={money(totals.subtotal)} />
@@ -58,7 +64,7 @@ export function CartViewMinimal({ cart, totals, currency, locale, labels, lineCo
           </aside>
         </div>
       )}
-    </main>
+    </PageShell>
   );
 }
 

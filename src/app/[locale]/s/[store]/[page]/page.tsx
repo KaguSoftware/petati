@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { storeContext } from "@/lib/tenant/context";
+import { PageShell } from "@/components/storefront/shared/page-shell";
 
 const PAGES = ["privacy", "terms", "about"] as const;
 
@@ -16,9 +17,8 @@ export default async function ContentPage({ params }: PageProps<"/[locale]/s/[st
   const pages = (store.settings.pages ?? {}) as Record<string, Record<string, string>>;
   const body = pages[page]?.[locale] ?? pages[page]?.[fallback] ?? "";
   return (
-    <main className="mx-auto w-full max-w-3xl px-gutter py-10">
-      <h1 className="mb-6 text-3xl font-semibold tracking-tight">{t(page as (typeof PAGES)[number])}</h1>
-      <div className="whitespace-pre-line text-muted-foreground">{body || "—"}</div>
-    </main>
+    <PageShell width="narrow" title={t(page as (typeof PAGES)[number])}>
+      <div className="bidi-auto max-w-prose text-base leading-relaxed whitespace-pre-line text-muted-foreground">{body || "—"}</div>
+    </PageShell>
   );
 }

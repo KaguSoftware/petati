@@ -56,7 +56,7 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/s/[st
       ratingAvg: product.ratingAvg,
       ratingCount: product.ratingCount,
       locale,
-      labels: { title: t("reviews"), empty: t("noReviews"), verified: t("verifiedPurchase") },
+      labels: { title: t("reviews"), empty: t("noReviews"), emptyTitle: t("noReviewsTitle"), verified: t("verifiedPurchase") },
       formSlot: (
         <Suspense>
           <ReviewFormGate storeSlug={store.slug} productId={product.id} signInLabel={t("signInToReview")} />
