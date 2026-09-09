@@ -37,13 +37,13 @@ select is(
   1, 'anon sees active brands only');
 
 -- customer: cannot write brands
-select tests.authenticate_as('customer@petati.local');
+select tests.authenticate_as('customer@petitati.local');
 select throws_ok(
   $$ insert into public.brands (store_id, slug, name) values ('10000000-0000-0000-0000-000000000001', 'hacker', 'Hacker') $$,
   '42501', null, 'customer cannot insert brands');
 
 -- manager: can write brands
-select tests.authenticate_as('manager@petati.local');
+select tests.authenticate_as('manager@petitati.local');
 select lives_ok(
   $$ insert into public.brands (store_id, slug, name) values ('10000000-0000-0000-0000-000000000001', 'acana', 'Acana') $$,
   'manager can insert brands');

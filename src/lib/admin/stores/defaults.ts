@@ -93,4 +93,4 @@ export const LOGO_TYPES: Record<string, string> = {
 export const LOGO_MAX_BYTES = 2 * 1024 * 1024;
 
 /** sessionStorage key of the wizard draft (cleared by the list page after a successful create). */
-export const DRAFT_STORAGE_KEY = "petati:create-store-draft";
+export const DRAFT_STORAGE_KEY = "petitati:create-store-draft";

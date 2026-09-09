@@ -1,4 +1,4 @@
-# Petati
+# Petitati
 
 E-commerce storefront and admin panel. Next.js 16, Supabase, Tailwind v4, shadcn/ui, next-intl
 (English, Turkish, Farsi).

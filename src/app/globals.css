@@ -160,7 +160,7 @@ body[data-overlayscrollbars-initialize]::-webkit-scrollbar {
   display: none;
 }
 /* Handle colour follows --foreground, so store themes recolour it inside [data-storefront]. */
-.os-theme-petati {
+.os-theme-petitati {
   --os-size: 10px;
   --os-padding-perpendicular: 2px;
   --os-padding-axis: 2px;

@@ -5,7 +5,7 @@ import { useOverlayScrollbars } from "overlayscrollbars-react";
 import type { PartialOptions } from "overlayscrollbars";
 
 const OPTIONS: PartialOptions = {
-  scrollbars: { theme: "os-theme-petati", autoHide: "leave", autoHideDelay: 600, clickScroll: true },
+  scrollbars: { theme: "os-theme-petitati", autoHide: "leave", autoHideDelay: 600, clickScroll: true },
   overflow: { x: "hidden", y: "scroll" },
 };
 

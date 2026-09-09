@@ -7,23 +7,23 @@ set client_min_messages to warning;
 -- ---------- store ----------
 insert into public.stores (id, slug, name, tagline, currency, default_locale, enabled_locales, contact_email,
                            contact_phone, email_from, tax_rate_bp, low_stock_threshold, created_by, settings, theme)
-values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything your pet loves',
-        'TRY', 'en', '{en,tr,fa}', 'hello@petati.local', '+90 212 555 00 00', 'Petati <noreply@petati.local>', 2000, 5,
+values ('10000000-0000-0000-0000-000000000001', 'default', 'Petitati', 'Everything your pet loves',
+        'TRY', 'en', '{en,tr,fa}', 'hello@petitati.local', '+90 212 555 00 00', 'Petitati <noreply@petitati.local>', 2000, 5,
         null,  -- created_by; the dev-users seed links the demo owner locally
         -- Home hero (Design page → Hero). The seed photo is a placeholder; a real store uploads to store-media/<id>/hero/.
         '{
           "hero_title": {"en": "Everything your pet loves", "tr": "Evcil dostunuzun sevdiği her şey", "fa": "هر چیزی که حیوان خانگی شما دوست دارد"},
           "hero_subtitle": {"en": "Toys, food, beds and accessories, delivered to your door.", "tr": "Oyuncak, mama, yatak ve aksesuarlar kapınıza gelsin.", "fa": "اسباب‌بازی، غذا، تخت و لوازم جانبی، تحویل درب منزل."},
-          "hero_image": "https://picsum.photos/seed/petati-hero/2400/1000",
+          "hero_image": "https://picsum.photos/seed/petitati-hero/2400/1000",
           "hero_slides": [
             {
-              "image": "https://picsum.photos/seed/petati-hero/2400/1000",
+              "image": "https://picsum.photos/seed/petitati-hero/2400/1000",
               "title": {"en": "Everything your pet loves", "tr": "Evcil dostunuzun sevdiği her şey", "fa": "هر چیزی که حیوان خانگی شما دوست دارد"},
               "subtitle": {"en": "Toys, food, beds and accessories, delivered to your door.", "tr": "Oyuncak, mama, yatak ve aksesuarlar kapınıza gelsin.", "fa": "اسباب‌بازی، غذا، تخت و لوازم جانبی، تحویل درب منزل."},
               "link": null
             },
             {
-              "image": "https://picsum.photos/seed/petati-hero-2/2400/1000",
+              "image": "https://picsum.photos/seed/petitati-hero-2/2400/1000",
               "title": {"en": "New arrivals every week", "tr": "Her hafta yeni ürünler", "fa": "هر هفته محصولات تازه"},
               "subtitle": {"en": "Fresh toys, treats and gear for cats and dogs.", "tr": "Kediler ve köpekler için yeni oyuncaklar, ödüller ve ekipman.", "fa": "اسباب‌بازی، تشویقی و لوازم تازه برای گربه‌ها و سگ‌ها."},
               "link": "/shop?sort=newest"
@@ -31,7 +31,7 @@ values ('10000000-0000-0000-0000-000000000001', 'default', 'Petati', 'Everything
           ],
           "address": {"en": "Bağdat Cd. No:123\nKadıköy, İstanbul", "tr": "Bağdat Cd. No:123\nKadıköy, İstanbul", "fa": "خیابان بغداد، پلاک ۱۲۳\nکادیکوی، استانبول"},
           "opening_hours": {"en": "Mon–Sat 9:00–19:00\nSun closed", "tr": "Pzt–Cmt 9:00–19:00\nPazar kapalı", "fa": "دوشنبه تا شنبه ۹:۰۰ تا ۱۹:۰۰\nیکشنبه تعطیل"},
-          "social_links": {"instagram": "https://instagram.com/petati", "whatsapp": "https://wa.me/902125550000"},
+          "social_links": {"instagram": "https://instagram.com/petitati", "whatsapp": "https://wa.me/902125550000"},
           "trust_enabled": true,
           "trust_items": [],
           "payment_methods": ["visa", "mastercard", "troy", "cash_on_delivery"]

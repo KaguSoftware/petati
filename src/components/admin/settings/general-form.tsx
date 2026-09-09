@@ -67,7 +67,7 @@ export function GeneralForm({ store }: { store: StoreGeneral }) {
             <LatinInput key={store.contact_phone ?? ""} kind="tel" id="contact_phone" name="contact_phone" defaultValue={store.contact_phone ?? ""} autoComplete="off" />
           </FormField>
           <FormField name="email_from" label={t("emailFrom")} description={t("emailFromHint")} errors={errors} className="sm:col-span-2">
-            <Input key={store.email_from ?? ""} id="email_from" name="email_from" dir="ltr" className="text-start" defaultValue={store.email_from ?? ""} placeholder="Petati <noreply@example.com>" autoComplete="off" spellCheck={false} />
+            <Input key={store.email_from ?? ""} id="email_from" name="email_from" dir="ltr" className="text-start" defaultValue={store.email_from ?? ""} placeholder="Petitati <noreply@example.com>" autoComplete="off" spellCheck={false} />
           </FormField>
         </CardContent>
       </Card>

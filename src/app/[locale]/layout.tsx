@@ -27,7 +27,7 @@ const markazi = Markazi_Text({ subsets: ["arabic", "latin"], variable: "--font-m
 const themeFontClasses = [manrope, dmSans, playfair, notoSansArabic, notoNaskhArabic, cairo, amiri, markazi].map((f) => f.variable).join(" ");
 
 export const metadata: Metadata = {
-  title: { default: "Petati", template: "%s · Petati" },
+  title: { default: "Petitati", template: "%s · Petitati" },
 };
 
 export function generateStaticParams() {

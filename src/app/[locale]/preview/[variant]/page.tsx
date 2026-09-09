@@ -24,7 +24,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
   const v = variant as VariantKey;
 
   const currency = "TRY";
-  const storeName = "Petati";
+  const storeName = "Petitati";
   const [ta, p] = await Promise.all([
     getTranslations("admin"),
     buildSectionPreviews({ locale, storeName, logoUrl: null, currency, announcement: "Free shipping on orders over ₺2.000", heroSlides: fixtureHeroSlides, gridSize: 8 }),

@@ -24,7 +24,7 @@ grant usage on schema tests to anon, authenticated;
 grant execute on all functions in schema tests to anon, authenticated;
 
 -- manager: no store creation, no domain management
-select tests.authenticate_as('manager@petati.local');
+select tests.authenticate_as('manager@petitati.local');
 select throws_ok(
   $$ insert into public.stores (slug, name) values ('manager-shop', 'Manager Shop') $$,
   '42501', null, 'manager cannot insert into stores');
@@ -33,15 +33,15 @@ select throws_ok(
   '42501', null, 'manager cannot insert into store_domains');
 
 -- staff: same
-select tests.authenticate_as('staff@petati.local');
+select tests.authenticate_as('staff@petitati.local');
 select throws_ok(
   $$ insert into public.stores (slug, name) values ('staff-shop', 'Staff Shop') $$,
   '42501', null, 'staff cannot insert into stores');
 
 -- owner: may create a store, attach a domain, and delete it again
-select tests.authenticate_as('owner@petati.local');
+select tests.authenticate_as('owner@petitati.local');
 select lives_ok(
-  $$ insert into public.stores (id, slug, name, created_by) values ('10000000-0000-0000-0000-00000000aaaa', 'owner-shop', 'Owner Shop', tests.user_id('owner@petati.local')) $$,
+  $$ insert into public.stores (id, slug, name, created_by) values ('10000000-0000-0000-0000-00000000aaaa', 'owner-shop', 'Owner Shop', tests.user_id('owner@petitati.local')) $$,
   'owner can insert into stores');
 select lives_ok(
   $$ insert into public.store_domains (store_id, hostname, is_primary) values ('10000000-0000-0000-0000-00000000aaaa', 'owner.example.test', true) $$,

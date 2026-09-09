@@ -10,13 +10,13 @@ import type { ResolvedHeroSlide } from "./hero";
 const img = (seed: string, w = 900, h = 900) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
 
 /** A wide fixture photo for heroes when the store has none (full-bleed heroes crop square photos badly). */
-export const fixtureHeroImage = img("petati-hero", 2400, 1000);
+export const fixtureHeroImage = img("petitati-hero", 2400, 1000);
 
 /** Complete contact/footer content so the design picker shows every footer layout filled in. */
 export const fixtureFooterContent: FooterContent = {
   address: { en: "Bağdat Cd. No:123\nKadıköy, İstanbul", tr: "Bağdat Cd. No:123\nKadıköy, İstanbul", fa: "خیابان بغداد، پلاک ۱۲۳\nکادیکوی، استانبول" },
   hours: { en: "Mon–Sat 9:00–19:00\nSun closed", tr: "Pzt–Cmt 9:00–19:00\nPazar kapalı", fa: "دوشنبه تا شنبه ۹:۰۰ تا ۱۹:۰۰\nیکشنبه تعطیل" },
-  social: { instagram: "https://instagram.com/petati", whatsapp: "https://wa.me/902125550000", telegram: "https://t.me/petati" },
+  social: { instagram: "https://instagram.com/petitati", whatsapp: "https://wa.me/902125550000", telegram: "https://t.me/petitati" },
   trustEnabled: true,
   trustItems: [],
   payments: ["visa", "mastercard", "troy", "cash_on_delivery"],
@@ -26,7 +26,7 @@ export const fixtureContactPhone = "+90 212 555 00 00";
 /** Two slides for the dev harness, so every hero layout is exercised as a carousel (text of slide 1 comes from the `home` messages). */
 export const fixtureHeroSlides: ResolvedHeroSlide[] = [
   { imageUrl: fixtureHeroImage, link: null },
-  { title: "New arrivals every week", subtitle: "Fresh toys, treats and gear for cats and dogs.", imageUrl: img("petati-hero-2", 2400, 1000), link: "/shop?sort=newest" },
+  { title: "New arrivals every week", subtitle: "Fresh toys, treats and gear for cats and dogs.", imageUrl: img("petitati-hero-2", 2400, 1000), link: "/shop?sort=newest" },
 ];
 
 export const fixtureCategories: CategoryData[] = [
@@ -41,7 +41,7 @@ export const fixtureCategories: CategoryData[] = [
 /** Top-level categories only (banner, footer). */
 export const fixtureTopCategories = fixtureCategories.filter((c) => !c.parentId);
 
-const brands = ["Petati", "Royal Canin", null, "Gourmet"];
+const brands = ["Petitati", "Royal Canin", null, "Gourmet"];
 
 const names = [
   "Rope Tug Toy", "Squeaky Duck", "Feather Wand", "Treat Puzzle Ball",

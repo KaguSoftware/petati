@@ -81,7 +81,7 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
     storeName,
     logoUrl,
     tagline: heroSlides[0].subtitle,
-    email: "hello@petati.local",
+    email: "hello@petitati.local",
     phone: fixtureContactPhone,
     categories: fixtureTopCategories,
     resolved: resolveFooter(fixtureFooterContent, locale, "en"),

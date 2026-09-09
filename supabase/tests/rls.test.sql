@@ -30,18 +30,18 @@ select is((select count(*)::int from public.coupons), 0, 'anon cannot read coupo
 select is((select count(*)::int from public.orders), 0, 'anon cannot read orders');
 
 -- staff: reads coupons of own store, cannot read expenses
-select tests.authenticate_as('staff@petati.local');
+select tests.authenticate_as('staff@petitati.local');
 select ok((select count(*) from public.coupons) > 0, 'staff can read store coupons');
 select is((select count(*)::int from public.expense_categories), 0, 'staff cannot read finance');
 select ok(public.has_store_access('10000000-0000-0000-0000-000000000001', 'staff'), 'staff has staff access');
 select ok(not public.has_store_access('10000000-0000-0000-0000-000000000001', 'manager'), 'staff lacks manager access');
 
 -- manager: finance visible
-select tests.authenticate_as('manager@petati.local');
+select tests.authenticate_as('manager@petitati.local');
 select ok((select count(*) from public.expense_categories) > 0, 'manager can read finance');
 
 -- owner: platform owner on any store
-select tests.authenticate_as('owner@petati.local');
+select tests.authenticate_as('owner@petitati.local');
 select is(public.store_role_for('10000000-0000-0000-0000-000000000001'), 'owner', 'owner role resolves');
 select ok(public.is_owner(), 'owner flag set');
 

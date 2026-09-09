@@ -12,7 +12,7 @@ export const env = {
   supabaseUrl: () => required("NEXT_PUBLIC_SUPABASE_URL"),
   supabaseAnonKey: () => required("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
   supabaseServiceRoleKey: () => required("SUPABASE_SERVICE_ROLE_KEY"),
-  /** e.g. "petati.com" or "localhost:3000". Subdomains of this resolve to stores. */
+  /** e.g. "petitati.com" or "localhost:3000". Subdomains of this resolve to stores. */
   rootDomain: () => process.env.ROOT_DOMAIN ?? "localhost:3000",
   defaultStoreSlug: () => process.env.DEFAULT_STORE_SLUG ?? "default",
   appUrl: () => process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
