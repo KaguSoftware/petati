@@ -63,6 +63,7 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
   phone numbers sit in `<bdi dir="ltr">`, steppers are `dir="ltr"`, display headings get `line-height: 1.3` under RTL.
   Wordmarks size with `cqw`, never `vw`. Screenshot loop: `scratchpad/audit-shots.mjs` (+ `audit-extra`, `audit-admin`,
   `nav-shots`, `quick-shots`; run with `MSYS_NO_PATHCONV=1`) and three reviewer agents per pass.
+- **Account sections follow the fast-admin rule (2026-09-09)**: `account/layout.tsx` loads orders, addresses, wishlist and profile in ONE query wave (inside Suspense) and renders all four panels; `AccountPanels` (client) switches them with local state + `history.pushState`, which Next mirrors into `usePathname` (Back/Forward and deep links keep working). The `/account/*` pages are empty deep-link stubs. Measured: ~80 ms per switch, zero requests.
 - Hero content (image + per-locale headline/subtitle) lives in `stores.settings` (`hero_image`, `hero_title`,
   `hero_subtitle`), read through `src/lib/theme/hero.ts` (`Store.hero`), edited on the Design page and saved by
   `saveThemeAction` together with the theme. New image URLs must be inside `store-media/<storeId>/`.
