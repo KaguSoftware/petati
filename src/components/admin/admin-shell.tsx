@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Store } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { buttonVariants } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { AdminMobileNav } from "./admin-mobile-nav";
 import { AdminSidebarNav } from "./admin-sidebar-nav";
 import { Breadcrumbs } from "./shared/breadcrumbs";
+import { StoreMark } from "./store-mark";
 import { StoreSwitcher } from "./store-switcher";
 import { UserMenu } from "./user-menu";
 
@@ -19,7 +20,7 @@ export interface AdminShellProps {
   locale: string;
   user: { name: string; email: string; avatarUrl: string | null };
   role: EffectiveRole;
-  store: { id: string; name: string; slug: string; currency: string };
+  store: { id: string; name: string; slug: string; currency: string; logoUrl: string | null };
   /** Non-empty only for platform owners. */
   stores: { id: string; name: string }[];
   /** Platform owner: shows the switcher, the Stores nav item and the create link. */
@@ -43,7 +44,7 @@ export function AdminShell({ locale, user, role, store, stores, multiStore, chil
     <div className="flex min-h-screen bg-background">
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col self-start border-e bg-sidebar text-sidebar-foreground md:flex">
         <div className="flex h-14 shrink-0 items-center gap-2 border-b px-4 font-semibold">
-          <Store className="size-5 shrink-0" />
+          <StoreMark logoUrl={store.logoUrl} />
           <span className="truncate">{store.name}</span>
         </div>
         {switcher && <div className="border-b p-2">{switcher}</div>}
@@ -65,7 +66,7 @@ export function AdminShell({ locale, user, role, store, stores, multiStore, chil
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-background/85 px-3 backdrop-blur md:px-6">
-          <AdminMobileNav items={nav} storeName={store.name} switcher={switcher} />
+          <AdminMobileNav items={nav} storeName={store.name} logoUrl={store.logoUrl} switcher={switcher} />
           <Breadcrumbs className="min-w-0 flex-1" />
           <div className="flex items-center gap-1">
             <LocaleSwitcher variant="compact" />

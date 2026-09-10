@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { NAVBAR_VARS, themeToCssVars } from "@/lib/theme/types";
 import { storeContext } from "@/lib/tenant/context";
 import { StoreProvider } from "@/components/storefront/store-provider";
@@ -9,6 +10,12 @@ import { cn } from "@/lib/utils";
  * scheme as CSS variables so every shadcn token inside is re-skinned, exposes store basics to
  * client components via context, and wraps pages in the store's chosen chrome.
  */
+/** Tab icon = the store's favicon when it has one (admin → Design → Branding); otherwise the app icon. */
+export async function generateMetadata({ params }: LayoutProps<"/[locale]/s/[store]">): Promise<Metadata> {
+  const { store } = await storeContext(params);
+  return store.favicon_url ? { icons: { icon: store.favicon_url } } : {};
+}
+
 export default async function StoreLayout({ children, params }: LayoutProps<"/[locale]/s/[store]">) {
   const ctx = await storeContext(params);
   const { store, locale } = ctx;

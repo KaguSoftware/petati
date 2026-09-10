@@ -22,7 +22,7 @@ export async function AdminFrame({ locale, children }: { locale: string; childre
       locale={locale}
       user={{ name: user.profile.full_name ?? "", email: user.email ?? "", avatarUrl: user.profile.avatar_url }}
       role={role}
-      store={{ id: store.id, name: store.name, slug: store.slug, currency: store.currency }}
+      store={{ id: store.id, name: store.name, slug: store.slug, currency: store.currency, logoUrl: store.logo_url }}
       stores={multiStore ? stores.map((s) => ({ id: s.id, name: s.name })) : []}
       multiStore={multiStore}
     >

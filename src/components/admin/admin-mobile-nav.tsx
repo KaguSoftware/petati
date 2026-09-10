@@ -8,15 +8,17 @@ import { OverlayScroll } from "@/components/ui/overlay-scroll";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import type { AdminNavItem } from "@/lib/auth/permissions";
 import { AdminSidebarNav } from "./admin-sidebar-nav";
+import { StoreMark } from "./store-mark";
 
 interface Props {
   items: AdminNavItem[];
   storeName: string;
+  logoUrl: string | null;
   /** Store switcher (owner) rendered under the header. */
   switcher?: ReactNode;
 }
 
-export function AdminMobileNav({ items, storeName, switcher }: Props) {
+export function AdminMobileNav({ items, storeName, logoUrl, switcher }: Props) {
   const t = useTranslations("admin.nav");
   const [open, setOpen] = useState(false);
   return (
@@ -26,7 +28,10 @@ export function AdminMobileNav({ items, storeName, switcher }: Props) {
       </SheetTrigger>
       <SheetContent side="start" showCloseButton={false} className="gap-0 p-0">
         <div className="flex h-14 shrink-0 items-center justify-between border-b px-4">
-          <span className="truncate font-semibold">{storeName}</span>
+          <span className="flex min-w-0 items-center gap-2 font-semibold">
+            <StoreMark logoUrl={logoUrl} />
+            <span className="truncate">{storeName}</span>
+          </span>
           <SheetClose render={<Button variant="ghost" size="icon" aria-label={t("closeMenu")} />}>
             <XIcon />
           </SheetClose>

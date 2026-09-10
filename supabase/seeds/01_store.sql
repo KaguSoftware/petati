@@ -5,9 +5,10 @@
 set client_min_messages to warning;
 
 -- ---------- store ----------
-insert into public.stores (id, slug, name, tagline, currency, default_locale, enabled_locales, contact_email,
+insert into public.stores (id, slug, name, tagline, logo_url, favicon_url, currency, default_locale, enabled_locales, contact_email,
                            contact_phone, email_from, tax_rate_bp, low_stock_threshold, created_by, settings, theme)
 values ('10000000-0000-0000-0000-000000000001', 'default', 'Petitati', 'Everything your pet loves',
+        '/brand/petitati-logo.svg', '/brand/petitati-mark-square.svg',  -- the client's paw mark, shipped in public/brand
         'TRY', 'en', '{en,tr,fa}', 'hello@petitati.local', '+90 212 555 00 00', 'Petitati <noreply@petitati.local>', 2000, 5,
         null,  -- created_by; the dev-users seed links the demo owner locally
         -- Home hero (Design page → Hero). The seed photo is a placeholder; a real store uploads to store-media/<id>/hero/.
