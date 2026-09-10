@@ -12,7 +12,7 @@ import { AdminSidebarNav } from "./admin-sidebar-nav";
 interface Props {
   items: AdminNavItem[];
   storeName: string;
-  /** Store switcher (owner + flag) rendered under the header. */
+  /** Store switcher (owner) rendered under the header. */
   switcher?: ReactNode;
 }
 

@@ -60,6 +60,6 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { key: "design", href: "/admin/design", permission: "store.design", icon: "Palette" },
   { key: "staff", href: "/admin/staff", permission: "staff.manage", icon: "UserCog" },
   { key: "settings", href: "/admin/settings", permission: "store.settings", icon: "Settings" },
-  // SCOPE(multi-store, unpaid): hidden until the flag is on; owner-only by permission.
+  // Owner-only by permission; shown only when the admin context says multiStore.
   { key: "stores", href: "/admin/stores", permission: "store.create", icon: "Store", gate: "multiStore" },
 ];

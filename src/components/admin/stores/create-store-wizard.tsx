@@ -42,7 +42,7 @@ interface StoredDraft {
  * Multi-step "create a new website" flow. Draft state mirrors to sessionStorage (files excluded)
  * so a reload does not lose work. Each step validates with its zod schema before advancing; the
  * server re-validates everything and its field errors jump back to the owning step.
- * SCOPE(multi-store, unpaid): reachable only behind FEATURE_MULTI_STORE + Owner.
+ * Reachable only by platform owners (stores/layout.tsx gate).
  */
 export function CreateStoreWizard({ locale, rootDomain, defaultStoreSlug, showPreviewLinks, variants, presetPreviews }: Props) {
   const t = useTranslations("stores");

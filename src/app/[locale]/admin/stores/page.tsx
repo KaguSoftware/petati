@@ -11,8 +11,7 @@ import { requireAdminPage } from "@/lib/admin/context";
 import { listStoresWithDomains } from "@/lib/admin/stores/queries";
 
 /**
- * SCOPE(multi-store, unpaid): the stores/layout.tsx gate 404s this page unless the flag is on and
- * the user is a platform owner.
+ * The stores/layout.tsx gate 404s this page unless the user is a platform owner.
  */
 export default async function StoresPage({ params }: PageProps<"/[locale]/admin/stores">) {
   const { locale } = await params;

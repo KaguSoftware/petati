@@ -20,9 +20,9 @@ export interface AdminShellProps {
   user: { name: string; email: string; avatarUrl: string | null };
   role: EffectiveRole;
   store: { id: string; name: string; slug: string; currency: string };
-  /** Non-empty only for owners with FEATURE_MULTI_STORE on. */
+  /** Non-empty only for platform owners. */
   stores: { id: string; name: string }[];
-  /** SCOPE(multi-store, unpaid): shows the switcher, the Stores nav item and the create link. */
+  /** Platform owner: shows the switcher, the Stores nav item and the create link. */
   multiStore: boolean;
   children: React.ReactNode;
 }

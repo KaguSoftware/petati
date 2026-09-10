@@ -7,7 +7,6 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getAdminStoreIds, getRoleForStore, requireCompleteProfile, type SessionUser } from "@/lib/auth/session";
 import { can, type Permission } from "@/lib/auth/permissions";
 import type { EffectiveRole } from "@/lib/db/types";
-import { features } from "@/lib/env";
 import { listStores, type Store } from "@/lib/tenant/store";
 import { ADMIN_STORE_COOKIE } from "./constants";
 
@@ -20,7 +19,7 @@ export interface AdminContext {
   store: Store;
   /** Every store the user may administer. Owner → all. */
   stores: Store[];
-  /** SCOPE(multi-store, unpaid): true only when the flag is on AND the user is Owner. */
+  /** True only for platform owners: shows the store switcher, the Stores nav item and the create link. */
   multiStore: boolean;
 }
 
@@ -51,7 +50,7 @@ export const adminContext = cache(async (localeParam: string): Promise<AdminCont
   const role = (await getRoleForStore(store.id)) ?? (user.profile.platform_role === "owner" ? "owner" : null);
   if (!role) return { ok: false, locale, user };
 
-  return { ok: true, locale, user, role, store, stores, multiStore: features.multiStore() && role === "owner" };
+  return { ok: true, locale, user, role, store, stores, multiStore: role === "owner" };
 });
 
 /**

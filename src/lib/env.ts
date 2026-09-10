@@ -19,11 +19,3 @@ export const env = {
   resendApiKey: () => process.env.RESEND_API_KEY,
   emailFromFallback: () => process.env.EMAIL_FROM_FALLBACK ?? "noreply@example.com",
 };
-
-export const features = {
-  /**
-   * SCOPE(multi-store, unpaid): the client has not paid for multi-store yet. Every UI trace of
-   * creating/switching stores is gated here AND by Owner role. GROWS LATER → flip to true.
-   */
-  multiStore: () => process.env.FEATURE_MULTI_STORE === "true",
-};

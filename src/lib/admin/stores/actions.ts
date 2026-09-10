@@ -70,7 +70,7 @@ async function removeStorageFolder(db: Db, storeId: string) {
 
 /**
  * Creates a store from the wizard payload (`payload` JSON + optional `logo` File).
- * SCOPE(multi-store, unpaid): owner-only, flag-gated.
+ * Owner-only.
  */
 export async function createStoreAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const localeRaw = String(formData.get("locale") ?? "en");

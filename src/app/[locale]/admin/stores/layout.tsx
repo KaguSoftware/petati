@@ -4,10 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { requireMultiStore } from "@/lib/admin/stores/guard";
 
-/**
- * SCOPE(multi-store, unpaid): the whole /admin/stores subtree 404s unless FEATURE_MULTI_STORE is
- * on AND the user is a platform owner. GROWS LATER → drop the flag once the client pays.
- */
+/** The whole /admin/stores subtree 404s unless the user is a platform owner. */
 export default async function StoresLayout({ children, params }: LayoutProps<"/[locale]/admin/stores">) {
   const { locale } = await params;
   setRequestLocale(locale);

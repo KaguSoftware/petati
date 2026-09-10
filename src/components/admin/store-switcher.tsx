@@ -7,7 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 import { switchAdminStoreAction } from "@/lib/admin/actions";
 
 /**
- * SCOPE(multi-store, unpaid): rendered only when FEATURE_MULTI_STORE is on and the user is Owner.
+ * Rendered only for platform owners.
  * GROWS LATER → full store list page with create wizard.
  */
 export function StoreSwitcher({

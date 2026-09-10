@@ -10,7 +10,7 @@ import { composeHome } from "@/lib/theme/preview-compose";
 import { availableVariants } from "@/lib/theme/registry";
 import { SECTION_KEYS, VARIANT_KEYS, type SectionKey, type VariantKey } from "@/lib/theme/types";
 
-/** SCOPE(multi-store, unpaid): gated by stores/layout.tsx. */
+/** Owner-only: gated by stores/layout.tsx. */
 export default async function NewStorePage({ params }: PageProps<"/[locale]/admin/stores/new">) {
   const { locale } = await params;
   setRequestLocale(locale);

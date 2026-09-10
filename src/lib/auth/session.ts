@@ -97,7 +97,7 @@ export async function requireUser(locale: string, nextPath: string) {
 
 /**
  * Platform-level guard (no store scope): only a platform owner holds `permission`.
- * SCOPE(multi-store, unpaid): used by the hidden store-creation module.
+ * Used by the store-creation module.
  */
 export async function requirePlatformPermission(permission: Permission) {
   const user = await getSessionUser();

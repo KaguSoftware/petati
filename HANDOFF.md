@@ -10,8 +10,9 @@
   AND carries a `// SCOPE(<phase>): … GROWS LATER → …` code tag.
 - **Git**: push to `main` freely. Author is Parsa (global git config). **Never add an AI co-author
   line.** No `Co-Authored-By`, no "Generated with" footer.
-- **Multi-store is unpaid and hidden.** Never surface it to the client. Gate every trace behind
-  `FEATURE_MULTI_STORE` + Owner role.
+- **Multi-store is owner-only.** Store creation/switching/domains are visible to platform owners only
+  (`requireMultiStore` → `platform_role = owner`); store-level managers/staff never see them. The
+  `FEATURE_MULTI_STORE` env flag was removed on 2026-09-10 at the owner's request.
 - **Security is layered, never optional** (owner's standing rule, 2026-09-07):
   1. Row Level Security is enabled on **every** table in `public` (guarded by `supabase/tests/rls_enabled.test.sql`, which fails the test suite if a table lacks it). Every new migration must `enable row level security` and add policies.
   2. The service-role client (`src/lib/supabase/admin.ts`) bypasses RLS, so it is only called after `requirePermission()` from `src/lib/auth/session.ts`, or for public catalog/tenant reads that are scoped by `store_id` in the query.
@@ -33,7 +34,7 @@ Payments: none yet; iyzico (Turkey) later. Thorough admin: orders, inventory, fi
 - next-intl 4 with `messages/{en,tr,fa}.json`, `[locale]` prefix always.
 - Supabase (Postgres, Auth, Storage) via `@supabase/ssr`. **The app runs against the linked cloud project `zsuxkiqswaaxgpibwstb`** (eu-central-1, the client's account) since 2026-09-08; `.env.local` holds its URL + legacy anon/service_role JWTs (`npx supabase projects api-keys --project-ref zsuxkiqswaaxgpibwstb -o json`). The local Docker stack (machine 2 only) is used for `db reset` + pgTAP. Migrations reach the cloud with `npx supabase db push` (CLI already linked + authenticated).
 - Resend + react-email for transactional mail (optional in dev, logs to console without a key).
-- Vercel hosting at https://petitati.vercel.app (auto-deploys from `main`). **Functions are pinned to `fra1` in `vercel.json`** (next to the Supabase project; the default was `iad1`, which cost ~120 ms per database call — see Gotchas). The Vercel CLI is logged in on the owner's machine and this folder is linked (`.vercel/`), so `npx vercel env ls production` works; env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ROOT_DOMAIN=petitati.vercel.app`, `DEFAULT_STORE_SLUG=default`, `FEATURE_MULTI_STORE=false`, `NEXT_PUBLIC_APP_URL=https://petitati.vercel.app`, `EMAIL_FROM_FALLBACK`, optional `RESEND_API_KEY`.
+- Vercel hosting at https://petitati.vercel.app (auto-deploys from `main`). **Functions are pinned to `fra1` in `vercel.json`** (next to the Supabase project; the default was `iad1`, which cost ~120 ms per database call — see Gotchas). The Vercel CLI is logged in on the owner's machine and this folder is linked (`.vercel/`), so `npx vercel env ls production` works; env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ROOT_DOMAIN=petitati.vercel.app`, `DEFAULT_STORE_SLUG=default`, `NEXT_PUBLIC_APP_URL=https://petitati.vercel.app`, `EMAIL_FROM_FALLBACK`, optional `RESEND_API_KEY`.
 - Dev OS: Windows 11. Machine 1: Node 22.14, npm 11 (no Docker). Machine 2: Node 24.15, npm 12, Docker Desktop 29 (works).
 - No secrets in this file. Env template: `.env.example`.
 
@@ -131,7 +132,7 @@ Done (build, typecheck, lint, 25 pgTAP tests green; every flow below verified wi
 - **UI foundation**: every control is custom (Base UI shadcn Select/Checkbox/RadioGroup/Combobox/NumberField…; no native select/checkbox/radio/number/date/color anywhere); OverlayScrollbars on the document and scroll containers (no layout shift, RTL-mirrored); `DirectionProvider` mounted; Latin-only inputs (`LatinInput`) stay LTR under `fa`; navbar redesign with logo slot, pill nav (3 categories, 5 at xl, rest via Shop/drawer) and an animated hamburger drawer.
 - **Phone onboarding**: `profiles.phone` (E.164, unique) + `phone_country`; `PhoneField` (country Combobox + LTR number, `libphonenumber-js` server-side); required at sign-up and enforced by a one-time `/complete-profile` screen (account, checkout, admin, sign-in, OAuth callback).
 - **Step 5 admin — all modules built**: dashboard, orders (lifecycle + emails + refunds), products (translations, options/variants, images, categories), inventory (adjustments = stock movements, log), customers (`v_customer_stats`), coupons, reviews, finance (overview, margins, expenses), design (theme editor + live preview + branding upload), settings (general/commerce/pages/shipping), staff (invite/role/remove). Shell: Suspense frame (`instant = false`), mobile Sheet nav, DropdownMenu user menu, breadcrumbs, shared `StatusTabs`/DataTable/toolbar/dialog components under `src/components/admin/shared/`.
-- **Multi-store (hidden)**: `/admin/stores` list + 7-step create wizard + domain actions, gated by `FEATURE_MULTI_STORE` AND platform owner (`requireMultiStore`). On locally (`.env.local`) so `testuser@gmail.com` (platform owner on the cloud project, password `12345678`) can use it; keep it off in Vercel.
+- **Multi-store (owner-only, visible since 2026-09-10)**: `/admin/stores` list + 7-step create wizard + domain actions, gated by platform owner only (`requireMultiStore`). `testuser@gmail.com` (platform owner on the cloud project, password `12345678`) sees "Create store" on Vercel too; the env flag is gone.
 - **Themes B–D (2026-09-08, late)**: every section now has `bold`, `editorial` and `playful` variants (48 files, all registered; the design editor and wizard show no "coming soon"). Verified in `/en|fa/preview/<variant>` at 390/1280: no overflow, no native controls. Theme fonts now really apply to the storefront.
 - **Speed pass (2026-09-08, late)**: `staleTimes`; Settings is one page with four pre-rendered panels (`?tab=`, old sub-routes redirect); Orders/Products/Reviews preload every status bucket and switch tabs with zero requests; optimistic featured/active/tracking switches, product status, review moderation, order status transitions and staff roles, all with rollback; sidebar links show a pending pulse. Verified with `node_modules/.qa/speed-qa.mjs`.
 - **Navigation speed (2026-09-08, night)**: sidebar click → painted page went from ~1.3 s to ~130 ms on Vercel (full prefetch + router cache); raw server render of an admin page from ~1.0–1.4 s to ~0.2–0.4 s (region fra1, local JWT verification, cached store list, single query wave). Measure with `node_modules/.qa/nav-timing.mjs <base> <rounds> <settleMs>`.
@@ -203,7 +204,7 @@ In progress: nothing. Not started: iyzico, rich text editor, CSV export, DNS ver
 ## Deliberately partial — grows later (scope ledger)
 | Area | What shipped now | Intended full shape | Grows in |
 |---|---|---|---|
-| Multi-store | Built, hidden behind `FEATURE_MULTI_STORE` + Owner | Visible "Create store" wizard, domains UI | When client pays |
+| Multi-store | Visible to platform owners: "Create store" wizard, switcher, domains dialog | Automatic DNS/TLS verification, wildcard domain | When client pays for custom domains |
 | Payments | `manual` provider (order = pending_payment, admin marks paid) | iyzico checkout + webhooks + refunds | When client supplies iyzico credentials |
 | Footer content | Address, hours, socials (5 networks), trust strip (≤4), payment badges from settings | Contact page/route, map embed, more networks | When asked |
 | Themes | Four structurally distinct layouts per section, previewed for real in admin | Per-section options (e.g. hero height, card aspect), theme-specific animations | As requested |

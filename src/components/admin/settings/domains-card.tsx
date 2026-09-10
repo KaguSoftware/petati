@@ -5,8 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Link } from "@/i18n/navigation";
 
 /**
- * SCOPE(multi-store, unpaid): rendered only when the admin context says `multiStore` (flag on AND
- * Owner). Domain actions live in the stores module; this card only links there.
+ * Rendered only when the admin context says `multiStore` (platform owner). Domain actions live in the stores module; this card only links there.
  */
 export async function DomainsCard({ slug }: { slug: string }) {
   const t = await getTranslations("admin.settings.domains");

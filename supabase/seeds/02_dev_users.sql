@@ -4,7 +4,7 @@
 -- GoTrue cannot scan NULL token columns, so every manual insert sets them to '' (else sign-in
 -- fails with "Database error querying schema").
 -- Demo users (password for all: "password123"):
---   owner@petitati.local    platform owner (sees hidden multi-store UI when FEATURE_MULTI_STORE=true)
+--   owner@petitati.local    platform owner (sees the multi-store UI)
 --   manager@petitati.local  manager of the "default" store
 --   staff@petitati.local    staff of the "default" store
 --   customer@petitati.local a shopper

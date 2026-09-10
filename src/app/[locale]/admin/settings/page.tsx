@@ -59,7 +59,7 @@ async function Content({ locale }: { locale: string }) {
           />
           <div className="flex flex-col gap-6">
             <PaymentsCard />
-            {/* SCOPE(multi-store, unpaid): never rendered for the client (flag off). */}
+            {/* Owner-only. */}
             {ctx.multiStore && <DomainsCard slug={store.slug} />}
           </div>
         </div>

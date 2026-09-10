@@ -6,7 +6,7 @@ import { SECTION_KEYS, VARIANT_KEYS, themeColorsSchema, type SectionKey, type Va
 /**
  * Create-store wizard validation. Plain module: imported by the client wizard (per-step checks)
  * and by the server action (whole payload). Every message is a key under `stores.fieldErrors.*`.
- * SCOPE(multi-store, unpaid): hidden behind FEATURE_MULTI_STORE + Owner.
+ * Owner-only store management.
  */
 
 export const CURRENCIES = ["TRY", "USD", "EUR", "GBP", "IRR", "AED", "SAR"] as const;
