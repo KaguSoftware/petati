@@ -41,13 +41,13 @@ export function AdminShell({ locale, user, role, store, stores, multiStore, chil
 
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="hidden w-60 shrink-0 flex-col border-e bg-sidebar text-sidebar-foreground md:flex">
+      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col self-start border-e bg-sidebar text-sidebar-foreground md:flex">
         <div className="flex h-14 shrink-0 items-center gap-2 border-b px-4 font-semibold">
           <Store className="size-5 shrink-0" />
           <span className="truncate">{store.name}</span>
         </div>
         {switcher && <div className="border-b p-2">{switcher}</div>}
-        <OverlayScroll className="flex-1">
+        <OverlayScroll className="min-h-0 flex-1">
           <AdminSidebarNav items={nav} className="p-2" />
         </OverlayScroll>
         <div className="border-t p-2">
