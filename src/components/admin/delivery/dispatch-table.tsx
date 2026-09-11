@@ -90,7 +90,7 @@ export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, 
           {
             key: "cash",
             className: "text-end",
-            header: t("delivery.cash"),
+            header: t("delivery.cashLabel"),
             cell: (r: DeliveryListRow) =>
               r.cash_expected > 0 ? (
                 <span className="tabular-nums">{formatMoney(r.cash_collected ?? r.cash_expected, r.currency, locale)}</span>

@@ -1,4 +1,4 @@
-import type { CourierRow, DeliveryFailure, DeliveryRow, DeliveryState, OrderStatus } from "@/lib/db/types";
+import type { CourierRow, DeliveryFailure, DeliveryRow, DeliveryState, OrderAddress, OrderStatus } from "@/lib/db/types";
 
 export const DELIVERY_STATES: readonly DeliveryState[] = ["pending", "assigned", "out_for_delivery", "delivered", "failed", "returned", "cancelled"];
 
@@ -36,6 +36,8 @@ export interface DeliveryListRow extends DeliveryRow {
   customer_name: string | null;
   phone: string | null;
   city: string | null;
+  /** Snapshot the parcel is actually going to. */
+  address: OrderAddress | null;
   courier_name: string | null;
 }
 

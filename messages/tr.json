@@ -1255,7 +1255,8 @@
         "commerce": "Ticaret",
         "pages": "Sayfalar",
         "shipping": "Kargo",
-        "footer": "İletişim ve altbilgi"
+        "footer": "İletişim ve altbilgi",
+        "delivery": "Teslimat"
       },
       "general": {
         "identity": "Kimlik",
@@ -1464,7 +1465,9 @@
         "settled": "Mutabık",
         "none": "Bekleyen tahsilat yok.",
         "short": "Eksik",
-        "history": "Son mutabakatlar"
+        "history": "Son mutabakatlar",
+        "expected": "Beklenen",
+        "collected": "Tahsil edilen"
       },
       "collected": "Tahsil edilen",
       "expected": "Beklenen",
@@ -1571,7 +1574,11 @@
         "postponed": "Ertelendi",
         "unsafe": "Güvenle ulaşılamadı",
         "other": "Diğer"
-      }
+      },
+      "title": "Teslimat",
+      "proofPhoto": "Kanıt fotoğrafı",
+      "proofLocation": "Teslim konumu",
+      "cashLabel": "Nakit"
     }
   },
   "shop": {

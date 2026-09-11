@@ -6,6 +6,8 @@ import { FooterForm } from "@/components/admin/settings/footer-form";
 import { GeneralForm } from "@/components/admin/settings/general-form";
 import { PagesForm } from "@/components/admin/settings/pages-form";
 import { PaymentsCard } from "@/components/admin/settings/payments-card";
+import { DeliveryForm } from "@/components/admin/settings/delivery-form";
+import { deliveryFromSettings } from "@/lib/delivery/settings";
 import { ShippingRates } from "@/components/admin/settings/shipping-rates";
 import { PageHeader } from "@/components/admin/shared/page-header";
 import { TabbedPanels } from "@/components/admin/shared/tabbed-panels";
@@ -99,6 +101,15 @@ async function Content({ locale }: { locale: string }) {
       value: "shipping",
       label: t("shipping"),
       content: <ShippingRates storeId={store.id} currency={store.currency} locale={ctx.locale} enabledLocales={store.enabled_locales} rates={rates} />,
+    },
+    {
+      value: "delivery",
+      label: t("delivery"),
+      content: (
+        <div className="max-w-3xl">
+          <DeliveryForm storeId={store.id} settings={deliveryFromSettings(store.settings)} locale={ctx.locale} />
+        </div>
+      ),
     },
   ];
 

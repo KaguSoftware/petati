@@ -1255,7 +1255,8 @@
         "commerce": "Commerce",
         "pages": "Pages",
         "shipping": "Shipping",
-        "footer": "Contact & footer"
+        "footer": "Contact & footer",
+        "delivery": "Delivery"
       },
       "general": {
         "identity": "Identity",
@@ -1464,7 +1465,9 @@
         "settled": "Settled",
         "none": "No cash outstanding.",
         "short": "Short",
-        "history": "Recent settlements"
+        "history": "Recent settlements",
+        "expected": "Expected",
+        "collected": "Collected"
       },
       "collected": "Collected",
       "expected": "Expected",
@@ -1571,7 +1574,11 @@
         "postponed": "Postponed",
         "unsafe": "Could not reach safely",
         "other": "Other"
-      }
+      },
+      "title": "Delivery",
+      "proofPhoto": "Proof photo",
+      "proofLocation": "Location at handover",
+      "cashLabel": "Cash"
     }
   },
   "shop": {

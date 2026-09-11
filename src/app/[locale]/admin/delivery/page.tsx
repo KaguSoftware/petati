@@ -4,11 +4,12 @@ import { PageHeader } from "@/components/admin/shared/page-header";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { TabbedPanels } from "@/components/admin/shared/tabbed-panels";
 import { DeliveryKpiRow } from "@/components/admin/delivery/delivery-kpis";
+import { DeliveryStatsPanel } from "@/components/admin/delivery/delivery-stats";
 import { DispatchTable } from "@/components/admin/delivery/dispatch-table";
 import { QueueTable } from "@/components/admin/delivery/queue-table";
 import { DeliveryNavActions } from "@/components/admin/delivery/delivery-nav-actions";
 import { requireAdminPage } from "@/lib/admin/context";
-import { getDeliveryKpis, listCouriers, listDeliveries, listUndeliveredOrders, storeToday } from "@/lib/admin/delivery/queries";
+import { getDeliveryKpis, getDeliveryStats, listCouriers, listDeliveries, listUndeliveredOrders, storeToday } from "@/lib/admin/delivery/queries";
 import { deliveryFromSettings } from "@/lib/delivery/settings";
 import { can } from "@/lib/auth/permissions";
 
@@ -40,7 +41,7 @@ async function Board({ locale }: { locale: string }) {
   const today = storeToday(ctx.store.timezone);
   const tomorrow = storeToday(ctx.store.timezone, settings.leadDays);
 
-  const [kpis, couriers, queue, assigned, out, failed, done, t] = await Promise.all([
+  const [kpis, couriers, queue, assigned, out, failed, done, stats, t] = await Promise.all([
     getDeliveryKpis(ctx.store.id, ctx.store.timezone),
     listCouriers(ctx.store.id, false),
     listUndeliveredOrders(ctx.store.id),
@@ -48,6 +49,7 @@ async function Board({ locale }: { locale: string }) {
     listDeliveries(ctx.store.id, { states: ["out_for_delivery"] }),
     listDeliveries(ctx.store.id, { states: ["failed", "returned"] }),
     listDeliveries(ctx.store.id, { states: ["delivered"], limit: 25 }),
+    getDeliveryStats(ctx.store.id, ctx.store.timezone),
     getTranslations("admin"),
   ]);
 
@@ -66,6 +68,7 @@ async function Board({ locale }: { locale: string }) {
     <div className="flex flex-col gap-6">
       <DeliveryKpiRow kpis={kpis} currency={ctx.store.currency} locale={ctx.locale} />
       <TabbedPanels label={t("common.status")} param="bucket" defaultValue="needs" panels={panels} />
+      <DeliveryStatsPanel stats={stats} locale={ctx.locale} currency={ctx.store.currency} />
     </div>
   );
 }

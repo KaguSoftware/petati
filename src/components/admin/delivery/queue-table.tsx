@@ -63,7 +63,7 @@ export async function QueueTable({ rows, storeId, locale, canAssign, couriers, t
           {
             key: "cash",
             className: "text-end",
-            header: t("delivery.cash"),
+            header: t("delivery.cashLabel"),
             cell: (r: UndeliveredOrderRow) => (r.cash_expected > 0 ? <span className="tabular-nums">{formatMoney(r.cash_expected, r.currency, locale)}</span> : <span className="text-muted-foreground">—</span>),
             hideBelow: "lg" as const,
           } satisfies Column<UndeliveredOrderRow>,

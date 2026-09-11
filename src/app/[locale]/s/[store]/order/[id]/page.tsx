@@ -4,6 +4,8 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { storeContext, type StoreContext } from "@/lib/tenant/context";
 import { getOrderForViewer } from "@/lib/account/queries";
+import { getOrderDeliveries } from "@/lib/account/delivery";
+import { DeliveryProgress } from "@/components/storefront/shared/delivery-progress";
 import { formatMoney } from "@/lib/money";
 import { pickJson } from "@/lib/catalog/types";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +30,14 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/[l
 
 async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: string; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { store, locale, fallback } = ctx;
-  const [t, ts, tc, order, sp] = await Promise.all([getTranslations("order"), getTranslations("orderStatus"), getTranslations("cart"), getOrderForViewer(store.id, id), searchParams]);
+  const [t, ts, tc, order, deliveries, sp] = await Promise.all([
+    getTranslations("order"),
+    getTranslations("orderStatus"),
+    getTranslations("cart"),
+    getOrderForViewer(store.id, id),
+    getOrderDeliveries(store.id, id),
+    searchParams,
+  ]);
   if (!order) notFound();
   const money = (n: number) => formatMoney(n, order.currency, locale);
   const a = order.shipping_address;
@@ -67,6 +76,8 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
           <p className="text-sm text-muted-foreground">{t("deliveryCodeHint")}</p>
         </section>
       )}
+
+      <DeliveryProgress attempts={deliveries} locale={locale} />
 
       <section className="rounded-xl border">
         <ul className="divide-y">

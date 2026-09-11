@@ -40,13 +40,11 @@ interface Props {
  */
 export function CashSheet({ storeId, courier, rows, expectedLabel, collectedTotal, collectedLabel, currency }: Props) {
   const t = useTranslations("admin.delivery.cash");
-  const tc = useTranslations("admin.common");
   const { run, pending } = useOptimisticAction("admin.delivery");
   const [picked, setPicked] = useState<Set<string>>(new Set(rows.map((r) => r.id)));
   const [received, setReceived] = useState(String(toMajor(collectedTotal, currency)));
 
   const chosen = rows.filter((r) => picked.has(r.id));
-  const chosenTotal = chosen.reduce((s, r) => s + r.collected, 0);
 
   function toggle(id: string) {
     setPicked((prev) => {
@@ -113,7 +111,6 @@ export function CashSheet({ storeId, courier, rows, expectedLabel, collectedTota
           </Button>
         </div>
       </div>
-      <p className="sr-only">{tc("total")}: {chosenTotal}</p>
     </section>
   );
 }

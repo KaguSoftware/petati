@@ -35,6 +35,7 @@ function flatten(row: JoinedDelivery): DeliveryListRow {
     customer_name: o?.customers?.full_name ?? address?.full_name ?? null,
     phone: address?.phone ?? o?.phone ?? null,
     city: address?.city ?? null,
+    address,
     courier_name: row.couriers?.name ?? null,
   };
 }

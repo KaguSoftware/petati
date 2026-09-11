@@ -10,6 +10,7 @@ import { catalogTag } from "@/lib/catalog/queries";
 import type { Translated } from "@/lib/db/types";
 import { storeCacheTag } from "@/lib/tenant/store";
 import { footerFromInput, footerInputSchema, footerToSettings } from "@/lib/theme/footer";
+import { deliveryFromInput, deliveryInputSchema, deliveryToSettings } from "@/lib/delivery/settings";
 import { CONTENT_PAGES, CURRENCIES, EMAIL_FROM_RE } from "./constants";
 
 const localeEnum = z.enum(locales);
@@ -157,6 +158,30 @@ export async function updateFooterAction(_prev: ActionState, formData: FormData)
     const store = await loadStore(db, storeId);
     if (!store) return { error: "notFound" };
     const settings = { ...(store.settings ?? {}), ...footerToSettings(footerFromInput(footer)) };
+    const { error } = await db.from("stores").update({ settings }).eq("id", storeId);
+    if (error) throw error;
+    invalidateStore(store.slug);
+    return { ok: true };
+  } catch (err) {
+    return { error: actionError(err) };
+  }
+}
+
+
+/**
+ * Delivery settings (time slots, the wrong-code limit, cash on delivery) as one JSON payload, merged
+ * into stores.settings exactly like the footer. The attempt limit stops being a hard constant here:
+ * DELIVERY_ATTEMPT_LIMIT becomes the default rather than the law.
+ */
+export async function updateDeliverySettingsAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = parseForm(z.object({ storeId: uuidField, delivery: jsonField(deliveryInputSchema) }), formData);
+  if (!parsed.data) return { error: "invalid", fieldErrors: parsed.fieldErrors };
+  const { storeId, delivery } = parsed.data;
+  try {
+    const { db } = await adminMutation(storeId, "store.settings");
+    const store = await loadStore(db, storeId);
+    if (!store) return { error: "notFound" };
+    const settings = { ...(store.settings ?? {}), ...deliveryToSettings(deliveryFromInput(delivery)) };
     const { error } = await db.from("stores").update({ settings }).eq("id", storeId);
     if (error) throw error;
     invalidateStore(store.slug);

@@ -48,7 +48,7 @@ function Card({ title, children, className = "" }: { title: React.ReactNode; chi
   );
 }
 
-export async function OrderDetail({ order, storeId, locale }: { order: OrderDetailData; storeId: string; locale: Locale }) {
+export async function OrderDetail({ order, storeId, locale, delivery }: { order: OrderDetailData; storeId: string; locale: Locale; delivery?: React.ReactNode }) {
   const t = await getTranslations("admin");
   const tc = await getTranslations("cart");
   const money = (n: number) => formatMoney(n, order.currency, locale);
@@ -197,6 +197,7 @@ export async function OrderDetail({ order, storeId, locale }: { order: OrderDeta
             </ul>
           )}
         </Card>
+        {delivery}
         {order.status !== "cancelled" && order.status !== "refunded" && (
           <Card title={t("orders.deliveryCode")}>
             <DeliveryCodeCard
