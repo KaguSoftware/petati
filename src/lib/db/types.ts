@@ -422,3 +422,83 @@ export interface CouponRedemptionRow {
   amount: number;
   created_at: string;
 }
+
+// ---------- delivery (couriers, delivery jobs, log, cash settlements) ----------
+
+export type DeliveryState = "pending" | "assigned" | "out_for_delivery" | "delivered" | "failed" | "returned" | "cancelled";
+export type DeliveryFailure = "no_answer" | "wrong_address" | "refused" | "postponed" | "unsafe" | "other";
+export type CourierVehicle = "motorbike" | "car" | "van" | "bicycle" | "on_foot";
+
+export interface CourierRow {
+  id: string;
+  store_id: string;
+  name: string;
+  phone: string | null;
+  vehicle: CourierVehicle | null;
+  /** Set only when the courier also has a staff account. */
+  user_id: string | null;
+  /** Addresses this courier's stop list; PII-bearing, so it can be rotated and deactivated. */
+  token: string;
+  token_issued_at: string;
+  is_active: boolean;
+  note: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** One delivery job. An order gets a new row per attempt cycle; only one may be open at a time. */
+export interface DeliveryRow {
+  id: string;
+  store_id: string;
+  order_id: string;
+  courier_id: string | null;
+  state: DeliveryState;
+  /** Store-local date (YYYY-MM-DD), not UTC. */
+  scheduled_for: string | null;
+  slot: string | null;
+  sort_order: number;
+  attempt_no: number;
+  /** Minor units to collect at the door; 0 when the order is already paid. */
+  cash_expected: number;
+  cash_collected: number | null;
+  settlement_id: string | null;
+  /** True only when the customer's delivery code was used. */
+  verified: boolean;
+  recipient_name: string | null;
+  failure_reason: DeliveryFailure | null;
+  note: string | null;
+  photo_url: string | null;
+  lat: number | null;
+  lng: number | null;
+  assigned_at: string | null;
+  dispatched_at: string | null;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type DeliveryEventType = "created" | "assigned" | "unassigned" | "scheduled" | "dispatched" | "delivered" | "failed" | "returned" | "cancelled" | "cash" | "settled" | "note";
+
+export interface DeliveryEventRow {
+  id: string;
+  store_id: string;
+  delivery_id: string;
+  type: DeliveryEventType | string;
+  data: Record<string, unknown>;
+  /** Null when the courier wrote it (they have no profile) — `courier_id` says who instead. */
+  actor_id: string | null;
+  courier_id: string | null;
+  created_at: string;
+}
+
+export interface DeliverySettlementRow {
+  id: string;
+  store_id: string;
+  courier_id: string;
+  amount: number;
+  currency: string;
+  deliveries_count: number;
+  settled_by: string | null;
+  note: string | null;
+  created_at: string;
+}

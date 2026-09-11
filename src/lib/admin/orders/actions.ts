@@ -10,6 +10,8 @@ import type { OrderItemRow, OrderRow, OrderStatus, PaymentRow } from "@/lib/db/t
 import { confirmDeliveryWithCode, markDelivered } from "@/lib/delivery/confirm";
 import { getProviderByKey } from "@/lib/payments";
 import { notifyCustomer } from "@/lib/orders/notify";
+import { markOrderPaid } from "@/lib/orders/pay";
+import { markShipped } from "@/lib/orders/ship";
 import { canTransition, ORDER_STATUSES, REFUNDABLE, RESTOCK_ON_CANCEL } from "./transitions";
 
 /** Most a single bulk call may touch: one page of the list, with room to spare. */
@@ -52,19 +54,10 @@ export async function markPaidAction(_prev: ActionState, formData: FormData): Pr
     if (!order) return { error: "notFound" };
     if (!canTransition(order.status, "paid")) return { error: "transition" };
 
-    const { data: payment } = await db.from("payments").select("*").eq("order_id", order.id).eq("store_id", storeId).order("created_at", { ascending: false }).limit(1).maybeSingle<PaymentRow>();
-    if (!payment) return { error: "noPayment" };
-    const provider = getProviderByKey(payment.provider);
-    if (!provider) return { error: "noPayment" };
-    const { providerRef } = await provider.markPaid(payment, reference);
-
-    const now = new Date().toISOString();
-    await db.from("payments").update({ status: "paid", provider_ref: providerRef }).eq("id", payment.id);
-    await db.from("orders").update({ status: "paid", paid_at: now }).eq("id", order.id);
-    await logEvent(db, order.id, user.id, "payment", { status: "paid", reference: providerRef });
-    await notifyCustomer(db, order, "paid");
+    const result = await markOrderPaid(db, order, reference, user.id);
     refresh();
-    return { ok: true };
+    // "alreadyPaid" is not a failure: the money was already recorded, the button was pressed twice.
+    return result === "noPayment" ? { error: "noPayment" } : { ok: true };
   } catch (err) {
     return { error: actionError(err) };
   }
@@ -123,9 +116,7 @@ export async function shipOrderAction(_prev: ActionState, formData: FormData): P
     const costParsed = parseForm(z.object({ shipping_cost: optionalMoneyField(order.currency) }), formData);
     if (!costParsed.data) return { error: "invalid", fieldErrors: costParsed.fieldErrors };
     const shipping_cost = costParsed.data.shipping_cost ?? order.shipping_cost ?? 0;
-    await db.from("orders").update({ status: "shipped", shipped_at: new Date().toISOString(), tracking_number, tracking_url, shipping_cost }).eq("id", order.id);
-    await logEvent(db, order.id, user.id, "shipment", { tracking_number, tracking_url, shipping_cost });
-    await notifyCustomer(db, order, "shipped", { trackingNumber: tracking_number, trackingUrl: tracking_url });
+    await markShipped(db, order, user.id, { trackingNumber: tracking_number, trackingUrl: tracking_url, shippingCost: shipping_cost });
     refresh();
     return { ok: true };
   } catch (err) {
@@ -255,8 +246,7 @@ export async function bulkUpdateOrderStatusAction(_prev: ActionState, formData: 
     const ids = eligible.map((o) => o.id);
     const now = new Date().toISOString();
     if (status === "shipped") {
-      await db.from("orders").update({ status, shipped_at: now }).in("id", ids);
-      await db.from("order_events").insert(eligible.map((o) => ({ order_id: o.id, actor_id: user.id, type: "shipment", data: { bulk: true } })));
+      for (const order of eligible) await markShipped(db, order, user.id, { event: { bulk: true } });
     } else if (status === "delivered") {
       await db.from("orders").update({ status, delivered_at: now, delivered_by: "manual", delivery_attempts: 0 }).in("id", ids);
       await db.from("order_events").insert(eligible.map((o) => ({ order_id: o.id, actor_id: user.id, type: "status_changed", data: { from: o.status, to: status, method: "manual" } })));
@@ -267,8 +257,9 @@ export async function bulkUpdateOrderStatusAction(_prev: ActionState, formData: 
     }
 
     // One mail per order, after the data is safe. `sendEmail` swallows its own failures, so a dead
-    // mail provider can never undo a status move that already happened.
-    for (const order of eligible) await notifyCustomer(db, order, status);
+    // mail provider can never undo a status move that already happened. `shipped` already mailed
+    // inside markShipped, so it is excluded here.
+    if (status !== "shipped") for (const order of eligible) await notifyCustomer(db, order, status);
 
     refresh();
     return { ok: true, changed: eligible.length, skipped };

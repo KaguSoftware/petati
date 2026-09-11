@@ -254,7 +254,8 @@
       "signOut": "Çıkış yap",
       "switchStore": "Mağaza değiştir",
       "createStore": "Mağaza oluştur",
-      "storefront": "Mağazayı aç"
+      "storefront": "Mağazayı aç",
+      "delivery": "Teslimat"
     },
     "common": {
       "actions": "İşlemler",
@@ -326,7 +327,11 @@
       "expenses": "Giderler",
       "commerce": "Ticaret",
       "pages": "Sayfalar",
-      "shipping": "Kargo"
+      "shipping": "Kargo",
+      "couriers": "Kuryeler",
+      "runs": "Turlar",
+      "cash": "Nakit",
+      "log": "Kayıt"
     },
     "status": {
       "order": {
@@ -369,6 +374,15 @@
       "store": {
         "active": "Aktif",
         "inactive": "Pasif"
+      },
+      "delivery": {
+        "pending": "Planlanmadı",
+        "assigned": "Atandı",
+        "out_for_delivery": "Dağıtımda",
+        "delivered": "Teslim edildi",
+        "failed": "Başarısız",
+        "returned": "İade edildi",
+        "cancelled": "İptal edildi"
       }
     },
     "dashboard": {
@@ -1368,6 +1382,20 @@
           "invalidUrl": "Geçerli bir bağlantı girin.",
           "socialHost": "Bu bağlantı o ağa ait değil."
         }
+      },
+      "delivery": {
+        "nav": "Teslimat",
+        "slots": "Zaman aralıkları",
+        "slotsHint": "Teslimat planlarken sunulur. En fazla altı.",
+        "slotLabel": "Etiket",
+        "slotFrom": "Başlangıç",
+        "slotTo": "Bitiş",
+        "addSlot": "Aralık ekle",
+        "attemptLimit": "Hatalı kod sınırı",
+        "attemptLimitHint": "Müşterinin kodu kilitlenmeden önceki hatalı deneme sayısı.",
+        "cod": "Kapıda ödeme",
+        "codHint": "Panoda ve kurye telefonunda nakit alanlarını göster.",
+        "leadDays": "Varsayılan hazırlık (gün)"
       }
     },
     "staff": {
@@ -1402,6 +1430,147 @@
         "inviteFailed": "Davet e-postası gönderilemedi. Adresi kontrol edip tekrar deneyin.",
         "isOwner": "Bu kişi bir platform sahibi ve zaten erişimi var.",
         "self": "Kendi üyeliğinizi değiştiremezsiniz."
+      }
+    },
+    "delivery": {
+      "description": "Günün turlarını planlayın, kurye atayın ve durakları kapatın.",
+      "bucket": {
+        "needs": "Kurye bekliyor",
+        "assigned": "Atandı",
+        "out_for_delivery": "Dağıtımda",
+        "failed": "Başarısız",
+        "done": "Tamamlandı"
+      },
+      "kpi": {
+        "out": "Dağıtımda",
+        "scheduled": "Bugün planlanan",
+        "delivered": "Bugün teslim edilen",
+        "failed": "Bugün başarısız",
+        "unverified": "Kodsuz kapatılan",
+        "cash": "Tahsil edilecek"
+      },
+      "courier": "Kurye",
+      "noCourier": "Kurye yok",
+      "recipient": "Alıcı",
+      "address": "Adres",
+      "slot": "Zaman aralığı",
+      "scheduledFor": "Planlanan",
+      "attempt": "Deneme",
+      "cash": {
+        "title": "Nakit",
+        "subtitle": "Her kuryenin tahsil ettiği ve henüz teslim etmediği tutar.",
+        "received": "Alınan tutar",
+        "settle": "Mutabakat",
+        "settled": "Mutabık",
+        "none": "Bekleyen tahsilat yok.",
+        "short": "Eksik",
+        "history": "Son mutabakatlar"
+      },
+      "collected": "Tahsil edilen",
+      "expected": "Beklenen",
+      "verified": "Kodla doğrulandı",
+      "unverified": "Kodsuz kapatıldı",
+      "assign": "Ata",
+      "unassign": "Atamayı kaldır",
+      "dispatch": "Dağıtıma çıkar",
+      "redeliver": "Yeniden teslim et",
+      "date": {
+        "today": "Bugün",
+        "tomorrow": "Yarın"
+      },
+      "empty": {
+        "needs": "Her siparişin kuryesi var.",
+        "needsHint": "Ödenmiş ve kargolanmış siparişler atanana kadar burada görünür.",
+        "day": "Burada bir şey yok."
+      },
+      "couriers": {
+        "title": "Kuryeler",
+        "new": "Yeni kurye",
+        "name": "Ad",
+        "phone": "Telefon",
+        "vehicle": "Araç",
+        "active": "Aktif",
+        "openStops": "Açık durak",
+        "cashHeld": "Üzerindeki nakit",
+        "link": "Özel bağlantı",
+        "linkHint": "Bu bağlantıya sahip herkes bu kuryenin duraklarını yürütebilir. Doğrudan kendisine gönderin.",
+        "copy": "Bağlantıyı kopyala",
+        "rotate": "Yeni bağlantı",
+        "rotateConfirm": "Bağlantı değiştirilsin mi?",
+        "rotateHint": "Eski bağlantı hemen geçersiz olur.",
+        "rotated": "Yeni bağlantı oluşturuldu",
+        "delete": "Kuryeyi sil",
+        "deleteConfirm": "{name} silinsin mi?",
+        "none": "Henüz kurye yok.",
+        "noneHint": "Paketlerinizi taşıyan kişileri ekleyin.",
+        "note": "Not"
+      },
+      "run": {
+        "title": "Tur listesi",
+        "print": "Tur listesini yazdır",
+        "stops": "{count} durak",
+        "moveUp": "Yukarı taşı",
+        "moveDown": "Aşağı taşı",
+        "codeBox": "Teslimat kodu",
+        "instruction": "Müşteriden teslimat kodunu isteyin ve buraya yazın."
+      },
+      "log": {
+        "title": "Teslimat kaydı",
+        "hint": "Bir teslimattaki her değişiklik, en yenisi üstte.",
+        "event": "Olay",
+        "none": "Henüz kayıt yok.",
+        "system": "Kurye uygulaması"
+      },
+      "event": {
+        "created": "Durak oluşturuldu",
+        "assigned": "Atandı",
+        "unassigned": "Atama kaldırıldı",
+        "dispatched": "Dağıtıma çıktı",
+        "delivered": "Teslim edildi",
+        "failed": "Başarısız deneme",
+        "returned": "İade edildi",
+        "cancelled": "İptal edildi",
+        "settled": "Nakit mutabakatı",
+        "note": "Not"
+      },
+      "stats": {
+        "title": "Son 30 gün",
+        "delivered": "Teslim edilen",
+        "failed": "Başarısız deneme",
+        "verifiedRate": "Kodla doğrulanan",
+        "avgHours": "Ort. kargo-teslim",
+        "hours": "{count} sa",
+        "league": "Kuryeler",
+        "stops": "Durak",
+        "none": "Henüz teslimat yok."
+      },
+      "bulk": {
+        "selected": "{count} seçildi",
+        "clear": "Temizle",
+        "done": "{changed} güncellendi, {skipped} atlandı",
+        "pickCourier": "Kurye seçin"
+      },
+      "errors": {
+        "transition": "Bu geçiş mevcut durumdan yapılamaz.",
+        "inactiveCourier": "Bu kurye aktif değil.",
+        "hasDeliveries": "Bu kuryenin teslimatları var — bunun yerine pasifleştirin.",
+        "openDelivery": "Bu siparişin zaten açık bir teslimatı var.",
+        "stale": "Siz çalışırken liste değişti. Sayfayı yenileyin."
+      },
+      "vehicle": {
+        "motorbike": "Motosiklet",
+        "car": "Otomobil",
+        "van": "Panelvan",
+        "bicycle": "Bisiklet",
+        "on_foot": "Yaya"
+      },
+      "failureReason": {
+        "no_answer": "Cevap yok",
+        "wrong_address": "Adres hatalı",
+        "refused": "Kabul edilmedi",
+        "postponed": "Ertelendi",
+        "unsafe": "Güvenle ulaşılamadı",
+        "other": "Diğer"
       }
     }
   },
@@ -1438,7 +1607,14 @@
     "tracking": "Kargo takip",
     "deliveryCode": "Teslimat kodu",
     "deliveryCodeHint": "Siparişiniz geldiğinde bu kodu kuryeye söyleyin.",
-    "print": "Yazdır"
+    "print": "Yazdır",
+    "delivery": "Teslimat",
+    "outForDelivery": "Dağıtımda",
+    "attemptLine": "{n}. deneme",
+    "deliveredTo": "{name} teslim aldı",
+    "withCode": "kodunuzla doğrulandı",
+    "withoutCode": "kurye tarafından kodsuz onaylandı",
+    "scheduled": "{date} için planlandı"
   },
   "stores": {
     "title": "Mağazalar",
@@ -1690,5 +1866,69 @@
     "invalid": "Sipariş numarası ile kod eşleşmiyor.",
     "locked": "Çok fazla hatalı deneme. Mağazadan yeni bir kod isteyin.",
     "notShipped": "Bu sipariş henüz dağıtımda değil."
+  },
+  "courier": {
+    "stopsLeft": "Kalan durak",
+    "doneToday": "Tamamlanan",
+    "toCollect": "Tahsil edilecek",
+    "startRun": "Tura başla",
+    "noStops": "Şu anda size atanmış durak yok.",
+    "closed": "Kapatılan",
+    "attempt": "{n}. deneme",
+    "collect": "{amount} tahsil et",
+    "paidOnline": "Ödendi",
+    "navigate": "Yol tarifi",
+    "deliver": "Teslim edildi",
+    "failed": "Başarısız",
+    "delivered": "Teslim edildi",
+    "closedWithCode": "{name} teslim aldı, kodla doğrulandı.",
+    "closedWithoutCode": "{name} teslim aldı, kod yok.",
+    "failureReason": {
+      "no_answer": "Cevap yok",
+      "wrong_address": "Adres hatalı",
+      "refused": "Kabul edilmedi",
+      "postponed": "Ertelendi",
+      "unsafe": "Güvenle ulaşılamadı",
+      "other": "Diğer"
+    },
+    "confirm": {
+      "title": "Teslimatı onayla",
+      "code": "Teslimat kodu",
+      "codeHint": "Müşteriye gönderilen altı hane.",
+      "triesLeft": "{count} deneme kaldı",
+      "recipient": "Teslim alan",
+      "cash": "Tahsil edilen",
+      "cashHint": "Beklenen: {amount}",
+      "note": "Not",
+      "photo": "Fotoğraf ekle",
+      "photoUploading": "Yükleniyor…",
+      "photoDone": "Fotoğraf eklendi",
+      "gpsOn": "Konum alındı.",
+      "gpsOff": "Konum alınamadı — sorun değil.",
+      "submit": "Teslimatı onayla"
+    },
+    "noCode": {
+      "toggle": "Müşteride kod yok",
+      "back": "Kodu gir",
+      "reason": "Neden kod yok?",
+      "placeholder": "Müşteri bulamadı, kapıcıya bırakıldı…",
+      "warning": "Bu teslimat mağazanın incelemesi için işaretlenecek."
+    },
+    "fail": {
+      "title": "Başarısız deneme kaydet",
+      "reason": "Ne oldu?",
+      "note": "Not",
+      "submit": "Kaydet"
+    },
+    "errors": {
+      "invalid": "Bu bağlantı veya durak geçerli değil.",
+      "wrongCode": "Kod eşleşmiyor.",
+      "locked": "Çok fazla hatalı deneme. Mağazadan yeni kod isteyin.",
+      "notShipped": "Bu durak dağıtımda değil.",
+      "alreadyClosed": "Bu durak zaten kapatıldı.",
+      "reasonRequired": "Lütfen kodun neden olmadığını yazın.",
+      "photoFailed": "Fotoğraf kaydedilemedi.",
+      "failed": "Bir şeyler ters gitti. Tekrar deneyin."
+    }
   }
 }

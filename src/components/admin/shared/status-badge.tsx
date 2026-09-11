@@ -2,12 +2,13 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export type StatusKind = "order" | "payment" | "product" | "review" | "stock" | "coupon" | "store";
+export type StatusKind = "order" | "delivery" | "payment" | "product" | "review" | "stock" | "coupon" | "store";
 
 type Tone = "neutral" | "info" | "success" | "warning" | "danger";
 
 const TONES: Record<StatusKind, Record<string, Tone>> = {
   order: { pending_payment: "warning", paid: "info", processing: "info", shipped: "info", delivered: "success", cancelled: "neutral", refunded: "danger" },
+  delivery: { pending: "neutral", assigned: "info", out_for_delivery: "info", delivered: "success", failed: "danger", returned: "warning", cancelled: "neutral" },
   payment: { pending: "warning", authorized: "info", paid: "success", failed: "danger", refunded: "danger", partially_refunded: "warning" },
   product: { draft: "neutral", active: "success", archived: "neutral" },
   review: { pending: "warning", approved: "success", rejected: "neutral" },

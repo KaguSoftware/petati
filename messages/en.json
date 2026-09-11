@@ -254,7 +254,8 @@
       "signOut": "Sign out",
       "switchStore": "Switch store",
       "createStore": "Create store",
-      "storefront": "Open storefront"
+      "storefront": "Open storefront",
+      "delivery": "Delivery"
     },
     "common": {
       "actions": "Actions",
@@ -326,7 +327,11 @@
       "expenses": "Expenses",
       "commerce": "Commerce",
       "pages": "Pages",
-      "shipping": "Shipping"
+      "shipping": "Shipping",
+      "couriers": "Couriers",
+      "runs": "Runs",
+      "cash": "Cash",
+      "log": "Log"
     },
     "status": {
       "order": {
@@ -369,6 +374,15 @@
       "store": {
         "active": "Active",
         "inactive": "Inactive"
+      },
+      "delivery": {
+        "pending": "Not scheduled",
+        "assigned": "Assigned",
+        "out_for_delivery": "Out for delivery",
+        "delivered": "Delivered",
+        "failed": "Failed",
+        "returned": "Returned",
+        "cancelled": "Cancelled"
       }
     },
     "dashboard": {
@@ -1368,6 +1382,20 @@
           "invalidUrl": "Enter a valid link.",
           "socialHost": "This link does not belong to that network."
         }
+      },
+      "delivery": {
+        "nav": "Delivery",
+        "slots": "Time slots",
+        "slotsHint": "Offered when scheduling a delivery. Up to six.",
+        "slotLabel": "Label",
+        "slotFrom": "From",
+        "slotTo": "To",
+        "addSlot": "Add slot",
+        "attemptLimit": "Wrong-code limit",
+        "attemptLimitHint": "Wrong tries before a customer's code locks.",
+        "cod": "Cash on delivery",
+        "codHint": "Show cash fields on the board and on the courier's phone.",
+        "leadDays": "Default lead time (days)"
       }
     },
     "staff": {
@@ -1402,6 +1430,147 @@
         "inviteFailed": "The invitation email could not be sent. Check the address and try again.",
         "isOwner": "This person is a platform owner and already has access.",
         "self": "You cannot change your own membership."
+      }
+    },
+    "delivery": {
+      "description": "Plan the day's runs, assign couriers and close stops.",
+      "bucket": {
+        "needs": "Needs a courier",
+        "assigned": "Assigned",
+        "out_for_delivery": "Out now",
+        "failed": "Failed",
+        "done": "Done"
+      },
+      "kpi": {
+        "out": "Out for delivery",
+        "scheduled": "Scheduled today",
+        "delivered": "Delivered today",
+        "failed": "Failed today",
+        "unverified": "Closed without a code",
+        "cash": "Cash to settle"
+      },
+      "courier": "Courier",
+      "noCourier": "No courier",
+      "recipient": "Recipient",
+      "address": "Address",
+      "slot": "Time slot",
+      "scheduledFor": "Scheduled",
+      "attempt": "Attempt",
+      "cash": {
+        "title": "Cash",
+        "subtitle": "What each courier collected and has not handed over yet.",
+        "received": "Amount received",
+        "settle": "Settle",
+        "settled": "Settled",
+        "none": "No cash outstanding.",
+        "short": "Short",
+        "history": "Recent settlements"
+      },
+      "collected": "Collected",
+      "expected": "Expected",
+      "verified": "Confirmed with the code",
+      "unverified": "Closed without a code",
+      "assign": "Assign",
+      "unassign": "Unassign",
+      "dispatch": "Out for delivery",
+      "redeliver": "Deliver again",
+      "date": {
+        "today": "Today",
+        "tomorrow": "Tomorrow"
+      },
+      "empty": {
+        "needs": "Every order has a courier.",
+        "needsHint": "Paid and shipped orders appear here until they are assigned.",
+        "day": "Nothing here."
+      },
+      "couriers": {
+        "title": "Couriers",
+        "new": "New courier",
+        "name": "Name",
+        "phone": "Phone",
+        "vehicle": "Vehicle",
+        "active": "Active",
+        "openStops": "Open stops",
+        "cashHeld": "Cash held",
+        "link": "Private link",
+        "linkHint": "Anyone with this link can work this courier's stops. Send it to them directly.",
+        "copy": "Copy link",
+        "rotate": "New link",
+        "rotateConfirm": "Replace this link?",
+        "rotateHint": "The old link stops working immediately.",
+        "rotated": "New link issued",
+        "delete": "Delete courier",
+        "deleteConfirm": "Delete {name}?",
+        "none": "No couriers yet.",
+        "noneHint": "Add the people who carry your parcels.",
+        "note": "Note"
+      },
+      "run": {
+        "title": "Run sheet",
+        "print": "Print run sheet",
+        "stops": "{count} stops",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "codeBox": "Delivery code",
+        "instruction": "Ask the customer for their delivery code and write it here."
+      },
+      "log": {
+        "title": "Delivery log",
+        "hint": "Every change to a delivery, newest first.",
+        "event": "Event",
+        "none": "Nothing recorded yet.",
+        "system": "Courier app"
+      },
+      "event": {
+        "created": "Stop created",
+        "assigned": "Assigned",
+        "unassigned": "Unassigned",
+        "dispatched": "Out for delivery",
+        "delivered": "Delivered",
+        "failed": "Failed attempt",
+        "returned": "Returned",
+        "cancelled": "Cancelled",
+        "settled": "Cash settled",
+        "note": "Note"
+      },
+      "stats": {
+        "title": "Last 30 days",
+        "delivered": "Delivered",
+        "failed": "Failed attempts",
+        "verifiedRate": "Confirmed with a code",
+        "avgHours": "Avg ship to delivery",
+        "hours": "{count} h",
+        "league": "Couriers",
+        "stops": "Stops",
+        "none": "No deliveries yet."
+      },
+      "bulk": {
+        "selected": "{count} selected",
+        "clear": "Clear",
+        "done": "{changed} updated, {skipped} skipped",
+        "pickCourier": "Choose a courier"
+      },
+      "errors": {
+        "transition": "That move is not allowed from the current state.",
+        "inactiveCourier": "That courier is not active.",
+        "hasDeliveries": "This courier has deliveries — deactivate them instead.",
+        "openDelivery": "This order already has an open delivery.",
+        "stale": "The sheet changed while you were working. Reload and try again."
+      },
+      "vehicle": {
+        "motorbike": "Motorbike",
+        "car": "Car",
+        "van": "Van",
+        "bicycle": "Bicycle",
+        "on_foot": "On foot"
+      },
+      "failureReason": {
+        "no_answer": "No answer",
+        "wrong_address": "Wrong address",
+        "refused": "Refused",
+        "postponed": "Postponed",
+        "unsafe": "Could not reach safely",
+        "other": "Other"
       }
     }
   },
@@ -1438,7 +1607,14 @@
     "tracking": "Tracking",
     "deliveryCode": "Delivery code",
     "deliveryCodeHint": "Give this code to the courier when your order arrives.",
-    "print": "Print"
+    "print": "Print",
+    "delivery": "Delivery",
+    "outForDelivery": "Out for delivery",
+    "attemptLine": "Attempt {n}",
+    "deliveredTo": "Handed to {name}",
+    "withCode": "confirmed with your code",
+    "withoutCode": "confirmed by the courier without a code",
+    "scheduled": "Scheduled for {date}"
   },
   "stores": {
     "title": "Stores",
@@ -1690,5 +1866,69 @@
     "invalid": "That order number and code do not match.",
     "locked": "Too many wrong tries. Ask the store to issue a new code.",
     "notShipped": "This order is not out for delivery."
+  },
+  "courier": {
+    "stopsLeft": "Stops left",
+    "doneToday": "Done",
+    "toCollect": "To collect",
+    "startRun": "Start the run",
+    "noStops": "Nothing assigned to you right now.",
+    "closed": "Closed",
+    "attempt": "Attempt {n}",
+    "collect": "Collect {amount}",
+    "paidOnline": "Paid",
+    "navigate": "Navigate",
+    "deliver": "Delivered",
+    "failed": "Failed",
+    "delivered": "Delivered",
+    "closedWithCode": "Handed to {name}, confirmed with the code.",
+    "closedWithoutCode": "Handed to {name}, no code.",
+    "failureReason": {
+      "no_answer": "No answer",
+      "wrong_address": "Wrong address",
+      "refused": "Refused",
+      "postponed": "Postponed",
+      "unsafe": "Could not reach safely",
+      "other": "Other"
+    },
+    "confirm": {
+      "title": "Confirm delivery",
+      "code": "Delivery code",
+      "codeHint": "The six digits the customer received.",
+      "triesLeft": "{count} tries left",
+      "recipient": "Handed to",
+      "cash": "Cash collected",
+      "cashHint": "Expected: {amount}",
+      "note": "Note",
+      "photo": "Add a photo",
+      "photoUploading": "Uploading…",
+      "photoDone": "Photo attached",
+      "gpsOn": "Location captured.",
+      "gpsOff": "Location unavailable — that is fine.",
+      "submit": "Confirm delivery"
+    },
+    "noCode": {
+      "toggle": "The customer has no code",
+      "back": "Enter the code instead",
+      "reason": "Why is there no code?",
+      "placeholder": "Customer could not find it, left with the doorman…",
+      "warning": "This delivery will be flagged for the store to review."
+    },
+    "fail": {
+      "title": "Record a failed attempt",
+      "reason": "What happened?",
+      "note": "Note",
+      "submit": "Save failed attempt"
+    },
+    "errors": {
+      "invalid": "That link or stop is not valid.",
+      "wrongCode": "That code does not match.",
+      "locked": "Too many wrong tries. Ask the store for a new code.",
+      "notShipped": "This stop is not out for delivery.",
+      "alreadyClosed": "This stop is already closed.",
+      "reasonRequired": "Please say why there is no code.",
+      "photoFailed": "The photo could not be saved.",
+      "failed": "Something went wrong. Try again."
+    }
   }
 }

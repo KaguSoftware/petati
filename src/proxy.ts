@@ -16,7 +16,9 @@ export const config = {
   matcher: ["/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.[a-z0-9]+$).*)"],
 };
 
-const SHARED_PREFIXES = ["/admin", "/auth", "/preview"]; // never rewritten into a store
+// Never rewritten into a store. `/courier` is here because a courier link carries its own tenant:
+// the token resolves the store, so the link works on any host the shop is served from.
+const SHARED_PREFIXES = ["/admin", "/auth", "/preview", "/courier"];
 
 export async function proxy(request: NextRequest) {
   const url = request.nextUrl;

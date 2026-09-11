@@ -22,6 +22,11 @@ export const PERMISSIONS = {
   "orders.read": ["owner", "manager", "staff"],
   "orders.update": ["owner", "manager", "staff"],
   "orders.refund": ["owner", "manager"],
+  "delivery.read": ["owner", "manager", "staff"],
+  "delivery.assign": ["owner", "manager", "staff"],
+  // Couriers and their links are an access-control surface; settling cash moves money.
+  "delivery.manage": ["owner", "manager"],
+  "delivery.cash": ["owner", "manager"],
   "customers.read": ["owner", "manager", "staff"],
   "customers.write": ["owner", "manager"],
   "coupons.manage": ["owner", "manager"],
@@ -51,6 +56,7 @@ export interface AdminNavItem {
 export const ADMIN_NAV: AdminNavItem[] = [
   { key: "dashboard", href: "/admin", permission: "orders.read", icon: "LayoutDashboard" },
   { key: "orders", href: "/admin/orders", permission: "orders.read", icon: "ShoppingBag" },
+  { key: "delivery", href: "/admin/delivery", permission: "delivery.read", icon: "Truck" },
   { key: "products", href: "/admin/products", permission: "products.read", icon: "Package" },
   { key: "inventory", href: "/admin/inventory", permission: "inventory.read", icon: "Boxes" },
   { key: "customers", href: "/admin/customers", permission: "customers.read", icon: "Users" },

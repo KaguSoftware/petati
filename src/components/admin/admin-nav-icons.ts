@@ -9,13 +9,14 @@ import {
   Star,
   Store,
   Ticket,
+  Truck,
   UserCog,
   Users,
   Wallet,
   type LucideIcon,
 } from "lucide-react";
 
-/** Explicit map so the client bundle ships eleven icons, not the whole lucide library. */
+/** Explicit map so the client bundle ships a dozen icons, not the whole lucide library. */
 export const NAV_ICONS: Record<string, LucideIcon> = {
   LayoutDashboard,
   ShoppingBag,
@@ -29,6 +30,7 @@ export const NAV_ICONS: Record<string, LucideIcon> = {
   UserCog,
   Settings,
   Store,
+  Truck,
 };
 
 export function navIcon(name: string): LucideIcon {

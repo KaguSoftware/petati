@@ -2,7 +2,9 @@ import type { OrderStatus } from "@/lib/db/types";
 
 /** Allowed manual status moves from the admin. Refunds are recorded via refundOrderAction. */
 export const TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
-  pending_payment: ["paid", "cancelled"],
+  // `processing` is reachable while still unpaid: a cash-on-delivery parcel is paid at the door, so
+  // without this edge a COD order could never legally reach shipped → delivered.
+  pending_payment: ["paid", "processing", "cancelled"],
   paid: ["processing", "cancelled"],
   processing: ["shipped", "cancelled"],
   shipped: ["delivered"],

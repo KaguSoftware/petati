@@ -8,7 +8,7 @@ import { ADMIN_NAV } from "@/lib/auth/permissions";
 import { cn } from "@/lib/utils";
 
 const NAV_KEYS = new Set(ADMIN_NAV.map((i) => i.key));
-const SUB_KEYS = new Set(["new", "edit", "categories", "brands", "movements", "expenses", "commerce", "pages", "shipping"]);
+const SUB_KEYS = new Set(["new", "edit", "categories", "brands", "movements", "couriers", "runs", "cash", "log", "expenses", "commerce", "pages", "shipping"]);
 
 /** Derives crumbs from the pathname: /admin/orders/abc → Admin › Orders › abc. */
 export function Breadcrumbs({ className }: { className?: string }) {
