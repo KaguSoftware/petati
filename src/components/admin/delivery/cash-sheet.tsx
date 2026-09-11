@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { Route } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/i18n/navigation";
 import { settleCashAction } from "@/lib/admin/delivery/actions";
 import { toMajor } from "@/lib/money";
+import { EntityLink } from "../shared/entity-link";
 import { useOptimisticAction } from "../shared/use-optimistic-action";
 
 interface CashRow {
   id: string;
+  orderId: string;
   orderNumber: string;
   customer: string | null;
   expected: number;
@@ -29,6 +33,8 @@ interface Props {
   collectedTotal: number;
   collectedLabel: string;
   currency: string;
+  /** On the courier's own page the name is the title already. */
+  hideCourier?: boolean;
 }
 
 /**
@@ -38,7 +44,7 @@ interface Props {
  * A short stop (collected < expected) is settled too, but it records no payment — the order stays
  * unpaid and visibly short, which is the honest representation of money that did not arrive.
  */
-export function CashSheet({ storeId, courier, rows, expectedLabel, collectedTotal, collectedLabel, currency }: Props) {
+export function CashSheet({ storeId, courier, rows, expectedLabel, collectedTotal, collectedLabel, currency, hideCourier }: Props) {
   const t = useTranslations("admin.delivery.cash");
   const { run, pending } = useOptimisticAction("admin.delivery");
   const [picked, setPicked] = useState<Set<string>>(new Set(rows.map((r) => r.id)));
@@ -66,9 +72,18 @@ export function CashSheet({ storeId, courier, rows, expectedLabel, collectedTota
   }
 
   return (
-    <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
-      <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-medium">{courier.name}</h2>
+    <section id={courier.id} className="flex scroll-mt-20 flex-col gap-3 rounded-xl border bg-card p-4">
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        {hideCourier ? (
+          <h2 className="font-medium">{t("title")}</h2>
+        ) : (
+          <h2 className="flex items-center gap-2 font-medium">
+            <EntityLink kind="courier" id={courier.id} label={courier.name} />
+            <Link href={`/admin/delivery/runs/${courier.id}`} className={buttonVariants({ variant: "ghost", size: "icon-xs" })} aria-label={t("runSheet")} title={t("runSheet")}>
+              <Route />
+            </Link>
+          </h2>
+        )}
         <p className="text-sm text-muted-foreground">
           {t("expected")}: <span className="tabular-nums">{expectedLabel}</span> · {t("collected")}:{" "}
           <span className="font-medium text-foreground tabular-nums">{collectedLabel}</span>
@@ -81,9 +96,7 @@ export function CashSheet({ storeId, courier, rows, expectedLabel, collectedTota
           return (
             <li key={r.id} className="flex items-center gap-3 py-2">
               <Checkbox checked={picked.has(r.id)} onCheckedChange={() => toggle(r.id)} aria-label={r.orderNumber} />
-              <span dir="ltr" className="tabular-nums">
-                {r.orderNumber}
-              </span>
+              <EntityLink kind="order" id={r.orderId} label={r.orderNumber} />
               <span className="min-w-0 flex-1 truncate text-muted-foreground">{r.customer ?? "—"}</span>
               {short && <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-xs text-amber-800 dark:text-amber-300">{t("short")}</span>}
               <span className="tabular-nums">{r.collectedLabel}</span>

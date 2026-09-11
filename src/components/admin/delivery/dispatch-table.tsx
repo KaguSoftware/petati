@@ -1,14 +1,15 @@
 import { getTranslations } from "next-intl/server";
 import { AlertTriangle } from "lucide-react";
-import { Link } from "@/i18n/navigation";
 import type { DeliverySlot } from "@/lib/delivery/settings";
 import type { DeliveryListRow } from "@/lib/admin/delivery/types";
 import { slotLabel } from "@/lib/delivery/settings";
 import { formatMoney } from "@/lib/money";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
-import { StatusBadge } from "../shared/status-badge";
+import { EntityLink } from "../shared/entity-link";
+import { OptimisticStatusBadge } from "../shared/optimistic-status-badge";
 import { DeliveryBulkBar } from "./delivery-bulk-bar";
+import { DeliveryRowActions } from "./delivery-row-actions";
 import { DeliveryRowCheckbox, DeliverySelectAll } from "./delivery-row-select";
 
 interface Props {
@@ -22,18 +23,23 @@ interface Props {
   tomorrow: string;
   slots: DeliverySlot[];
   codEnabled: boolean;
+  /** Hide the courier column (courier page: every row is theirs). */
+  hideCourier?: boolean;
+  /** Hide the bulk bar (history views). */
+  noBulk?: boolean;
 }
 
-export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, couriers, today, tomorrow, slots, codEnabled }: Props) {
+export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, couriers, today, tomorrow, slots, codEnabled, hideCourier, noBulk }: Props) {
   const t = await getTranslations("admin");
   // The scope carries the bucket: every panel is mounted at once, so a shared scope would let a
   // selection made on one tab act on another tab's rows.
   const scope = `delivery:${bucket}`;
   const ids = rows.map((r) => r.id);
   const date = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+  const selectable = canAssign && !noBulk;
 
   const columns: Column<DeliveryListRow>[] = [
-    ...(canAssign
+    ...(selectable
       ? [{ key: "select", className: "w-10", header: <DeliverySelectAll scope={scope} ids={ids} />, cell: (r: DeliveryListRow) => <DeliveryRowCheckbox scope={scope} id={r.id} /> } satisfies Column<DeliveryListRow>]
       : []),
     {
@@ -41,9 +47,7 @@ export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, 
       header: t("orders.number"),
       cell: (r) => (
         <div className="flex min-w-0 flex-col">
-          <Link href={`/admin/orders/${r.order_id}`} className="font-medium tabular-nums hover:underline" dir="ltr">
-            {r.order_number}
-          </Link>
+          <EntityLink kind="order" id={r.order_id} label={r.order_number} />
           {r.attempt_no > 1 && <span className="text-xs text-muted-foreground">{t("delivery.attempt")} {r.attempt_no}</span>}
         </div>
       ),
@@ -58,21 +62,30 @@ export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, 
         </div>
       ),
     },
-    {
-      key: "courier",
-      header: t("delivery.courier"),
-      cell: (r) => <span className="truncate">{r.courier_name ?? <span className="text-muted-foreground">{t("delivery.noCourier")}</span>}</span>,
-      hideBelow: "md",
-    },
+    ...(hideCourier
+      ? []
+      : [
+          {
+            key: "courier",
+            header: t("delivery.courier"),
+            cell: (r: DeliveryListRow) =>
+              r.courier_id && r.courier_name ? (
+                <EntityLink kind="courier" id={r.courier_id} label={r.courier_name} muted />
+              ) : (
+                <span className="text-muted-foreground">{t("delivery.noCourier")}</span>
+              ),
+            hideBelow: "md" as const,
+          } satisfies Column<DeliveryListRow>,
+        ]),
     {
       key: "scheduled",
       header: t("delivery.scheduledFor"),
-      cell: (r) => (
-        <span className="text-muted-foreground tabular-nums">
-          {r.scheduled_for ? date.format(new Date(r.scheduled_for)) : "—"}
-          {r.slot ? ` · ${slotLabel(slots.find((s) => s.key === r.slot) ?? { key: r.slot, label: {}, from: "", to: "" }, locale, locale)}` : ""}
-        </span>
-      ),
+      cell: (r) =>
+        r.scheduled_for && r.courier_id ? (
+          <EntityLink kind="run" id={r.courier_id} query={`d=${r.scheduled_for}`} muted className="tabular-nums" label={`${date.format(new Date(r.scheduled_for))}${r.slot ? ` · ${slotLabel(slots.find((s) => s.key === r.slot) ?? { key: r.slot, label: {}, from: "", to: "" }, locale, locale)}` : ""}`} />
+        ) : (
+          <span className="text-muted-foreground tabular-nums">{r.scheduled_for ? date.format(new Date(r.scheduled_for)) : "—"}</span>
+        ),
       hideBelow: "lg",
     },
     {
@@ -80,7 +93,7 @@ export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, 
       header: t("common.status"),
       cell: (r) => (
         <span className="flex items-center gap-1.5">
-          <StatusBadge kind="delivery" value={r.state} />
+          <OptimisticStatusBadge id={r.id} kind="delivery" value={r.state} field="state" />
           {r.state === "delivered" && !r.verified && <AlertTriangle className="size-3.5 text-amber-600" aria-label={t("delivery.unverified")} />}
         </span>
       ),
@@ -101,12 +114,27 @@ export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, 
           } satisfies Column<DeliveryListRow>,
         ]
       : []),
+    ...(canAssign
+      ? [
+          {
+            key: "actions",
+            className: "w-px",
+            header: <span className="sr-only">{t("common.actions")}</span>,
+            cell: (r: DeliveryListRow) => (
+              <DeliveryRowActions
+                storeId={storeId}
+                delivery={{ id: r.id, orderId: r.order_id, state: r.state, verified: r.verified, courierId: r.courier_id, scheduledFor: r.scheduled_for, cashExpected: r.cash_expected, currency: r.currency }}
+              />
+            ),
+          } satisfies Column<DeliveryListRow>,
+        ]
+      : []),
   ];
 
   return (
     <>
       <DataTable columns={columns} rows={rows} rowKey={(r) => r.id} empty={<EmptyState title={t("delivery.empty.day")} />} />
-      {canAssign && rows.length > 0 && (
+      {selectable && rows.length > 0 && (
         <DeliveryBulkBar
           storeId={storeId}
           scope={scope}

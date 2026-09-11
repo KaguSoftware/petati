@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { Truck } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -113,9 +115,15 @@ export function DeliveryForm({ storeId, settings, locale }: Props) {
       </Card>
 
       {state.error && <p className="text-sm text-destructive">{state.error}</p>}
-      <Button type="submit" disabled={pending} className="self-start">
-        {tc("save")}
-      </Button>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button type="submit" disabled={pending}>
+          {tc("save")}
+        </Button>
+        <Link href="/admin/delivery" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          <Truck data-icon="inline-start" />
+          {t("openBoard")}
+        </Link>
+      </div>
     </form>
   );
 }

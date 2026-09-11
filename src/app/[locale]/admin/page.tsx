@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { KpiGrid, LowStockList, RecentOrders, SalesBars } from "@/components/admin/dashboard/dashboard-widgets";
+import { DeliveryToday, KpiGrid, LowStockList, RecentOrders, SalesBars } from "@/components/admin/dashboard/dashboard-widgets";
 import { PageHeader } from "@/components/admin/shared/page-header";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { requireAdminPage } from "@/lib/admin/context";
@@ -28,10 +28,13 @@ async function Content({ locale }: { locale: string }) {
     locale: ctx.locale,
     fallback: ctx.store.default_locale,
     finance: can(ctx.role, "finance.read"),
+    delivery: can(ctx.role, "delivery.read"),
+    timezone: ctx.store.timezone,
   });
   return (
     <>
       <KpiGrid data={data} locale={ctx.locale} />
+      <DeliveryToday data={data} locale={ctx.locale} canCash={can(ctx.role, "delivery.cash")} />
       <SalesBars data={data} locale={ctx.locale} />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <RecentOrders data={data} locale={ctx.locale} />

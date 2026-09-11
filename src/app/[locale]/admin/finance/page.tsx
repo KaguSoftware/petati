@@ -12,7 +12,9 @@ import { TableToolbar } from "@/components/admin/shared/table-toolbar";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { requireAdminPage } from "@/lib/admin/context";
+import { getDeliveryKpis, sumSettlements } from "@/lib/admin/delivery/queries";
 import { getExpenseTotals, getProductMargins, getSalesSummary, resolveDateRange } from "@/lib/admin/finance/queries";
+import { can } from "@/lib/auth/permissions";
 import type { SearchParams } from "@/lib/admin/list-params";
 
 type Props = PageProps<"/[locale]/admin/finance">;
@@ -35,10 +37,13 @@ async function Content({ locale, searchParams }: { locale: string; searchParams:
   const ctx = await requireAdminPage(locale, "finance.read");
   const sp = (await searchParams) as SearchParams;
   const { from, to } = resolveDateRange(sp);
-  const [summary, expenses, margins, t] = await Promise.all([
+  const canCash = can(ctx.role, "delivery.cash");
+  const [summary, expenses, margins, deliveryKpis, settled, t] = await Promise.all([
     getSalesSummary(ctx.store.id, from, to),
     getExpenseTotals(ctx.store.id, from, to),
     getProductMargins(ctx.store.id, { limit: 20 }),
+    canCash ? getDeliveryKpis(ctx.store.id, ctx.store.timezone) : Promise.resolve(null),
+    canCash ? sumSettlements(ctx.store.id, from, to) : Promise.resolve(null),
     getTranslations("admin.finance"),
   ]);
   const fmt = new Intl.DateTimeFormat(ctx.locale, { dateStyle: "medium" });
@@ -58,7 +63,7 @@ async function Content({ locale, searchParams }: { locale: string; searchParams:
         <DateRangePicker />
         <span className="text-sm text-muted-foreground tabular-nums">{t("period", { period })}</span>
       </TableToolbar>
-      <FinanceOverview summary={summary} expenses={expenses} currency={currency} locale={ctx.locale} />
+      <FinanceOverview summary={summary} expenses={expenses} currency={currency} locale={ctx.locale} courierCash={deliveryKpis && settled !== null ? { outstanding: deliveryKpis.cashOutstanding, settled } : null} />
       <DailySalesTable rows={summary.rows} currency={currency} locale={ctx.locale} />
       <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
         <MarginsTable rows={margins} currency={currency} locale={ctx.locale} />

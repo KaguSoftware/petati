@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ProductForm } from "@/components/admin/products/product-form";
 import { ProductImages } from "@/components/admin/products/product-images";
 import { VariantsEditor } from "@/components/admin/products/variants-editor";
+import { CrumbLabel } from "@/components/admin/shared/crumb-label";
 import { PageHeader } from "@/components/admin/shared/page-header";
 import { StatusBadge } from "@/components/admin/shared/status-badge";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
@@ -49,6 +50,7 @@ async function Content({ params }: { params: Props["params"] }) {
 
   return (
     <>
+      <CrumbLabel segment={data.product.id} label={name} />
       <PageHeader
         back={{ href: "/admin/products", label: t("nav.products") }}
         title={

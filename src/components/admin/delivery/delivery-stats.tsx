@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { DeliveryStats } from "@/lib/admin/delivery/queries";
 import { formatMoney } from "@/lib/money";
+import { EntityLink } from "../shared/entity-link";
 
 /** 1-2-5 rounding so the axis lands on a readable number (same helper idea as the sales chart). */
 function niceMax(value: number): number {
@@ -96,8 +97,10 @@ export async function DeliveryStatsPanel({ stats, locale, currency }: { stats: D
           </thead>
           <tbody className="divide-y">
             {stats.couriers.map((c) => (
-              <tr key={c.courier_id}>
-                <td className="py-1.5">{c.name}</td>
+              <tr key={c.courier_id} className="hover:bg-muted/40">
+                <td className="py-1.5">
+                  <EntityLink kind="courier" id={c.courier_id} label={c.name} />
+                </td>
                 <td className="py-1.5 text-end tabular-nums">{c.stops}</td>
                 <td className="py-1.5 text-end tabular-nums">{c.delivered}</td>
                 <td className="py-1.5 text-end tabular-nums">{c.delivered > 0 ? `${Math.round((c.verified / c.delivered) * 100)}%` : "—"}</td>

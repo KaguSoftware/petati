@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Link2, MoreHorizontal, Pencil, RefreshCw, Trash2 } from "lucide-react";
+import { Check, ChevronDown, Copy, Link2, MoreHorizontal, Pencil, RefreshCw, Trash2, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -17,13 +18,15 @@ interface Props {
   locale: string;
   courier: CourierDraft;
   hasStops: boolean;
+  /** "icon" = the ⋯ in a table row (default); "button" = a labelled Actions button on the courier page. */
+  variant?: "icon" | "button";
 }
 
 /**
  * Per-courier actions. The private link is fetched on demand rather than rendered into the page, so
  * a screenshot of the couriers list never leaks a working link.
  */
-export function CourierRowActions({ storeId, locale, courier, hasStops }: Props) {
+export function CourierRowActions({ storeId, locale, courier, hasStops, variant = "icon" }: Props) {
   const t = useTranslations("admin.delivery.couriers");
   const tc = useTranslations("admin.common");
   const { run, pending } = useOptimisticAction("admin.delivery");
@@ -70,10 +73,23 @@ export function CourierRowActions({ storeId, locale, courier, hasStops }: Props)
   return (
     <>
       <DropdownMenu modal={false}>
-        <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={tc("actions")} disabled={pending} />}>
-          <MoreHorizontal />
+        <DropdownMenuTrigger render={variant === "icon" ? <Button variant="ghost" size="icon-sm" aria-label={tc("actions")} disabled={pending} /> : <Button variant="outline" size="sm" disabled={pending} />}>
+          {variant === "icon" ? (
+            <MoreHorizontal />
+          ) : (
+            <>
+              {tc("actions")}
+              <ChevronDown data-icon="inline-end" />
+            </>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-44">
+          {variant === "icon" && courier.id && (
+            <DropdownMenuItem render={<Link href={`/admin/delivery/couriers/${courier.id}`} />}>
+              <UserRound data-icon="inline-start" />
+              {t("open")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => setEdit(true)}>
             <Pencil data-icon="inline-start" />
             {tc("edit")}

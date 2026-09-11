@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/admin/shared/page-header";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { EmptyState } from "@/components/admin/shared/empty-state";
 import { CashSheet } from "@/components/admin/delivery/cash-sheet";
+import { SettlementsList } from "@/components/admin/delivery/settlements-list";
 import { requireAdminPage } from "@/lib/admin/context";
 import { listCashSheet, listSettlements } from "@/lib/admin/delivery/queries";
 import { formatMoney } from "@/lib/money";
@@ -28,7 +29,6 @@ async function Content({ locale }: { locale: string }) {
   const ctx = await requireAdminPage(locale, "delivery.cash");
   const [groups, settlements, t] = await Promise.all([listCashSheet(ctx.store.id), listSettlements(ctx.store.id), getTranslations("admin.delivery.cash")]);
   const money = (n: number) => formatMoney(n, ctx.store.currency, ctx.locale);
-  const date = new Intl.DateTimeFormat(ctx.locale, { dateStyle: "medium", timeStyle: "short" });
 
   return (
     <div className="flex flex-col gap-6">
@@ -42,6 +42,7 @@ async function Content({ locale }: { locale: string }) {
             courier={{ id: group.courier.id, name: group.courier.name }}
             rows={group.rows.map((r) => ({
               id: r.id,
+              orderId: r.order_id,
               orderNumber: r.order_number,
               customer: r.customer_name,
               expected: r.cash_expected,
@@ -56,21 +57,7 @@ async function Content({ locale }: { locale: string }) {
           />
         ))
       )}
-
-      {settlements.length > 0 && (
-        <section className="flex flex-col gap-2 rounded-xl border bg-card p-4">
-          <h2 className="text-sm font-medium text-muted-foreground">{t("history")}</h2>
-          <ul className="divide-y text-sm">
-            {settlements.map((s) => (
-              <li key={s.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
-                <span>{s.courier_name ?? "—"}</span>
-                <span className="text-xs text-muted-foreground tabular-nums">{date.format(new Date(s.created_at))}</span>
-                <span className="font-medium tabular-nums">{money(s.amount)}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <SettlementsList rows={settlements} currency={ctx.store.currency} locale={ctx.locale} />
     </div>
   );
 }

@@ -1,10 +1,12 @@
-import { AlertTriangle, Boxes, Star, TrendingUp, Wallet } from "lucide-react";
+import { AlertTriangle, Boxes, Coins, PackageSearch, Star, TrendingUp, Truck, Wallet, XCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Dashboard } from "@/lib/admin/dashboard/queries";
 import { formatMoney, toMajor } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { RunsStrip } from "../delivery/runs-strip";
 import { EmptyState } from "../shared/empty-state";
+import { EntityLink } from "../shared/entity-link";
 import { KpiCard } from "../shared/kpi-card";
 import { StatusBadge } from "../shared/status-badge";
 
@@ -14,12 +16,37 @@ export async function KpiGrid({ data, locale }: { data: Dashboard; locale: strin
   const num = new Intl.NumberFormat(locale);
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] gap-3">
-      {data.sales && <KpiCard label={t("revenue30d")} value={money(data.sales.paidGross - data.sales.refunds)} hint={t("ordersInPeriod", { count: data.sales.ordersCount })} icon={TrendingUp} />}
-      {data.sales && <KpiCard label={t("margin30d")} value={money(data.sales.paidGross - data.sales.refunds - data.sales.cogs)} hint={t("afterCogs")} icon={Wallet} />}
-      <KpiCard label={t("pendingPayment")} value={num.format(data.pendingPayment)} icon={AlertTriangle} tone={data.pendingPayment > 0 ? "warning" : "default"} />
-      <KpiCard label={t("pendingReviews")} value={num.format(data.pendingReviews)} icon={Star} />
-      <KpiCard label={t("lowStock")} value={num.format(data.lowStockCount)} icon={Boxes} tone={data.lowStockCount > 0 ? "warning" : "default"} />
+      {data.sales && <KpiCard label={t("revenue30d")} value={money(data.sales.paidGross - data.sales.refunds)} hint={t("ordersInPeriod", { count: data.sales.ordersCount })} icon={TrendingUp} href="/admin/finance" />}
+      {data.sales && <KpiCard label={t("margin30d")} value={money(data.sales.paidGross - data.sales.refunds - data.sales.cogs)} hint={t("afterCogs")} icon={Wallet} href="/admin/finance" />}
+      <KpiCard label={t("pendingPayment")} value={num.format(data.pendingPayment)} icon={AlertTriangle} tone={data.pendingPayment > 0 ? "warning" : "default"} href="/admin/orders?status=pending_payment" />
+      <KpiCard label={t("pendingReviews")} value={num.format(data.pendingReviews)} icon={Star} href="/admin/reviews?status=pending" />
+      <KpiCard label={t("lowStock")} value={num.format(data.lowStockCount)} icon={Boxes} tone={data.lowStockCount > 0 ? "warning" : "default"} href="/admin/inventory?low=1" />
     </div>
+  );
+}
+
+/** The delivery day on the dashboard: four numbers that open their bucket, and who is on the road. */
+export async function DeliveryToday({ data, locale, canCash }: { data: Dashboard; locale: string; canCash: boolean }) {
+  const t = await getTranslations("admin.dashboard.delivery");
+  const d = data.delivery;
+  if (!d) return null;
+  const num = new Intl.NumberFormat(locale);
+  return (
+    <section className="flex min-w-0 flex-col gap-3">
+      <div className="flex items-baseline justify-between gap-2">
+        <h2 className="text-sm font-medium text-muted-foreground">{t("title")}</h2>
+        <Link href="/admin/delivery" className="text-sm underline-offset-4 hover:underline">
+          {t("openBoard")}
+        </Link>
+      </div>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] gap-3">
+        <KpiCard label={t("needs")} value={num.format(d.needsCourier)} icon={PackageSearch} tone={d.needsCourier > 0 ? "warning" : "default"} href="/admin/delivery?bucket=needs" />
+        <KpiCard label={t("out")} value={num.format(d.kpis.outForDelivery)} icon={Truck} href="/admin/delivery?bucket=out_for_delivery" />
+        <KpiCard label={t("failed")} value={num.format(d.kpis.failedToday)} icon={XCircle} tone={d.kpis.failedToday > 0 ? "warning" : "default"} href="/admin/delivery?bucket=failed" />
+        <KpiCard label={t("cash")} value={formatMoney(d.kpis.cashOutstanding, data.currency, locale)} icon={Coins} href={canCash ? "/admin/delivery/cash" : undefined} />
+      </div>
+      <RunsStrip runs={d.runs} date={d.today} currency={data.currency} locale={locale} />
+    </section>
   );
 }
 
@@ -128,14 +155,12 @@ export async function RecentOrders({ data, locale }: { data: Dashboard; locale: 
         <ul className="divide-y">
           {data.recentOrders.map((o) => (
             <li key={o.id} className="flex min-w-0 items-center gap-3 py-2 text-sm">
-              <Link href={`/admin/orders/${o.id}`} className="font-medium tabular-nums hover:underline" dir="ltr">
-                {o.number}
-              </Link>
+              <EntityLink kind="order" id={o.id} label={o.number} />
               <span className="min-w-0 flex-1 truncate text-muted-foreground" dir="ltr">
                 {o.email}
               </span>
               <span className="hidden text-muted-foreground sm:inline">{date.format(new Date(o.placed_at))}</span>
-              <StatusBadge kind="order" value={o.status} />
+              {o.delivery && (o.delivery.state === "out_for_delivery" || o.delivery.state === "failed") ? <StatusBadge kind="delivery" value={o.delivery.state} /> : <StatusBadge kind="order" value={o.status} />}
               <span className="shrink-0 text-end tabular-nums">{formatMoney(o.total, o.currency, locale)}</span>
             </li>
           ))}
@@ -161,9 +186,7 @@ export async function LowStockList({ data }: { data: Dashboard }) {
         <ul className="divide-y">
           {data.lowStock.map((v) => (
             <li key={v.variant_id} className="flex min-w-0 items-center gap-3 py-2 text-sm">
-              <Link href={`/admin/products/${v.product_id}`} className="min-w-0 flex-1 truncate hover:underline">
-                {v.name}
-              </Link>
+              <EntityLink kind="product" id={v.product_id} label={v.name} className="min-w-0 flex-1 font-normal" />
               {v.sku && (
                 <span className="hidden max-w-32 truncate text-xs text-muted-foreground sm:inline" dir="ltr">
                   {v.sku}

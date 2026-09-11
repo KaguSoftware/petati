@@ -11,6 +11,7 @@ import type { EffectiveRole } from "@/lib/db/types";
 import { cn } from "@/lib/utils";
 import { AdminMobileNav } from "./admin-mobile-nav";
 import { AdminSidebarNav } from "./admin-sidebar-nav";
+import { AdminSearch } from "./search/admin-search";
 import { Breadcrumbs } from "./shared/breadcrumbs";
 import { StoreMark } from "./store-mark";
 import { StoreSwitcher } from "./store-switcher";
@@ -30,7 +31,9 @@ export interface AdminShellProps {
 
 export function AdminShell({ locale, user, role, store, stores, multiStore, children }: AdminShellProps) {
   const t = useTranslations("admin");
-  const nav = ADMIN_NAV.filter((item) => can(role, item.permission) && (!item.gate || (item.gate === "multiStore" && multiStore)));
+  const nav = ADMIN_NAV.filter((item) => can(role, item.permission) && (!item.gate || (item.gate === "multiStore" && multiStore))).map((item) =>
+    item.children ? { ...item, children: item.children.filter((c) => can(role, c.permission)) } : item,
+  );
   const switcher = multiStore && stores.length > 0 ? (
     <div className="flex flex-col gap-1.5">
       <StoreSwitcher current={store.id} stores={stores} />
@@ -68,6 +71,7 @@ export function AdminShell({ locale, user, role, store, stores, multiStore, chil
         <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-background/85 px-3 backdrop-blur md:px-6 print:hidden">
           <AdminMobileNav items={nav} storeName={store.name} logoUrl={store.logoUrl} switcher={switcher} />
           <Breadcrumbs className="min-w-0 flex-1" />
+          <AdminSearch storeId={store.id} locale={locale} canConfirm={can(role, "orders.update")} />
           <div className="flex items-center gap-1">
             <LocaleSwitcher variant="compact" />
             <UserMenu locale={locale} user={user} role={role} />

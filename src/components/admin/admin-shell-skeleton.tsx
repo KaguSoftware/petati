@@ -18,7 +18,8 @@ export function AdminShellSkeleton() {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-14 items-center gap-3 border-b px-3 md:px-6">
           <Skeleton className="h-4 w-40" />
-          <Skeleton className="ms-auto size-9 rounded-full" />
+          <Skeleton className="ms-auto hidden h-8 w-56 rounded-lg lg:block xl:w-64" />
+          <Skeleton className="size-9 rounded-full" />
         </header>
         <main className="flex-1 p-4 md:p-6">
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">

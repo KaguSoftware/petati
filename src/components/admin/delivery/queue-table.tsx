@@ -1,11 +1,11 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import type { DeliverySlot } from "@/lib/delivery/settings";
 import { slotLabel } from "@/lib/delivery/settings";
 import type { UndeliveredOrderRow } from "@/lib/admin/delivery/types";
 import { formatMoney } from "@/lib/money";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
+import { EntityLink } from "../shared/entity-link";
 import { StatusBadge } from "../shared/status-badge";
 import { DeliveryBulkBar } from "./delivery-bulk-bar";
 import { DeliveryRowCheckbox, DeliverySelectAll } from "./delivery-row-select";
@@ -37,15 +37,7 @@ export async function QueueTable({ rows, storeId, locale, canAssign, couriers, t
     ...(canAssign
       ? [{ key: "select", className: "w-10", header: <DeliverySelectAll scope={scope} ids={ids} />, cell: (r: UndeliveredOrderRow) => <DeliveryRowCheckbox scope={scope} id={r.id} /> } satisfies Column<UndeliveredOrderRow>]
       : []),
-    {
-      key: "order",
-      header: t("orders.number"),
-      cell: (r) => (
-        <Link href={`/admin/orders/${r.id}`} className="font-medium tabular-nums hover:underline" dir="ltr">
-          {r.number}
-        </Link>
-      ),
-    },
+    { key: "order", header: t("orders.number"), cell: (r) => <EntityLink kind="order" id={r.id} label={r.number} /> },
     {
       key: "recipient",
       header: t("delivery.recipient"),

@@ -43,11 +43,15 @@ function flatten(row: JoinedDelivery): DeliveryListRow {
 export interface DeliveryFilters {
   states?: DeliveryState[];
   courierId?: string;
+  /** Deliveries of one customer's orders (inner join on the order). */
+  customerId?: string;
   /** Store-local dates, inclusive. */
   from?: string;
   to?: string;
   /** Only stops closed without the customer's code. */
   unverifiedOnly?: boolean;
+  /** Newest first (history views) instead of the board's day/route order. */
+  newestFirst?: boolean;
 }
 
 export async function listDeliveries(
@@ -55,13 +59,17 @@ export async function listDeliveries(
   params: DeliveryFilters & { range?: ListParams<"created_at">["range"]; limit?: number },
 ): Promise<{ rows: DeliveryListRow[]; total: number }> {
   const db = createSupabaseAdminClient();
-  let q = db.from("deliveries").select(DELIVERY_SELECT, { count: "exact" }).eq("store_id", storeId);
+  const select = params.customerId ? DELIVERY_SELECT.replace("orders(", "orders!inner(customer_id, ") : DELIVERY_SELECT;
+  let q = db.from("deliveries").select(select, { count: "exact" }).eq("store_id", storeId);
   if (params.states?.length) q = q.in("state", params.states);
   if (params.courierId) q = q.eq("courier_id", params.courierId);
+  if (params.customerId) q = q.eq("orders.customer_id", params.customerId);
   if (params.from) q = q.gte("scheduled_for", params.from);
   if (params.to) q = q.lte("scheduled_for", params.to);
   if (params.unverifiedOnly) q = q.eq("verified", false).eq("state", "delivered");
-  q = q.order("scheduled_for", { ascending: true, nullsFirst: true }).order("sort_order", { ascending: true }).order("created_at", { ascending: false });
+  q = params.newestFirst
+    ? q.order("created_at", { ascending: false })
+    : q.order("scheduled_for", { ascending: true, nullsFirst: true }).order("sort_order", { ascending: true }).order("created_at", { ascending: false });
   q = params.range ? q.range(params.range.from, params.range.to) : q.limit(params.limit ?? 50);
   const { data, error, count } = await q.returns<JoinedDelivery[]>();
   if (error) throw error;
@@ -204,25 +212,103 @@ export async function listDeliveriesForOrder(storeId: string, orderId: string): 
 
 export type DeliveryLogRow = DeliveryEventRow & { order_number: string | null; order_id: string | null; courier_name: string | null; actor_name: string | null };
 
-export async function listDeliveryEvents(storeId: string, params: ListParams<"created_at">): Promise<{ rows: DeliveryLogRow[]; total: number }> {
+export interface DeliveryLogFilters {
+  /** Events written by or about this courier: the event's own courier_id OR the stop's courier. */
+  courierId?: string;
+  orderId?: string;
+  types?: string[];
+}
+
+export async function listDeliveryEvents(storeId: string, params: ListParams<"created_at">, filters: DeliveryLogFilters = {}): Promise<{ rows: DeliveryLogRow[]; total: number }> {
   const db = createSupabaseAdminClient();
-  const { data, error, count } = await db
+  // Filtering through the stop needs an inner join; the plain feed keeps the left join.
+  const viaStop = filters.orderId || filters.courierId;
+  let q = db
     .from("delivery_events")
-    .select("*, profiles(full_name), couriers(name), deliveries(order_id, orders(number))", { count: "exact" })
-    .eq("store_id", storeId)
+    .select(`*, profiles(full_name), couriers(name), deliveries${viaStop ? "!inner" : ""}(order_id, courier_id, orders(number))`, { count: "exact" })
+    .eq("store_id", storeId);
+  if (filters.orderId) q = q.eq("deliveries.order_id", filters.orderId);
+  if (filters.courierId) q = q.eq("deliveries.courier_id", filters.courierId);
+  if (filters.types?.length) q = q.in("type", filters.types);
+  const { data, error, count } = await q
     .order("created_at", { ascending: false })
     .range(params.range.from, params.range.to)
-    .returns<(DeliveryEventRow & { profiles: { full_name: string | null } | null; couriers: { name: string } | null; deliveries: { order_id: string; orders: { number: string } | null } | null })[]>();
+    .returns<(DeliveryEventRow & { profiles: { full_name: string | null } | null; couriers: { name: string } | null; deliveries: { order_id: string; courier_id: string | null; orders: { number: string } | null } | null })[]>();
   if (error) throw error;
   return {
     rows: (data ?? []).map((e) => ({
       ...e,
       order_id: e.deliveries?.order_id ?? null,
       order_number: e.deliveries?.orders?.number ?? null,
+      courier_id: e.courier_id ?? e.deliveries?.courier_id ?? null,
       courier_name: e.couriers?.name ?? null,
       actor_name: e.profiles?.full_name ?? null,
     })),
     total: count ?? 0,
+  };
+}
+
+export interface TodayRun {
+  courier: { id: string; name: string; phone: string | null; vehicle: string | null };
+  /** Stops still open today: assigned + out. */
+  open: number;
+  out: number;
+  done: number;
+  failed: number;
+  cashExpected: number;
+  cities: string[];
+}
+
+/**
+ * Who is on the road today and with what. One row per courier that has any stop scheduled for the
+ * day (including closed ones, so a finished run still reads as "done 8/8", not as nothing).
+ */
+export async function listTodayRuns(storeId: string, date: string): Promise<TodayRun[]> {
+  const db = createSupabaseAdminClient();
+  const { data } = await db
+    .from("deliveries")
+    .select("courier_id, state, cash_expected, orders(shipping_address), couriers(id, name, phone, vehicle)")
+    .eq("store_id", storeId)
+    .eq("scheduled_for", date)
+    .not("courier_id", "is", null)
+    .returns<{ courier_id: string; state: DeliveryState; cash_expected: number; orders: { shipping_address: OrderAddress | null } | null; couriers: { id: string; name: string; phone: string | null; vehicle: string | null } | null }[]>();
+  const runs = new Map<string, TodayRun>();
+  for (const d of data ?? []) {
+    if (!d.couriers) continue;
+    const run = runs.get(d.courier_id) ?? { courier: d.couriers, open: 0, out: 0, done: 0, failed: 0, cashExpected: 0, cities: [] };
+    if (d.state === "assigned" || d.state === "out_for_delivery") run.open++;
+    if (d.state === "out_for_delivery") run.out++;
+    if (d.state === "delivered") run.done++;
+    if (d.state === "failed" || d.state === "returned") run.failed++;
+    if (d.state !== "cancelled" && d.state !== "delivered") run.cashExpected += d.cash_expected;
+    const city = d.orders?.shipping_address?.city;
+    if (city && !run.cities.includes(city)) run.cities.push(city);
+    runs.set(d.courier_id, run);
+  }
+  return [...runs.values()].sort((a, b) => b.open - a.open || a.courier.name.localeCompare(b.courier.name));
+}
+
+export interface CourierSummary {
+  courier: CourierWithLoad;
+  /** Over the last 30 days. */
+  delivered: number;
+  failed: number;
+  verified: number;
+  avgHours: number | null;
+}
+
+/** The numbers a courier's page opens with, from the same 30-day read as the board's stats. */
+export async function getCourierSummary(storeId: string, courierId: string, timezone: string): Promise<CourierSummary | null> {
+  const [couriers, stats] = await Promise.all([listCouriers(storeId), getDeliveryStats(storeId, timezone)]);
+  const courier = couriers.find((c) => c.id === courierId);
+  if (!courier) return null;
+  const mine = stats.couriers.find((c) => c.courier_id === courierId);
+  return {
+    courier,
+    delivered: mine?.delivered ?? 0,
+    failed: mine?.failed ?? 0,
+    verified: mine?.verified ?? 0,
+    avgHours: mine?.avgHours ?? null,
   };
 }
 
@@ -266,16 +352,28 @@ export async function listCashSheet(storeId: string): Promise<CashSheetGroup[]> 
     });
 }
 
-export async function listSettlements(storeId: string, limit = 20): Promise<(DeliverySettlementRow & { courier_name: string | null })[]> {
+export async function listSettlements(storeId: string, limit = 20, courierId?: string): Promise<(DeliverySettlementRow & { courier_name: string | null; settled_by_name: string | null })[]> {
+  const db = createSupabaseAdminClient();
+  let q = db.from("delivery_settlements").select("*, couriers(name), profiles(full_name)").eq("store_id", storeId);
+  if (courierId) q = q.eq("courier_id", courierId);
+  const { data } = await q
+    .order("created_at", { ascending: false })
+    .limit(limit)
+    .returns<(DeliverySettlementRow & { couriers: { name: string } | null; profiles: { full_name: string | null } | null })[]>();
+  return (data ?? []).map((s) => ({ ...s, courier_name: s.couriers?.name ?? null, settled_by_name: s.profiles?.full_name ?? null }));
+}
+
+/** Cash handed over in a date range (store-local dates, inclusive) — what Finance shows beside "outstanding". */
+export async function sumSettlements(storeId: string, from: string, to: string): Promise<number> {
   const db = createSupabaseAdminClient();
   const { data } = await db
     .from("delivery_settlements")
-    .select("*, couriers(name)")
+    .select("amount")
     .eq("store_id", storeId)
-    .order("created_at", { ascending: false })
-    .limit(limit)
-    .returns<(DeliverySettlementRow & { couriers: { name: string } | null })[]>();
-  return (data ?? []).map((s) => ({ ...s, courier_name: s.couriers?.name ?? null }));
+    .gte("created_at", `${from}T00:00:00`)
+    .lte("created_at", `${to}T23:59:59.999`)
+    .returns<{ amount: number }[]>();
+  return (data ?? []).reduce((s, r) => s + (r.amount ?? 0), 0);
 }
 
 export interface CourierStat {
@@ -286,6 +384,8 @@ export interface CourierStat {
   failed: number;
   verified: number;
   cash: number;
+  /** Average hours from `shipped_at` to delivery for this courier, or null. */
+  avgHours: number | null;
 }
 
 export interface DeliveryStats {
@@ -318,6 +418,7 @@ export async function getDeliveryStats(storeId: string, timezone: string, days =
   const dayKey = (iso: string) => new Intl.DateTimeFormat("en-CA", { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(iso));
 
   const byCourier = new Map<string, CourierStat>();
+  const hours = new Map<string, { sum: number; count: number }>();
   let hoursSum = 0;
   let hoursCount = 0;
 
@@ -329,17 +430,26 @@ export async function getDeliveryStats(storeId: string, timezone: string, days =
         if (r.state === "failed") bucket.failed++;
       }
     }
+    let took: number | null = null;
     if (r.state === "delivered" && r.completed_at && r.orders?.shipped_at) {
-      hoursSum += (new Date(r.completed_at).getTime() - new Date(r.orders.shipped_at).getTime()) / 3_600_000;
+      took = (new Date(r.completed_at).getTime() - new Date(r.orders.shipped_at).getTime()) / 3_600_000;
+      hoursSum += took;
       hoursCount++;
     }
     if (r.courier_id) {
-      const stat = byCourier.get(r.courier_id) ?? { courier_id: r.courier_id, name: r.couriers?.name ?? "—", stops: 0, delivered: 0, failed: 0, verified: 0, cash: 0 };
+      const stat = byCourier.get(r.courier_id) ?? { courier_id: r.courier_id, name: r.couriers?.name ?? "—", stops: 0, delivered: 0, failed: 0, verified: 0, cash: 0, avgHours: null };
       stat.stops++;
       if (r.state === "delivered") stat.delivered++;
       if (r.state === "failed") stat.failed++;
       if (r.state === "delivered" && r.verified) stat.verified++;
       stat.cash += r.cash_collected ?? 0;
+      if (took !== null) {
+        const h = hours.get(r.courier_id) ?? { sum: 0, count: 0 };
+        h.sum += took;
+        h.count++;
+        hours.set(r.courier_id, h);
+        stat.avgHours = h.sum / h.count;
+      }
       byCourier.set(r.courier_id, stat);
     }
   }
@@ -358,6 +468,7 @@ export interface LookupMatch {
   orderId: string;
   orderNumber: string;
   orderStatus: OrderStatus;
+  customerId: string | null;
   customerName: string | null;
   phone: string | null;
   address: string | null;
@@ -365,7 +476,9 @@ export interface LookupMatch {
   currency: string;
   deliveryId: string | null;
   deliveryState: DeliveryState | null;
+  courierId: string | null;
   courierName: string | null;
+  scheduledFor: string | null;
   cashExpected: number;
   cashCollected: number | null;
   /** The query WAS this order's delivery code — so the code is already proven. */
@@ -385,7 +498,7 @@ export interface LookupMatch {
  */
 export async function lookupDelivery(storeId: string, query: string, attemptLimit: number): Promise<LookupMatch[]> {
   const term = query.trim();
-  if (term.length < 3) return [];
+  if (term.length < 2) return [];
   const db = createSupabaseAdminClient();
   const isCode = /^[0-9]{6}$/.test(term);
   // Strip what would break a PostgREST or() filter.
@@ -394,14 +507,16 @@ export async function lookupDelivery(storeId: string, query: string, attemptLimi
   let q = db
     .from("orders")
     .select(
-      "id, number, status, total, currency, phone, delivery_code, delivery_attempts, shipping_address, customers(full_name), deliveries(id, state, cash_expected, cash_collected, couriers(name))",
+      "id, number, status, total, currency, phone, customer_id, delivery_code, delivery_attempts, shipping_address, customers(full_name), deliveries(id, state, cash_expected, cash_collected, courier_id, scheduled_for, couriers(name))",
     )
     .eq("store_id", storeId)
+    .order("placed_at", { ascending: false })
     .limit(10);
-  // The phone can live on the order or only in the address snapshot, depending on how it was placed.
+  // The phone can live on the order or only in the address snapshot, depending on how it was placed;
+  // the name lives on the customer row or, for guests, only in the address.
   q = isCode
     ? q.or(`delivery_code.eq.${safe},number.ilike.%${safe}%`)
-    : q.or(`number.ilike.%${safe}%,email.ilike.%${safe}%,phone.ilike.%${safe}%,shipping_address->>phone.ilike.%${safe}%`);
+    : q.or(`number.ilike.%${safe}%,email.ilike.%${safe}%,phone.ilike.%${safe}%,shipping_address->>phone.ilike.%${safe}%,shipping_address->>full_name.ilike.%${safe}%`);
 
   const { data } = await q.returns<
     {
@@ -411,11 +526,12 @@ export async function lookupDelivery(storeId: string, query: string, attemptLimi
       total: number;
       currency: string;
       phone: string | null;
+      customer_id: string | null;
       delivery_code: string;
       delivery_attempts: number;
       shipping_address: OrderAddress | null;
       customers: { full_name: string | null } | null;
-      deliveries: { id: string; state: DeliveryState; cash_expected: number; cash_collected: number | null; couriers: { name: string } | null }[];
+      deliveries: { id: string; state: DeliveryState; cash_expected: number; cash_collected: number | null; courier_id: string | null; scheduled_for: string | null; couriers: { name: string } | null }[];
     }[]
   >();
 
@@ -429,6 +545,7 @@ export async function lookupDelivery(storeId: string, query: string, attemptLimi
       orderId: o.id,
       orderNumber: o.number,
       orderStatus: o.status,
+      customerId: o.customer_id,
       customerName: o.customers?.full_name ?? a?.full_name ?? null,
       phone: a?.phone ?? o.phone,
       address: a ? [a.line1, a.city].filter(Boolean).join(", ") : null,
@@ -436,7 +553,9 @@ export async function lookupDelivery(storeId: string, query: string, attemptLimi
       currency: o.currency,
       deliveryId: latest?.id ?? null,
       deliveryState: latest?.state ?? null,
+      courierId: latest?.courier_id ?? null,
       courierName: latest?.couriers?.name ?? null,
+      scheduledFor: latest?.scheduled_for ?? null,
       cashExpected: latest?.cash_expected ?? 0,
       cashCollected: latest?.cash_collected ?? null,
       matchedByCode,

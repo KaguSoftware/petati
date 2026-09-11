@@ -109,7 +109,7 @@ export async function confirmStopAction(_prev: CourierActionState, formData: For
 
   let verified = false;
   if (code) {
-    const result = await confirmDeliveryWithCode(db, order, code, null);
+    const result = await confirmDeliveryWithCode(db, order, code, null, { closeStop: false });
     if (result === "wrongCode") {
       const { data: fresh } = await db.from("orders").select("delivery_attempts").eq("id", order.id).maybeSingle<{ delivery_attempts: number }>();
       return { error: "wrongCode", triesLeft: Math.max(0, 5 - (fresh?.delivery_attempts ?? 0)) };
@@ -122,7 +122,7 @@ export async function confirmStopAction(_prev: CourierActionState, formData: For
   } else {
     if (!noCodeReason || noCodeReason.length < 3) return { error: "reasonRequired" };
     if (!markableDelivered(order)) return { error: "notShipped" };
-    await markDelivered(db, order, "manual", null);
+    await markDelivered(db, order, "manual", null, { closeStop: false });
   }
 
   const patch: Record<string, unknown> = {

@@ -28,6 +28,45 @@ export async function listCustomers(
   return { rows: data ?? [], total: count ?? 0 };
 }
 
+export interface CustomerDeliverySummary {
+  stops: number;
+  delivered: number;
+  failed: number;
+  unverified: number;
+  /** Minor units expected at the door on open stops, plus delivered-but-unsettled money. */
+  cashOpen: number;
+  lastCourier: { id: string; name: string } | null;
+  lastState: string | null;
+}
+
+/** What delivery looks like for this customer: a repeat "no answer" shows up here before it costs a third run. */
+export async function getCustomerDeliverySummary(storeId: string, customerId: string): Promise<CustomerDeliverySummary> {
+  const db = createSupabaseAdminClient();
+  const { data } = await db
+    .from("deliveries")
+    .select("state, verified, cash_expected, cash_collected, settlement_id, courier_id, created_at, couriers(name), orders!inner(customer_id)")
+    .eq("store_id", storeId)
+    .eq("orders.customer_id", customerId)
+    .order("created_at", { ascending: false })
+    .limit(200)
+    .returns<{ state: string; verified: boolean; cash_expected: number; cash_collected: number | null; settlement_id: string | null; courier_id: string | null; couriers: { name: string } | null }[]>();
+  const rows = data ?? [];
+  const latest = rows.find((r) => r.courier_id && r.couriers);
+  return {
+    stops: rows.length,
+    delivered: rows.filter((r) => r.state === "delivered").length,
+    failed: rows.filter((r) => r.state === "failed" || r.state === "returned").length,
+    unverified: rows.filter((r) => r.state === "delivered" && !r.verified).length,
+    cashOpen: rows.reduce((s, r) => {
+      if (r.state === "assigned" || r.state === "out_for_delivery" || r.state === "pending") return s + r.cash_expected;
+      if (r.state === "delivered" && !r.settlement_id) return s + (r.cash_collected ?? 0);
+      return s;
+    }, 0),
+    lastCourier: latest?.courier_id && latest.couriers ? { id: latest.courier_id, name: latest.couriers.name } : null,
+    lastState: rows[0]?.state ?? null,
+  };
+}
+
 export async function getCustomer(storeId: string, id: string): Promise<CustomerDetail | null> {
   const db = createSupabaseAdminClient();
   const { data, error } = await db.from("v_customer_stats").select("*").eq("store_id", storeId).eq("id", id).maybeSingle<CustomerStatsRow>();

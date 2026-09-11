@@ -398,7 +398,15 @@
       "viewAll": "Tümünü gör",
       "salesByDay": "Güne göre ödenen gelir",
       "noSales": "Bu dönemde henüz satış yok.",
-      "stockHealthy": "Takip edilen tüm varyantlar düşük stok eşiğinin üzerinde."
+      "stockHealthy": "Takip edilen tüm varyantlar düşük stok eşiğinin üzerinde.",
+      "delivery": {
+        "title": "Bugün teslimat",
+        "openBoard": "Panoyu aç",
+        "needs": "Kurye bekliyor",
+        "out": "Yolda",
+        "failed": "Bugün başarısız",
+        "cash": "Tesviye edilecek nakit"
+      }
     },
     "orders": {
       "number": "Sipariş",
@@ -491,8 +499,12 @@
         "selected": "{count} seçildi",
         "clear": "Temizle",
         "done": "{changed} güncellendi, {skipped} atlandı",
-        "confirmCancelTitle": "{count} sipariş iptal edilsin mi?"
-      }
+        "confirmCancelTitle": "{count} sipariş iptal edilsin mi?",
+        "assign": "Kuryeye ver"
+      },
+      "delivery": "Teslimat",
+      "courierFilter": "Kurye:",
+      "clearCourier": "Kurye filtresini kaldır"
     },
     "discountType": {
       "percent": "Yüzde",
@@ -529,7 +541,18 @@
       "ordersTitle": "Siparişler",
       "noOrders": "Henüz sipariş yok.",
       "readOnly": "Bu müşteriyi görüntüleyebilir ancak düzenleyemezsiniz.",
-      "scope": "Müşteri silme ve birleştirme henüz kullanılamıyor."
+      "scope": "Müşteri silme ve birleştirme henüz kullanılamıyor.",
+      "delivery": {
+        "title": "Teslimat",
+        "none": "Henüz teslimat yok.",
+        "last": "Son",
+        "stops": "Gönderilen",
+        "deliveredCount": "{count} teslim",
+        "failed": "Başarısız deneme",
+        "unverified": "Kodsuz kapatılan",
+        "cashOpen": "Açık nakit",
+        "allOrders": "Tüm siparişler"
+      }
     },
     "coupons": {
       "code": "Kod",
@@ -629,7 +652,11 @@
         "margin": "Net marj",
         "marginHint": "Ödenen gelire oranla net",
         "noPaid": "Bu dönemde ödenen gelir yok",
-        "orders": "{count, plural, =1 {1 sipariş} other {# sipariş}}"
+        "orders": "{count, plural, =1 {1 sipariş} other {# sipariş}}",
+        "courierCash": "Kuryelerdeki nakit",
+        "courierCashHint": "Kapıda alındı, henüz teslim edilmedi",
+        "cashSettled": "Teslim edilen nakit",
+        "cashSettledHint": "Bu dönemde kuryelerden alınan"
       },
       "dailySales": {
         "title": "Günlük satışlar",
@@ -1396,7 +1423,8 @@
         "attemptLimitHint": "Müşterinin kodu kilitlenmeden önceki hatalı deneme sayısı.",
         "cod": "Kapıda ödeme",
         "codHint": "Panoda ve kurye telefonunda nakit alanlarını göster.",
-        "leadDays": "Varsayılan hazırlık (gün)"
+        "leadDays": "Varsayılan hazırlık (gün)",
+        "openBoard": "Teslimat panosunu aç"
       }
     },
     "staff": {
@@ -1440,7 +1468,8 @@
         "assigned": "Atandı",
         "out_for_delivery": "Dağıtımda",
         "failed": "Başarısız",
-        "done": "Tamamlandı"
+        "done": "Tamamlandı",
+        "unverified": "Kodsuz"
       },
       "kpi": {
         "out": "Dağıtımda",
@@ -1467,7 +1496,10 @@
         "short": "Eksik",
         "history": "Son mutabakatlar",
         "expected": "Beklenen",
-        "collected": "Tahsil edilen"
+        "collected": "Tahsil edilen",
+        "runSheet": "Tur listesi",
+        "stops": "{count} sipariş",
+        "by": "{name} aldı"
       },
       "collected": "Tahsil edilen",
       "expected": "Beklenen",
@@ -1506,7 +1538,8 @@
         "deleteConfirm": "{name} silinsin mi?",
         "none": "Henüz kurye yok.",
         "noneHint": "Paketlerinizi taşıyan kişileri ekleyin.",
-        "note": "Not"
+        "note": "Not",
+        "open": "Kuryeyi aç"
       },
       "run": {
         "title": "Tur listesi",
@@ -1515,14 +1548,26 @@
         "moveUp": "Yukarı taşı",
         "moveDown": "Aşağı taşı",
         "codeBox": "Teslimat kodu",
-        "instruction": "Müşteriden teslimat kodunu isteyin ve buraya yazın."
+        "instruction": "Müşteriden teslimat kodunu isteyin ve buraya yazın.",
+        "empty": "Bu gün sipariş yok."
       },
       "log": {
         "title": "Teslimat kaydı",
         "hint": "Bir teslimattaki her değişiklik, en yenisi üstte.",
         "event": "Olay",
         "none": "Henüz kayıt yok.",
-        "system": "Kurye uygulaması"
+        "system": "Kurye uygulaması",
+        "when": "Ne zaman",
+        "order": "Sipariş",
+        "by": "Kim",
+        "filters": {
+          "courier": "Kurye",
+          "allCouriers": "Tüm kuryeler",
+          "type": "Olay",
+          "allTypes": "Tüm olaylar",
+          "order": "Sipariş",
+          "clear": "Filtreleri temizle"
+        }
       },
       "event": {
         "created": "Durak oluşturuldu",
@@ -1587,8 +1632,97 @@
         "confirm": "Teslimatı onayla",
         "confirmed": "{number} teslim edildi",
         "locked": "Kod kilitli",
-        "clear": "Temizle"
+        "clear": "Temizle",
+        "runSheet": "Tur listesi"
+      },
+      "settingsLink": "Teslimat ayarları",
+      "runs": {
+        "title": "Bugünün turları",
+        "subtitle": "Kim dışarıda, kaç siparişle ve ne kadar nakitle.",
+        "none": "Bu gün tur yok.",
+        "noneHint": "Panoda siparişleri bir kuryeye verin, tur burada görünür.",
+        "openSheet": "Tur listesi",
+        "print": "Yazdır",
+        "stopsOpen": "{count} açık",
+        "stopsDone": "{done}/{total} bitti",
+        "out": "{count} yolda",
+        "failed": "{count} başarısız",
+        "cash": "Tahsil edilecek {amount}",
+        "day": "Gün",
+        "prevDay": "Önceki gün",
+        "nextDay": "Sonraki gün"
+      },
+      "rowActions": {
+        "dispatch": "Yola çıkar",
+        "unassign": "Turdan çıkar",
+        "runSheet": "Tur listesi",
+        "deliveredCode": "Kodla teslim edildi",
+        "deliveredNoCode": "Kodsuz teslim edildi",
+        "failed": "Kapıda başarısız",
+        "redeliver": "Yeniden teslim et",
+        "returned": "Geri döndü",
+        "markChecked": "Kontrol edildi",
+        "noCodeTitle": "Kodsuz kapat",
+        "noCodeHint": "Müşteri kodu veremedi. Paketi kimin aldığını ve nedenini yazın; biri kontrol edene kadar işaretli kalır.",
+        "recipient": "Teslim alan",
+        "reason": "Neden kod yok?",
+        "cash": "Alınan nakit",
+        "failedTitle": "Başarısız deneme",
+        "failedHint": "Paket yeni bir deneme için panoya döner.",
+        "checkedTitle": "Kontrol edildi olarak işaretle",
+        "checkedHint": "Müşteriyi aradınız ya da fotoğrafı gördünüz ve teslimat sorunsuzdu.",
+        "note": "Not",
+        "done": "Tamam",
+        "redelivered": "Yeni deneme oluşturuldu"
+      },
+      "courierPage": {
+        "inactive": "Pasif",
+        "kpi": {
+          "open": "Açık siparişler",
+          "delivered": "Teslim (30g)",
+          "verified": "Kodla onaylanan",
+          "failed": "Başarısız (30g)",
+          "cash": "Üzerindeki nakit",
+          "avgHours": "Ort. teslim süresi"
+        },
+        "tabs": {
+          "today": "Bugün",
+          "history": "Geçmiş",
+          "cash": "Nakit",
+          "log": "Kayıt"
+        },
+        "runToday": "Bugünün tur listesi",
+        "allOrders": "Tüm siparişler",
+        "noCash": "Tesviye edilecek bir şey yok."
+      },
+      "assignInline": {
+        "done": "Kuryeye verildi",
+        "noCouriers": "Önce bir kurye ekleyin."
+      },
+      "orderCard": {
+        "noDelivery": "Henüz kurye yok",
+        "openBoard": "Teslimatta aç",
+        "log": "Teslimat kaydı"
       }
+    },
+    "search": {
+      "title": "Ara",
+      "open": "Ara",
+      "placeholder": "Sipariş, müşteri, ürün, kurye ara…",
+      "hint": "En az iki karakter yazın. Teslimat kodu da olur.",
+      "none": "Bir şey bulunamadı.",
+      "failed": "Arama başarısız. Tekrar deneyin.",
+      "confirmed": "{number} teslim edildi",
+      "groups": {
+        "orders": "Siparişler",
+        "customers": "Müşteriler",
+        "products": "Ürünler",
+        "couriers": "Kuryeler"
+      },
+      "navigate": "gez",
+      "select": "aç",
+      "close": "kapat",
+      "inactive": "Pasif"
     }
   },
   "shop": {

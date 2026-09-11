@@ -4,7 +4,7 @@ import { refresh } from "next/cache";
 import { z } from "zod";
 import { actionError, adminMutation } from "@/lib/admin/guard";
 import type { ActionState } from "@/lib/admin/types";
-import { dateField, moneyField, multi, optionalText, parseForm, uuidField } from "@/lib/admin/validate";
+import { dateField, moneyField, multi, optionalMoneyField, optionalText, parseForm, uuidField } from "@/lib/admin/validate";
 import type { CourierRow, DeliveryRow, DeliveryState, OrderRow } from "@/lib/db/types";
 import { markDelivered } from "@/lib/delivery/confirm";
 import { markOrderPaid } from "@/lib/orders/pay";
@@ -218,15 +218,45 @@ export async function setDeliveryStateAction(_prev: ActionState, formData: FormD
       patch.recipient_name = recipientName;
       // Closed by staff, not by the customer's code: it stays flagged as unverified.
       patch.verified = false;
+      // Cash typed by staff, when the stop expected some; a blank means "took the full amount".
+      if (delivery.cash_expected > 0) {
+        const { data: orderRow } = await db.from("orders").select("currency").eq("id", delivery.order_id).maybeSingle<{ currency: string }>();
+        const cash = parseForm(z.object({ cashCollected: optionalMoneyField(orderRow?.currency ?? "TRY") }), formData);
+        patch.cash_collected = cash.data?.cashCollected ?? delivery.cash_expected;
+      }
     }
 
     if (state === "delivered") {
       const { data: order } = await db.from("orders").select("*").eq("id", delivery.order_id).maybeSingle<OrderRow>();
       if (!order) return { error: "notFound" };
-      await markDelivered(db, order, "manual", user.id);
+      // The stop is written below with the staff's facts, so the helper must not close it too.
+      if (order.status !== "delivered") await markDelivered(db, order, "manual", user.id, { closeStop: false });
     }
     await db.from("deliveries").update(patch).eq("id", delivery.id).eq("store_id", storeId);
-    await logDelivery(db, storeId, delivery.id, state, user.id, { failure_reason: failureReason ?? null, recipient_name: recipientName ?? null });
+    await logDelivery(db, storeId, delivery.id, state, user.id, { failure_reason: failureReason ?? null, recipient_name: recipientName ?? null, cash_collected: patch.cash_collected ?? null, note: note ?? null });
+    refresh();
+    return { ok: true };
+  } catch (err) {
+    return { error: actionError(err) };
+  }
+}
+
+/**
+ * Staff have looked at a stop that was closed without the customer's code (called the customer,
+ * checked the photo) and are satisfied. Flips `verified` so the amber flag goes away, and says so in
+ * the log — the flag is only useful if there is a way to clear it.
+ */
+export async function verifyDeliveryAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = parseForm(base.extend({ deliveryId: uuidField, note: optionalText(300).optional() }), formData);
+  if (!parsed.data) return { error: "invalid", fieldErrors: parsed.fieldErrors };
+  const { storeId, deliveryId, note } = parsed.data;
+  try {
+    const { db, user } = await adminMutation(storeId, "delivery.assign");
+    const [delivery] = await loadDeliveries(db, storeId, [deliveryId]);
+    if (!delivery) return { error: "notFound" };
+    if (delivery.state !== "delivered" || delivery.verified) return { error: "transition" };
+    await db.from("deliveries").update({ verified: true }).eq("id", delivery.id).eq("store_id", storeId);
+    await logDelivery(db, storeId, delivery.id, "note", user.id, { checked: true, note: note ?? null });
     refresh();
     return { ok: true };
   } catch (err) {

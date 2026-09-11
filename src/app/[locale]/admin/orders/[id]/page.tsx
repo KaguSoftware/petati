@@ -3,13 +3,16 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { OrderActions } from "@/components/admin/orders/order-actions";
 import { OrderDetail } from "@/components/admin/orders/order-detail";
+import { CrumbLabel } from "@/components/admin/shared/crumb-label";
 import { PageHeader } from "@/components/admin/shared/page-header";
 import { OptimisticStatusBadge } from "@/components/admin/shared/optimistic-status-badge";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { requireAdminPage } from "@/lib/admin/context";
 import { getOrder } from "@/lib/admin/orders/queries";
-import { listDeliveriesForOrder } from "@/lib/admin/delivery/queries";
+import { listCouriers, listDeliveriesForOrder, storeToday } from "@/lib/admin/delivery/queries";
+import { DELIVERABLE_STATUSES } from "@/lib/admin/delivery/types";
 import { signedProofUrl } from "@/lib/courier/photo";
+import { deliveryFromSettings } from "@/lib/delivery/settings";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { OrderDeliveryCard } from "@/components/admin/orders/order-delivery-card";
 import { can } from "@/lib/auth/permissions";
@@ -29,7 +32,13 @@ async function Content({ params }: { params: Props["params"] }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
   const ctx = await requireAdminPage(locale, "orders.read");
-  const [order, deliveries, t] = await Promise.all([getOrder(ctx.store.id, id), listDeliveriesForOrder(ctx.store.id, id), getTranslations("admin")]);
+  const canAssign = can(ctx.role, "delivery.assign");
+  const [order, deliveries, couriers, t] = await Promise.all([
+    getOrder(ctx.store.id, id),
+    listDeliveriesForOrder(ctx.store.id, id),
+    canAssign ? listCouriers(ctx.store.id, false) : Promise.resolve([]),
+    getTranslations("admin"),
+  ]);
   if (!order) notFound();
   // Proof photos live in a private bucket: hand the card short-lived signed URLs, never paths.
   const photoUrls: Record<string, string> = {};
@@ -41,9 +50,13 @@ async function Content({ params }: { params: Props["params"] }) {
       if (url) photoUrls[d.id] = url;
     }
   }
+  const settings = deliveryFromSettings(ctx.store.settings);
+  const today = storeToday(ctx.store.timezone);
+  const tomorrow = storeToday(ctx.store.timezone, settings.leadDays);
   const date = new Intl.DateTimeFormat(ctx.locale, { dateStyle: "long", timeStyle: "short" });
   return (
     <>
+      <CrumbLabel segment={order.id} label={order.number} />
       <PageHeader
         back={{ href: "/admin/orders", label: t("nav.orders") }}
         title={
@@ -73,16 +86,20 @@ async function Content({ params }: { params: Props["params"] }) {
         storeId={ctx.store.id}
         locale={ctx.locale}
         delivery={
-          deliveries.length > 0 ? (
-            <OrderDeliveryCard
-              storeId={ctx.store.id}
-              attempts={deliveries}
-              locale={ctx.locale}
-              currency={order.currency}
-              canAssign={can(ctx.role, "delivery.assign")}
-              photoUrls={photoUrls}
-            />
-          ) : null
+          <OrderDeliveryCard
+            storeId={ctx.store.id}
+            orderId={order.id}
+            attempts={deliveries}
+            locale={ctx.locale}
+            currency={order.currency}
+            canAssign={canAssign}
+            photoUrls={photoUrls}
+            deliverable={(DELIVERABLE_STATUSES as readonly string[]).includes(order.status)}
+            couriers={couriers.map((c) => ({ id: c.id, name: c.name }))}
+            today={today}
+            tomorrow={tomorrow}
+            slots={settings.slots}
+          />
         }
       />
     </>

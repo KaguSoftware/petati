@@ -1,8 +1,10 @@
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import type { CourierWithLoad } from "@/lib/admin/delivery/types";
 import { formatMoney } from "@/lib/money";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
+import { EntityLink } from "../shared/entity-link";
 import { CourierRowActions } from "./courier-row-actions";
 
 interface Props {
@@ -22,7 +24,7 @@ export async function CouriersTable({ storeId, rows, locale, currency, emptyTitl
       header: t("delivery.couriers.name"),
       cell: (r) => (
         <div className="flex min-w-0 flex-col">
-          <span className={`truncate font-medium ${r.is_active ? "" : "text-muted-foreground line-through"}`}>{r.name}</span>
+          <EntityLink kind="courier" id={r.id} label={r.name} className={r.is_active ? "" : "text-muted-foreground line-through"} />
           {r.vehicle && <span className="truncate text-xs text-muted-foreground">{t(`delivery.vehicle.${r.vehicle}`)}</span>}
         </div>
       ),
@@ -40,12 +42,17 @@ export async function CouriersTable({ storeId, rows, locale, currency, emptyTitl
         ),
       hideBelow: "md",
     },
-    { key: "stops", header: t("delivery.couriers.openStops"), cell: (r) => <span className="tabular-nums">{r.open_stops}</span>, hideBelow: "sm" },
+    {
+      key: "stops",
+      header: t("delivery.couriers.openStops"),
+      cell: (r) => (r.open_stops > 0 ? <EntityLink kind="run" id={r.id} label={String(r.open_stops)} muted className="tabular-nums" /> : <span className="text-muted-foreground tabular-nums">0</span>),
+      hideBelow: "sm",
+    },
     {
       key: "cash",
       className: "text-end",
       header: t("delivery.couriers.cashHeld"),
-      cell: (r) => <span className="tabular-nums">{r.cash_held > 0 ? formatMoney(r.cash_held, currency, locale) : "—"}</span>,
+      cell: (r) => (r.cash_held > 0 ? <Link href={`/admin/delivery/cash#${r.id}`} className="tabular-nums underline-offset-4 hover:underline">{formatMoney(r.cash_held, currency, locale)}</Link> : <span className="text-muted-foreground">—</span>),
       hideBelow: "lg",
     },
     {
