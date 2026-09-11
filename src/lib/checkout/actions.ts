@@ -212,6 +212,7 @@ export async function placeOrderAction(_prev: CheckoutState, formData: FormData)
       orderUrl,
       locale,
       currency: store.currency,
+      deliveryCode: order.delivery_code,
       lines: cart.lines.map((l) => ({ name: l.name, variant: l.variantLabel, qty: l.quantity, total: l.lineTotal })),
       totals,
     }),

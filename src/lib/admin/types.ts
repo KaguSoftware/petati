@@ -7,4 +7,7 @@ export interface ActionState {
   fieldErrors?: Record<string, string>;
   /** Id of the created row, when relevant. */
   id?: string;
+  /** Bulk actions: rows that actually moved, and rows skipped because the move was not allowed. */
+  changed?: number;
+  skipped?: number;
 }

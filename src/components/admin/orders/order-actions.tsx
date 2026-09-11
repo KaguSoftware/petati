@@ -9,7 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LatinInput } from "@/components/forms/latin-input";
-import { markPaidAction, refundOrderAction, shipOrderAction, updateOrderStatusAction } from "@/lib/admin/orders/actions";
+import { confirmDeliveryByCodeAction, markPaidAction, refundOrderAction, shipOrderAction, updateOrderStatusAction } from "@/lib/admin/orders/actions";
 import { TRANSITIONS, REFUNDABLE } from "@/lib/admin/orders/transitions";
 import type { OrderStatus } from "@/lib/db/types";
 import { formatMoney } from "@/lib/money";
@@ -31,7 +31,7 @@ interface Props {
   shippingCost: number;
 }
 
-type DialogKind = "paid" | "ship" | "refund" | "cancel" | null;
+type DialogKind = "paid" | "ship" | "code" | "refund" | "cancel" | null;
 
 export function OrderActions({ storeId, orderId, status: serverStatus, currency, locale, remainingRefundable, canRefund, shippingCost }: Props) {
   const t = useTranslations("admin.orders");
@@ -43,6 +43,7 @@ export function OrderActions({ storeId, orderId, status: serverStatus, currency,
   const rollback = () => clearOptimistic(orderId, ["status"]);
   const [paidState, paidAction, paidPending] = useActionToast(markPaidAction, { errorNamespace: "admin.orders", onSuccess: close, onError: rollback });
   const [shipState, shipAction, shipPending] = useActionToast(shipOrderAction, { errorNamespace: "admin.orders", onSuccess: close, onError: rollback });
+  const [codeState, codeAction, codePending] = useActionToast(confirmDeliveryByCodeAction, { errorNamespace: "admin.orders", onSuccess: close, onError: rollback });
   const [refundState, refundAction, refundPending] = useActionToast(refundOrderAction, { errorNamespace: "admin.orders", onSuccess: close });
   const { run, pending: statusPending } = useOptimisticAction("admin.orders");
 
@@ -51,6 +52,7 @@ export function OrderActions({ storeId, orderId, status: serverStatus, currency,
   if (next.includes("paid")) items.push({ key: "paid", label: t("actions.markPaid"), onSelect: () => setDialog("paid") });
   if (next.includes("processing")) items.push({ key: "processing", label: t("actions.startProcessing"), onSelect: () => submitStatus("processing") });
   if (next.includes("shipped")) items.push({ key: "ship", label: t("actions.ship"), onSelect: () => setDialog("ship") });
+  if (next.includes("delivered")) items.push({ key: "code", label: t("actions.confirmCode"), onSelect: () => setDialog("code") });
   if (next.includes("delivered")) items.push({ key: "delivered", label: t("actions.markDelivered"), onSelect: () => submitStatus("delivered") });
   if (canRefund && REFUNDABLE.includes(status) && remainingRefundable > 0) items.push({ key: "refund", label: t("actions.refund"), onSelect: () => setDialog("refund") });
   if (next.includes("cancelled")) items.push({ key: "cancel", label: t("actions.cancel"), onSelect: () => setDialog("cancel"), destructive: true });
@@ -138,6 +140,41 @@ export function OrderActions({ storeId, orderId, status: serverStatus, currency,
               </Button>
               <Button type="submit" disabled={shipPending}>
                 {t("actions.ship")}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm with the customer's delivery code */}
+      <Dialog open={dialog === "code"} onOpenChange={(o) => !o && close()}>
+        <DialogContent>
+          <form action={codeAction} onSubmit={() => setOptimistic(orderId, { status: "delivered" })} className="flex flex-col gap-4">
+            {hidden}
+            <DialogHeader>
+              <DialogTitle>{t("deliverCode.title")}</DialogTitle>
+              <DialogDescription>{t("deliverCode.description")}</DialogDescription>
+            </DialogHeader>
+            <FormField name="code" label={t("deliverCode.label")} errors={codeState.fieldErrors} required>
+              <LatinInput
+                kind="code"
+                id="code"
+                name="code"
+                required
+                inputMode="numeric"
+                pattern="[0-9]{6}"
+                maxLength={6}
+                autoComplete="off"
+                placeholder="000000"
+                className="text-center text-lg tracking-[0.4em] tabular-nums"
+              />
+            </FormField>
+            <DialogFooter>
+              <Button type="button" variant="ghost" onClick={close}>
+                {tc("cancel")}
+              </Button>
+              <Button type="submit" disabled={codePending}>
+                {t("actions.confirmCode")}
               </Button>
             </DialogFooter>
           </form>

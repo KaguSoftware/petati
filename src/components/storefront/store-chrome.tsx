@@ -35,7 +35,10 @@ export async function StoreChrome({ ctx, children }: { ctx: StoreContext; childr
   });
 
   return (
+    // Chrome is wrapped rather than variant-patched so `print:hidden` covers all four layouts at
+    // once: a printed order receipt is the page, not the shop around it.
     <>
+      <div className="contents print:hidden">
       {renderSection("announcementBar", store.theme.sections.announcementBar, {
         text: store.theme.announcement[locale] ?? store.theme.announcement[fallback] ?? "",
       })}
@@ -66,8 +69,9 @@ export async function StoreChrome({ ctx, children }: { ctx: StoreContext; childr
           </Suspense>
         ),
       })}
+      </div>
       <div className="flex flex-1 flex-col *:w-full">{children}</div>
-      {renderSection("footer", store.theme.sections.footer, footerProps)}
+      <div className="contents print:hidden">{renderSection("footer", store.theme.sections.footer, footerProps)}</div>
     </>
   );
 }

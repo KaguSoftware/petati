@@ -5,7 +5,9 @@ import type { OrderAddress } from "@/lib/db/types";
 import type { Locale } from "@/i18n/config";
 import { pickJson } from "@/lib/catalog/types";
 import { formatMoney } from "@/lib/money";
+import { DELIVERY_ATTEMPT_LIMIT } from "@/lib/delivery/limits";
 import { StatusBadge } from "../shared/status-badge";
+import { DeliveryCodeCard } from "./delivery-code-card";
 import { InternalNoteForm } from "./internal-note-form";
 import { OrderTimeline } from "./order-timeline";
 
@@ -195,6 +197,21 @@ export async function OrderDetail({ order, storeId, locale }: { order: OrderDeta
             </ul>
           )}
         </Card>
+        {order.status !== "cancelled" && order.status !== "refunded" && (
+          <Card title={t("orders.deliveryCode")}>
+            <DeliveryCodeCard
+              storeId={storeId}
+              orderId={order.id}
+              code={order.delivery_code}
+              attempts={order.delivery_attempts}
+              limit={DELIVERY_ATTEMPT_LIMIT}
+              canReissue={order.status !== "delivered"}
+            />
+            <Link href={`/admin/orders/${order.id}/slip`} target="_blank" className="text-center text-xs text-muted-foreground underline underline-offset-4">
+              {t("orders.slip.open")}
+            </Link>
+          </Card>
+        )}
         {(order.tracking_number || order.tracking_url) && (
           <Card title={t("orders.ship.title")}>
             <p className="text-sm" dir="ltr">

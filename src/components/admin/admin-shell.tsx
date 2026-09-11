@@ -42,7 +42,7 @@ export function AdminShell({ locale, user, role, store, stores, multiStore, chil
 
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col self-start border-e bg-sidebar text-sidebar-foreground md:flex">
+      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col self-start border-e bg-sidebar text-sidebar-foreground md:flex print:hidden">
         <div className="flex h-14 shrink-0 items-center gap-2 border-b px-4 font-semibold">
           <StoreMark logoUrl={store.logoUrl} />
           <span className="truncate">{store.name}</span>
@@ -65,7 +65,7 @@ export function AdminShell({ locale, user, role, store, stores, multiStore, chil
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-background/85 px-3 backdrop-blur md:px-6">
+        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-background/85 px-3 backdrop-blur md:px-6 print:hidden">
           <AdminMobileNav items={nav} storeName={store.name} logoUrl={store.logoUrl} switcher={switcher} />
           <Breadcrumbs className="min-w-0 flex-1" />
           <div className="flex items-center gap-1">

@@ -8,7 +8,12 @@ import { formatMoney } from "@/lib/money";
 import { pickJson } from "@/lib/catalog/types";
 import { Badge } from "@/components/ui/badge";
 import { PageShell } from "@/components/storefront/shared/page-shell";
+import { PrintButton } from "@/components/storefront/shared/print-button";
 import { ProductImage } from "@/components/storefront/shared/product-image";
+import type { OrderStatus } from "@/lib/db/types";
+
+/** Statuses where the delivery code is still worth something to the customer. */
+const DELIVERY_CODE_VISIBLE: OrderStatus[] = ["paid", "processing", "shipped"];
 
 export default async function OrderPage({ params, searchParams }: PageProps<"/[locale]/s/[store]/order/[id]">) {
   const ctx = await storeContext(params);
@@ -45,8 +50,23 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
             {t("placedAt")} {new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(order.placed_at))}
           </p>
         </div>
-        <Badge variant={order.status === "cancelled" ? "destructive" : "secondary"}>{ts(order.status)}</Badge>
+        <div className="flex items-center gap-3">
+          <Badge variant={order.status === "cancelled" ? "destructive" : "secondary"}>{ts(order.status)}</Badge>
+          <PrintButton label={t("print")} />
+        </div>
       </div>
+
+      {/* The handover secret. Shown only while the parcel is still on its way: once the order is
+          delivered, cancelled or refunded the code is spent, and the order link lives in an email. */}
+      {DELIVERY_CODE_VISIBLE.includes(order.status) && (
+        <section className="flex flex-col gap-1 rounded-xl border border-dashed p-4 text-center">
+          <h2 className="text-sm font-medium text-muted-foreground">{t("deliveryCode")}</h2>
+          <p dir="ltr" className="text-3xl font-semibold tracking-[0.3em] tabular-nums">
+            {order.delivery_code}
+          </p>
+          <p className="text-sm text-muted-foreground">{t("deliveryCodeHint")}</p>
+        </section>
+      )}
 
       <section className="rounded-xl border">
         <ul className="divide-y">

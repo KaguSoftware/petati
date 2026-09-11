@@ -307,7 +307,10 @@
         "last30": "Son 30 gün",
         "thisMonth": "Bu ay",
         "lastMonth": "Geçen ay"
-      }
+      },
+      "selected": "Seçili",
+      "selectAll": "Tümünü seç",
+      "selectRow": "Satırı seç"
     },
     "roles": {
       "owner": "Sahip",
@@ -403,7 +406,9 @@
         "ship": "Kargolandı olarak işaretle",
         "markDelivered": "Teslim edildi olarak işaretle",
         "cancel": "Siparişi iptal et",
-        "refund": "İade"
+        "refund": "İade",
+        "confirmCode": "Kodla onayla",
+        "reissueCode": "Yeni kod"
       },
       "markPaid": {
         "description": "Ödemenin ulaştığını onaylayın (havale, kapıda ödeme…). Müşteri bilgilendirilir.",
@@ -442,12 +447,37 @@
         "shipment": "Kargolandı",
         "shipmentTracking": "Kargolandı · takip {number}",
         "refund": "{amount} iade edildi",
-        "note": "Dahili not güncellendi"
+        "note": "Dahili not güncellendi",
+        "deliveredByCode": "Teslim edildi · teslimat koduyla onaylandı",
+        "deliveredByManual": "Teslim edildi · personel işaretledi",
+        "codeReissued": "Yeni teslimat kodu oluşturuldu"
       },
       "errors": {
         "transition": "Mevcut durumdan bu değişiklik yapılamaz.",
         "noPayment": "Bu siparişe bağlı ödeme yok.",
-        "refundTooLarge": "Tutar iade edilebilecek miktarı aşıyor."
+        "refundTooLarge": "Tutar iade edilebilecek miktarı aşıyor.",
+        "wrongCode": "Bu kod siparişle eşleşmiyor.",
+        "locked": "Çok fazla hatalı deneme. Bu sipariş için yeni bir kod oluşturun."
+      },
+      "deliveryCode": "Teslimat kodu",
+      "deliverCode": {
+        "title": "Teslimatı onayla",
+        "description": "Müşteriden sipariş sayfasındaki altı haneyi isteyin ve buraya yazın.",
+        "label": "Teslimat kodu",
+        "attemptsLeft": "Kod kilitlenmeden önce {count} deneme kaldı.",
+        "locked": "Çok fazla hatalı deneme sonrası kilitlendi. Yeni bir kod oluşturun.",
+        "reissued": "Yeni kod oluşturuldu"
+      },
+      "slip": {
+        "open": "Teslimat fişini yazdır",
+        "print": "Yazdır",
+        "instruction": "Kurye: teslimatı bu adreste müşterinin koduyla onaylayın."
+      },
+      "bulk": {
+        "selected": "{count} seçildi",
+        "clear": "Temizle",
+        "done": "{changed} güncellendi, {skipped} atlandı",
+        "confirmCancelTitle": "{count} sipariş iptal edilsin mi?"
       }
     },
     "discountType": {
@@ -1405,7 +1435,10 @@
     "paymentPending": "Ödeme ve teslimat için sizinle iletişime geçeceğiz.",
     "shippingTo": "Teslimat adresi",
     "contact": "İletişim",
-    "tracking": "Kargo takip"
+    "tracking": "Kargo takip",
+    "deliveryCode": "Teslimat kodu",
+    "deliveryCodeHint": "Siparişiniz geldiğinde bu kodu kuryeye söyleyin.",
+    "print": "Yazdır"
   },
   "stores": {
     "title": "Mağazalar",
@@ -1645,5 +1678,17 @@
       "palette": "Palet",
       "hex": "Hex değeri"
     }
+  },
+  "deliver": {
+    "title": "Teslimatı onayla",
+    "description": "Paketteki sipariş numarasını ve müşterinin verdiği kodu girin.",
+    "orderNumber": "Sipariş numarası",
+    "code": "Teslimat kodu",
+    "codeHint": "Müşteriden alınan altı hane.",
+    "submit": "Teslimatı onayla",
+    "success": "{number} numaralı sipariş teslim edildi olarak onaylandı. Teşekkürler!",
+    "invalid": "Sipariş numarası ile kod eşleşmiyor.",
+    "locked": "Çok fazla hatalı deneme. Mağazadan yeni bir kod isteyin.",
+    "notShipped": "Bu sipariş henüz dağıtımda değil."
   }
 }

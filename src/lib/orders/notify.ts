@@ -1,0 +1,43 @@
+import "server-only";
+
+import type { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import type { OrderRow, OrderStatus } from "@/lib/db/types";
+import { sendEmail } from "@/lib/email/send";
+import { env } from "@/lib/env";
+import { OrderStatusEmail } from "@/emails/order-status";
+
+type Db = ReturnType<typeof createSupabaseAdminClient>;
+
+/**
+ * Status mail for the shopper. Lives outside the `"use server"` modules because both the admin
+ * actions and the public delivery confirm need it, and a `"use server"` file may only export
+ * async server actions. `sendEmail` never throws, so callers do not have to guard it.
+ */
+export async function notifyCustomer(
+  db: Db,
+  order: OrderRow,
+  status: OrderStatus,
+  extra: { trackingNumber?: string | null; trackingUrl?: string | null } = {},
+) {
+  const { data: store } = await db
+    .from("stores")
+    .select("slug, name, email_from")
+    .eq("id", order.store_id)
+    .maybeSingle<{ slug: string; name: string; email_from: string | null }>();
+  if (!store) return;
+  await sendEmail({
+    to: order.email,
+    from: store.email_from,
+    subject: `${store.name} · ${order.number}`,
+    react: OrderStatusEmail({
+      storeName: store.name,
+      orderNumber: order.number,
+      orderUrl: `${env.appUrl()}/${order.locale}/order/${order.id}`,
+      locale: order.locale,
+      status,
+      deliveryCode: status === "shipped" ? order.delivery_code : null,
+      trackingNumber: extra.trackingNumber ?? order.tracking_number,
+      trackingUrl: extra.trackingUrl ?? order.tracking_url,
+    }),
+  });
+}

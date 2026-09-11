@@ -6,6 +6,8 @@ import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { SortHeader } from "../shared/sort-header";
 import { StatusBadge } from "../shared/status-badge";
+import { OrdersBulkBar } from "./orders-bulk-bar";
+import { RowCheckbox, SelectAllCheckbox } from "./row-select";
 
 interface Props {
   rows: OrderListRow[];
@@ -15,12 +17,28 @@ interface Props {
   basePath?: string;
   /** Hide the customer column (customer detail page). */
   hideCustomer?: boolean;
+  /** Store id for the bulk bar; omit to render the table without selection. */
+  storeId?: string;
+  /** Selection scope (the status bucket). Required together with `storeId` to enable selection. */
+  scope?: string;
 }
 
-export async function OrdersTable({ rows, locale, sort, query, basePath = "/admin/orders", hideCustomer }: Props) {
+export async function OrdersTable({ rows, locale, sort, query, basePath = "/admin/orders", hideCustomer, storeId, scope }: Props) {
   const t = await getTranslations("admin");
   const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
+  const selectable = Boolean(storeId && scope);
+  const ids = rows.map((r) => r.id);
   const columns: Column<OrderListRow>[] = [
+    ...(selectable
+      ? [
+          {
+            key: "select",
+            className: "w-10",
+            header: <SelectAllCheckbox scope={scope!} ids={ids} />,
+            cell: (r: OrderListRow) => <RowCheckbox scope={scope!} id={r.id} />,
+          } satisfies Column<OrderListRow>,
+        ]
+      : []),
     {
       key: "number",
       header: <SortHeader label={t("orders.number")} sortKey="number" current={sort} basePath={basePath} query={query} />,
@@ -61,5 +79,12 @@ export async function OrdersTable({ rows, locale, sort, query, basePath = "/admi
       className: "text-end",
     },
   ];
-  return <DataTable columns={columns} rows={rows} rowKey={(r) => r.id} empty={<EmptyState title={t("common.noResults")} description={t("common.noResultsHint")} />} />;
+  return (
+    <>
+      <DataTable columns={columns} rows={rows} rowKey={(r) => r.id} empty={<EmptyState title={t("common.noResults")} description={t("common.noResultsHint")} />} />
+      {selectable && rows.length > 0 && (
+        <OrdersBulkBar storeId={storeId!} scope={scope!} statuses={Object.fromEntries(rows.map((r) => [r.id, r.status]))} />
+      )}
+    </>
+  );
 }

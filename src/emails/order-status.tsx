@@ -8,16 +8,19 @@ interface Props {
   locale: string;
   status: OrderStatus;
   trackingNumber?: string | null;
+  /** Shown on the shipped mail so the customer has it at the door. */
+  deliveryCode?: string | null;
   trackingUrl?: string | null;
 }
 
-type Copy = { view: string; tracking: string; track: string } & Partial<Record<OrderStatus, { title: string; body: string }>>;
+type Copy = { view: string; tracking: string; track: string; code?: string } & Partial<Record<OrderStatus, { title: string; body: string }>>;
 
 const copy: Record<string, Copy> = {
   en: {
     view: "View order",
     tracking: "Tracking number",
     track: "Track shipment",
+    code: "Delivery code",
     paid: { title: "Payment received", body: "Thank you, we have received your payment and will start preparing your order." },
     shipped: { title: "Your order is on its way", body: "Your order has been handed to the carrier." },
     delivered: { title: "Order delivered", body: "Your order has been delivered. We hope your pet loves it!" },
@@ -27,6 +30,7 @@ const copy: Record<string, Copy> = {
     view: "Siparişi görüntüle",
     tracking: "Takip numarası",
     track: "Kargoyu takip et",
+    code: "Teslimat kodu",
     paid: { title: "Ödeme alındı", body: "Teşekkürler, ödemenizi aldık ve siparişinizi hazırlamaya başlıyoruz." },
     shipped: { title: "Siparişiniz yolda", body: "Siparişiniz kargoya teslim edildi." },
     delivered: { title: "Sipariş teslim edildi", body: "Siparişiniz teslim edildi. Umarız dostunuz çok sever!" },
@@ -36,6 +40,7 @@ const copy: Record<string, Copy> = {
     view: "مشاهده سفارش",
     tracking: "کد رهگیری",
     track: "پیگیری مرسوله",
+    code: "کد تحویل",
     paid: { title: "پرداخت دریافت شد", body: "متشکریم، پرداخت شما را دریافت کردیم و آماده‌سازی سفارش را شروع می‌کنیم." },
     shipped: { title: "سفارش شما در راه است", body: "سفارش شما به شرکت حمل تحویل داده شد." },
     delivered: { title: "سفارش تحویل شد", body: "سفارش شما تحویل داده شد. امیدواریم حیوان خانگی‌تان دوستش داشته باشد!" },
@@ -58,6 +63,11 @@ export function OrderStatusEmail(p: Props) {
             {s.title} · {p.orderNumber}
           </Text>
           <Text>{s.body}</Text>
+          {p.status === "shipped" && p.deliveryCode && (
+            <Text style={{ textAlign: "center", border: "1px dashed #cccccc", borderRadius: 8, padding: 12 }}>
+              {c.code}: <strong dir="ltr" style={{ fontSize: 22, letterSpacing: 4 }}>{p.deliveryCode}</strong>
+            </Text>
+          )}
           {p.status === "shipped" && p.trackingNumber && (
             <Text>
               {c.tracking}: <strong dir="ltr">{p.trackingNumber}</strong>

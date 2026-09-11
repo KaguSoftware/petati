@@ -17,7 +17,11 @@ export async function OrderTimeline({ events, locale, currency }: Props) {
       case "placed":
         return t("orders.timeline.placed");
       case "status_changed":
+        // A delivery says HOW it was closed: the customer's code, or a staff override.
+        if (d.to === "delivered" && d.method) return t(d.method === "code" ? "orders.timeline.deliveredByCode" : "orders.timeline.deliveredByManual");
         return t("orders.timeline.status_changed", { from: t(`status.order.${String(d.from)}`), to: t(`status.order.${String(d.to)}`) });
+      case "delivery_code_reissued":
+        return t("orders.timeline.codeReissued");
       case "payment":
         return d.reference ? t("orders.timeline.paymentRef", { ref: String(d.reference) }) : t("orders.timeline.payment");
       case "shipment":

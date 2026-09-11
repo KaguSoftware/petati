@@ -307,7 +307,10 @@
         "last30": "Last 30 days",
         "thisMonth": "This month",
         "lastMonth": "Last month"
-      }
+      },
+      "selected": "Selected",
+      "selectAll": "Select all",
+      "selectRow": "Select row"
     },
     "roles": {
       "owner": "Owner",
@@ -403,7 +406,9 @@
         "ship": "Mark as shipped",
         "markDelivered": "Mark as delivered",
         "cancel": "Cancel order",
-        "refund": "Refund"
+        "refund": "Refund",
+        "confirmCode": "Confirm with code",
+        "reissueCode": "New code"
       },
       "markPaid": {
         "description": "Confirm that the payment arrived (bank transfer, cash on delivery…). The customer will be notified.",
@@ -442,12 +447,37 @@
         "shipment": "Shipped",
         "shipmentTracking": "Shipped · tracking {number}",
         "refund": "Refund of {amount}",
-        "note": "Internal note updated"
+        "note": "Internal note updated",
+        "deliveredByCode": "Delivered · confirmed with the delivery code",
+        "deliveredByManual": "Delivered · marked by staff",
+        "codeReissued": "New delivery code issued"
       },
       "errors": {
         "transition": "That change is not allowed from the current status.",
         "noPayment": "No payment is attached to this order.",
-        "refundTooLarge": "The amount exceeds what can still be refunded."
+        "refundTooLarge": "The amount exceeds what can still be refunded.",
+        "wrongCode": "That code does not match this order.",
+        "locked": "Too many wrong tries. Issue a new code for this order."
+      },
+      "deliveryCode": "Delivery code",
+      "deliverCode": {
+        "title": "Confirm delivery",
+        "description": "Ask the customer for the six digits on their order page, then type them here.",
+        "label": "Delivery code",
+        "attemptsLeft": "{count} tries left before the code locks.",
+        "locked": "Locked after too many wrong tries. Issue a new code.",
+        "reissued": "New code issued"
+      },
+      "slip": {
+        "open": "Print delivery slip",
+        "print": "Print",
+        "instruction": "Courier: confirm the delivery at this address with the customer's code."
+      },
+      "bulk": {
+        "selected": "{count} selected",
+        "clear": "Clear",
+        "done": "{changed} updated, {skipped} skipped",
+        "confirmCancelTitle": "Cancel {count} orders?"
       }
     },
     "discountType": {
@@ -1405,7 +1435,10 @@
     "paymentPending": "We will contact you to arrange payment and delivery.",
     "shippingTo": "Shipping to",
     "contact": "Contact",
-    "tracking": "Tracking"
+    "tracking": "Tracking",
+    "deliveryCode": "Delivery code",
+    "deliveryCodeHint": "Give this code to the courier when your order arrives.",
+    "print": "Print"
   },
   "stores": {
     "title": "Stores",
@@ -1645,5 +1678,17 @@
       "palette": "Palette",
       "hex": "Hex value"
     }
+  },
+  "deliver": {
+    "title": "Confirm delivery",
+    "description": "Enter the order number from the parcel and the code the customer gives you.",
+    "orderNumber": "Order number",
+    "code": "Delivery code",
+    "codeHint": "Six digits, from the customer.",
+    "submit": "Confirm delivery",
+    "success": "Order {number} is confirmed as delivered. Thank you!",
+    "invalid": "That order number and code do not match.",
+    "locked": "Too many wrong tries. Ask the store to issue a new code.",
+    "notShipped": "This order is not out for delivery."
   }
 }

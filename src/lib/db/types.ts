@@ -289,6 +289,11 @@ export interface OrderRow {
   shipped_at: string | null;
   delivered_at: string | null;
   cancelled_at: string | null;
+  /** Secret 6-digit code held by the customer; confirms delivery together with the order number. */
+  delivery_code: string;
+  /** Failed confirm attempts; at DELIVERY_ATTEMPT_LIMIT the code locks until staff reissue it. */
+  delivery_attempts: number;
+  delivered_by: "code" | "manual" | null;
 }
 
 export interface OrderItemRow {

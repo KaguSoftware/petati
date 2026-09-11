@@ -19,14 +19,16 @@ interface Props {
   orderUrl: string;
   locale: string;
   currency: string;
+  /** Secret the customer reads out to the courier at handover. */
+  deliveryCode?: string;
   lines: { name: string; variant: string | null; qty: number; total: number }[];
   totals: Totals;
 }
 
-const copy: Record<string, { title: string; thanks: string; view: string; total: string; shipping: string; discount: string }> = {
-  en: { title: "Order confirmed", thanks: "Thank you for your order. We will contact you to arrange payment and delivery.", view: "View order", total: "Total", shipping: "Shipping", discount: "Discount" },
-  tr: { title: "Sipariş alındı", thanks: "Siparişiniz için teşekkürler. Ödeme ve teslimat için sizinle iletişime geçeceğiz.", view: "Siparişi görüntüle", total: "Toplam", shipping: "Kargo", discount: "İndirim" },
-  fa: { title: "سفارش ثبت شد", thanks: "از سفارش شما متشکریم. برای هماهنگی پرداخت و ارسال با شما تماس می‌گیریم.", view: "مشاهده سفارش", total: "جمع کل", shipping: "هزینه ارسال", discount: "تخفیف" },
+const copy: Record<string, { title: string; thanks: string; view: string; total: string; shipping: string; discount: string; code: string; codeHint: string }> = {
+  en: { title: "Order confirmed", thanks: "Thank you for your order. We will contact you to arrange payment and delivery.", view: "View order", total: "Total", shipping: "Shipping", discount: "Discount", code: "Delivery code", codeHint: "Give this code to the courier when your order arrives. Keep it to yourself until then." },
+  tr: { title: "Sipariş alındı", thanks: "Siparişiniz için teşekkürler. Ödeme ve teslimat için sizinle iletişime geçeceğiz.", view: "Siparişi görüntüle", total: "Toplam", shipping: "Kargo", discount: "İndirim", code: "Teslimat kodu", codeHint: "Siparişiniz geldiğinde bu kodu kuryeye söyleyin. O ana kadar kimseyle paylaşmayın." },
+  fa: { title: "سفارش ثبت شد", thanks: "از سفارش شما متشکریم. برای هماهنگی پرداخت و ارسال با شما تماس می‌گیریم.", view: "مشاهده سفارش", total: "جمع کل", shipping: "هزینه ارسال", discount: "تخفیف", code: "کد تحویل", codeHint: "هنگام دریافت سفارش، این کد را به پیک بگویید. تا آن زمان آن را در اختیار کسی قرار ندهید." },
 };
 
 export function OrderConfirmationEmail(p: Props) {
@@ -65,6 +67,13 @@ export function OrderConfirmationEmail(p: Props) {
           <Text style={{ fontWeight: 700 }}>
             {c.total}: {money(p.totals.total)}
           </Text>
+          {p.deliveryCode && (
+            <Section style={{ border: "1px dashed #cccccc", borderRadius: 8, padding: 16, textAlign: "center", margin: "16px 0" }}>
+              <Text style={{ margin: 0, color: "#666666", fontSize: 13 }}>{c.code}</Text>
+              <Text style={{ margin: "4px 0", fontSize: 28, fontWeight: 700, letterSpacing: 6, direction: "ltr" }}>{p.deliveryCode}</Text>
+              <Text style={{ margin: 0, color: "#666666", fontSize: 13 }}>{c.codeHint}</Text>
+            </Section>
+          )}
           <Button
             href={p.orderUrl}
             style={{ backgroundColor: "#111111", color: "#ffffff", padding: "10px 18px", borderRadius: 6 }}
