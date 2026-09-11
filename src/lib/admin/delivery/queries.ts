@@ -353,3 +353,95 @@ export async function getDeliveryStats(storeId: string, timezone: string, days =
     couriers: [...byCourier.values()].sort((a, b) => b.delivered - a.delivered),
   };
 }
+
+export interface LookupMatch {
+  orderId: string;
+  orderNumber: string;
+  orderStatus: OrderStatus;
+  customerName: string | null;
+  phone: string | null;
+  address: string | null;
+  total: number;
+  currency: string;
+  deliveryId: string | null;
+  deliveryState: DeliveryState | null;
+  courierName: string | null;
+  cashExpected: number;
+  cashCollected: number | null;
+  /** The query WAS this order's delivery code — so the code is already proven. */
+  matchedByCode: boolean;
+  /** Wrong-code tries left; 0 means the code is locked. */
+  triesLeft: number;
+  /** Shipped with an open stop: one click away from delivered. */
+  canConfirm: boolean;
+}
+
+/**
+ * One box for the whole module: six digits, an order number, a phone or a name.
+ *
+ * A delivery code is an identifier, so it should be the thing you search WITH. When the query is the
+ * code and it matches, the searcher has already proved it — the caller can then close the stop in a
+ * single click instead of re-typing it into a dialog.
+ */
+export async function lookupDelivery(storeId: string, query: string, attemptLimit: number): Promise<LookupMatch[]> {
+  const term = query.trim();
+  if (term.length < 3) return [];
+  const db = createSupabaseAdminClient();
+  const isCode = /^[0-9]{6}$/.test(term);
+  // Strip what would break a PostgREST or() filter.
+  const safe = term.replace(/[,()%\\]/g, " ").trim();
+
+  let q = db
+    .from("orders")
+    .select(
+      "id, number, status, total, currency, phone, delivery_code, delivery_attempts, shipping_address, customers(full_name), deliveries(id, state, cash_expected, cash_collected, couriers(name))",
+    )
+    .eq("store_id", storeId)
+    .limit(10);
+  // The phone can live on the order or only in the address snapshot, depending on how it was placed.
+  q = isCode
+    ? q.or(`delivery_code.eq.${safe},number.ilike.%${safe}%`)
+    : q.or(`number.ilike.%${safe}%,email.ilike.%${safe}%,phone.ilike.%${safe}%,shipping_address->>phone.ilike.%${safe}%`);
+
+  const { data } = await q.returns<
+    {
+      id: string;
+      number: string;
+      status: OrderStatus;
+      total: number;
+      currency: string;
+      phone: string | null;
+      delivery_code: string;
+      delivery_attempts: number;
+      shipping_address: OrderAddress | null;
+      customers: { full_name: string | null } | null;
+      deliveries: { id: string; state: DeliveryState; cash_expected: number; cash_collected: number | null; couriers: { name: string } | null }[];
+    }[]
+  >();
+
+  return (data ?? []).map((o) => {
+    const open = o.deliveries?.find((d) => d.state === "assigned" || d.state === "out_for_delivery" || d.state === "pending");
+    const latest = open ?? o.deliveries?.[o.deliveries.length - 1] ?? null;
+    const a = o.shipping_address;
+    const matchedByCode = isCode && o.delivery_code === safe;
+    const triesLeft = Math.max(0, attemptLimit - o.delivery_attempts);
+    return {
+      orderId: o.id,
+      orderNumber: o.number,
+      orderStatus: o.status,
+      customerName: o.customers?.full_name ?? a?.full_name ?? null,
+      phone: a?.phone ?? o.phone,
+      address: a ? [a.line1, a.city].filter(Boolean).join(", ") : null,
+      total: o.total,
+      currency: o.currency,
+      deliveryId: latest?.id ?? null,
+      deliveryState: latest?.state ?? null,
+      courierName: latest?.couriers?.name ?? null,
+      cashExpected: latest?.cash_expected ?? 0,
+      cashCollected: latest?.cash_collected ?? null,
+      matchedByCode,
+      triesLeft,
+      canConfirm: o.status === "shipped" && triesLeft > 0,
+    };
+  });
+}

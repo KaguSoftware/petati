@@ -9,6 +9,8 @@ import type { CourierRow, DeliveryRow, DeliveryState, OrderRow } from "@/lib/db/
 import { markDelivered } from "@/lib/delivery/confirm";
 import { markOrderPaid } from "@/lib/orders/pay";
 import { markShipped } from "@/lib/orders/ship";
+import { lookupDelivery, type LookupMatch } from "./queries";
+import { deliveryFromSettings } from "@/lib/delivery/settings";
 import { env } from "@/lib/env";
 import { COURIER_VEHICLES, DELIVERY_TRANSITIONS, FAILURE_REASONS } from "./types";
 
@@ -402,6 +404,28 @@ export async function getCourierLinkAction(_prev: ActionState & { link?: string 
     const { data } = await db.from("couriers").select("token").eq("store_id", storeId).eq("id", courierId).maybeSingle<{ token: string }>();
     if (!data) return { error: "notFound" };
     return { ok: true, link: `${env.appUrl()}/${locale}/courier/${data.token}` };
+  } catch (err) {
+    return { error: actionError(err) };
+  }
+}
+
+/**
+ * The module's search: six digits, an order number, a phone or an email. Returns matches with
+ * everything needed to act on them, so staff never navigate to find a parcel someone is asking about
+ * on the phone.
+ */
+export async function lookupDeliveryAction(
+  _prev: ActionState & { matches?: LookupMatch[]; query?: string },
+  formData: FormData,
+): Promise<ActionState & { matches?: LookupMatch[]; query?: string }> {
+  const parsed = parseForm(base.extend({ query: z.string().trim().min(1).max(60) }), formData);
+  if (!parsed.data) return { error: "invalid" };
+  const { storeId, query } = parsed.data;
+  try {
+    const { db } = await adminMutation(storeId, "delivery.read");
+    const { data: store } = await db.from("stores").select("settings").eq("id", storeId).maybeSingle<{ settings: Record<string, unknown> }>();
+    const matches = await lookupDelivery(storeId, query, deliveryFromSettings(store?.settings).attemptLimit);
+    return { ok: true, matches, query };
   } catch (err) {
     return { error: actionError(err) };
   }

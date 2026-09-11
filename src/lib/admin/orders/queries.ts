@@ -52,7 +52,8 @@ export async function listOrders(storeId: string, params: ListParams<OrderSort> 
   if (params.from) q = q.gte("placed_at", `${params.from}T00:00:00Z`);
   if (params.to) q = q.lte("placed_at", `${params.to}T23:59:59.999Z`);
   const term = safeLike(params.q);
-  if (term) q = q.or(`number.ilike.%${term}%,email.ilike.%${term}%`);
+  // Six digits is a delivery code: a customer reading theirs out on the phone should find their order.
+  if (term) q = q.or(/^[0-9]{6}$/.test(term) ? `number.ilike.%${term}%,email.ilike.%${term}%,delivery_code.eq.${term}` : `number.ilike.%${term}%,email.ilike.%${term}%`);
   const { data, count, error } = await q.order(params.sort, { ascending: params.dir === "asc" }).range(params.range.from, params.range.to);
   if (error) throw error;
   type Raw = Omit<OrderListRow, "customer_name" | "payment_status"> & { customers: { full_name: string | null } | null; payments: { status: PaymentStatus }[] | null };

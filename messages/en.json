@@ -413,7 +413,7 @@
       "paymentRef": "Reference",
       "refunded": "Refunded",
       "shippingCost": "Shipping cost (paid to courier)",
-      "searchPlaceholder": "Search by order number or email…",
+      "searchPlaceholder": "Search by order number, email or delivery code…",
       "actions": {
         "markPaid": "Mark as paid",
         "startProcessing": "Start processing",
@@ -1578,7 +1578,17 @@
       "title": "Delivery",
       "proofPhoto": "Proof photo",
       "proofLocation": "Location at handover",
-      "cashLabel": "Cash"
+      "cashLabel": "Cash",
+      "search": {
+        "placeholder": "Delivery code, order number, phone…",
+        "submit": "Find",
+        "none": "Nothing matches that.",
+        "codeMatched": "Code matches",
+        "confirm": "Confirm delivery",
+        "confirmed": "{number} delivered",
+        "locked": "Code locked",
+        "clear": "Clear"
+      }
     }
   },
   "shop": {
@@ -1936,6 +1946,8 @@
       "reasonRequired": "Please say why there is no code.",
       "photoFailed": "The photo could not be saved.",
       "failed": "Something went wrong. Try again."
-    }
+    },
+    "find": "Find a stop: order number, name, street…",
+    "noMatch": "No stop matches that."
   }
 }

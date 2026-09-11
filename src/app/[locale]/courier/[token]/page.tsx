@@ -6,7 +6,7 @@ import { courierContext, getCourierStops } from "@/lib/courier/context";
 import { deliveryFromSettings } from "@/lib/delivery/settings";
 import { themeToCssVars } from "@/lib/theme/types";
 import { formatMoney } from "@/lib/money";
-import { StopCard } from "@/components/courier/stop-card";
+import { StopList } from "@/components/courier/stop-list";
 import { StartRunButton } from "@/components/courier/start-run-button";
 
 type Props = PageProps<"/[locale]/courier/[token]">;
@@ -65,22 +65,7 @@ async function Content({ params }: { params: Props["params"] }) {
         {canStart && <StartRunButton token={token} label={t("startRun")} />}
       </header>
 
-      {open.length === 0 && done.length === 0 && (
-        <p className="rounded-xl border border-dashed p-8 text-center text-muted-foreground">{t("noStops")}</p>
-      )}
-
-      {open.map((stop) => (
-        <StopCard key={stop.id} token={token} stop={stop} locale={locale} codEnabled={settings.codEnabled} />
-      ))}
-
-      {done.length > 0 && (
-        <section className="flex flex-col gap-3">
-          <h2 className="px-1 text-sm font-medium text-muted-foreground">{t("closed")}</h2>
-          {done.map((stop) => (
-            <StopCard key={stop.id} token={token} stop={stop} locale={locale} codEnabled={settings.codEnabled} />
-          ))}
-        </section>
-      )}
+      <StopList token={token} open={open} done={done} locale={locale} codEnabled={settings.codEnabled} />
     </main>
   );
 }

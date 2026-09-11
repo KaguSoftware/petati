@@ -413,7 +413,7 @@
       "paymentRef": "Referans",
       "refunded": "İade edildi",
       "shippingCost": "Kargo maliyeti (kargo firmasına ödenen)",
-      "searchPlaceholder": "Sipariş numarası veya e-posta ile ara…",
+      "searchPlaceholder": "Sipariş no, e-posta veya teslimat kodu ile ara…",
       "actions": {
         "markPaid": "Ödendi olarak işaretle",
         "startProcessing": "Hazırlamaya başla",
@@ -1578,7 +1578,17 @@
       "title": "Teslimat",
       "proofPhoto": "Kanıt fotoğrafı",
       "proofLocation": "Teslim konumu",
-      "cashLabel": "Nakit"
+      "cashLabel": "Nakit",
+      "search": {
+        "placeholder": "Teslimat kodu, sipariş no, telefon…",
+        "submit": "Bul",
+        "none": "Eşleşen bir şey yok.",
+        "codeMatched": "Kod eşleşti",
+        "confirm": "Teslimatı onayla",
+        "confirmed": "{number} teslim edildi",
+        "locked": "Kod kilitli",
+        "clear": "Temizle"
+      }
     }
   },
   "shop": {
@@ -1936,6 +1946,8 @@
       "reasonRequired": "Lütfen kodun neden olmadığını yazın.",
       "photoFailed": "Fotoğraf kaydedilemedi.",
       "failed": "Bir şeyler ters gitti. Tekrar deneyin."
-    }
+    },
+    "find": "Durak bul: sipariş no, ad, sokak…",
+    "noMatch": "Eşleşen durak yok."
   }
 }

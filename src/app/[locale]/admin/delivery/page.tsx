@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/admin/shared/page-header";
 import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { TabbedPanels } from "@/components/admin/shared/tabbed-panels";
 import { DeliveryKpiRow } from "@/components/admin/delivery/delivery-kpis";
+import { DeliverySearch } from "@/components/admin/delivery/delivery-search";
 import { DeliveryStatsPanel } from "@/components/admin/delivery/delivery-stats";
 import { DispatchTable } from "@/components/admin/delivery/dispatch-table";
 import { QueueTable } from "@/components/admin/delivery/queue-table";
@@ -66,6 +67,7 @@ async function Board({ locale }: { locale: string }) {
 
   return (
     <div className="flex flex-col gap-6">
+      <DeliverySearch storeId={ctx.store.id} canConfirm={can(ctx.role, "orders.update")} locale={ctx.locale} />
       <DeliveryKpiRow kpis={kpis} currency={ctx.store.currency} locale={ctx.locale} />
       <TabbedPanels label={t("common.status")} param="bucket" defaultValue="needs" panels={panels} />
       <DeliveryStatsPanel stats={stats} locale={ctx.locale} currency={ctx.store.currency} />
