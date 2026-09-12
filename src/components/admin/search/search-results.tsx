@@ -7,6 +7,7 @@ import type { BrandHit, CourierHit, CustomerHit, GlobalSearchResult, ProductHit,
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "../shared/status-badge";
 import { OrderHit } from "./order-hit";
+import { numberFormat } from "@/lib/number";
 
 export type FlatHit =
   | { id: string; kind: "orders"; href: string; hit: LookupMatch }
@@ -148,7 +149,7 @@ function Row({ hit, locale, canConfirm, confirming, onConfirm }: { hit: FlatHit;
         <div className="min-w-0 flex-1">
           <p className="truncate font-medium">{b.name}</p>
           <p className="truncate text-xs text-muted-foreground">
-            {tb("products")}: {new Intl.NumberFormat(locale).format(b.productCount)}
+            {tb("products")}: {numberFormat(locale).format(b.productCount)}
           </p>
         </div>
         {!b.isActive && <span className="text-xs text-muted-foreground">{t("inactive")}</span>}

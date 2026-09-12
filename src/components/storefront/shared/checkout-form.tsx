@@ -99,7 +99,7 @@ export function CheckoutForm({ storeSlug, locale, currency, email, phone, addres
         <Field name="line2" label={t("addressLine2")} error={fe.line2}>
           <Input id="line2" name="line2" key={`l2-${addr?.id}`} defaultValue={addr?.line2 ?? ""} autoComplete="address-line2" />
         </Field>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 @phablet:grid-cols-2">
           <Field name="city" label={t("city")} error={fe.city}>
             <Input id="city" name="city" key={`c-${addr?.id}`} defaultValue={addr?.city ?? ""} required autoComplete="address-level2" />
           </Field>
@@ -116,7 +116,7 @@ export function CheckoutForm({ storeSlug, locale, currency, email, phone, addres
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold">{tc("shipping")}</h2>
+        <h2 className="text-lg font-semibold">{t("shippingMethod")}</h2>
         <RadioGroup
           name="shipping_rate_id"
           required
@@ -137,7 +137,6 @@ export function CheckoutForm({ storeSlug, locale, currency, email, phone, addres
             </Label>
           ))}
         </RadioGroup>
-        {state.error === "shipping" && <p className="text-sm text-destructive">{tc("shipping")}</p>}
       </section>
 
       <section className="flex flex-col gap-3">
@@ -157,9 +156,11 @@ export function CheckoutForm({ storeSlug, locale, currency, email, phone, addres
         {t("marketingOptIn")}
       </Label>
 
-      {state.error && state.error !== "invalid" && (
+      {/* `invalid` normally means per-field errors are shown above, so the banner would be noise —
+          but if none came back the form used to fail silently. Unknown codes fall back too. */}
+      {state.error && (state.error !== "invalid" || Object.keys(fe).length === 0) && (
         <p role="alert" className="text-sm text-destructive">
-          {t(`errors.${state.error}`)}
+          {t.has(`errors.${state.error}`) ? t(`errors.${state.error}`) : t("errors.failed")}
         </p>
       )}
 

@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { dateTimeFormat } from "@/lib/number";
 
 function shift(day: string, by: number): string {
   const [y, m, d] = day.split("-").map(Number);
@@ -14,7 +15,7 @@ function shift(day: string, by: number): string {
 export async function DayNav({ day, today, basePath, locale, className }: { day: string; today: string; basePath: string; locale: string; className?: string }) {
   const t = await getTranslations("admin.delivery");
   const href = (d: string) => (d === today ? basePath : `${basePath}?d=${d}`);
-  const long = new Intl.DateTimeFormat(locale, { weekday: "long", day: "numeric", month: "long" }).format(new Date(`${day}T12:00:00`));
+  const long = dateTimeFormat(locale, { weekday: "long", day: "numeric", month: "long" }).format(new Date(`${day}T12:00:00`));
   return (
     <nav aria-label={t("runs.day")} className={cn("flex flex-wrap items-center gap-2 print:hidden", className)}>
       <Link href={href(shift(day, -1))} className={buttonVariants({ variant: "outline", size: "icon-sm" })} aria-label={t("runs.prevDay")}>

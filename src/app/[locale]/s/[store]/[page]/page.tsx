@@ -15,10 +15,13 @@ export default async function ContentPage({ params }: PageProps<"/[locale]/s/[st
   if (!(PAGES as readonly string[]).includes(page)) notFound();
   const t = await getTranslations("footer");
   const pages = (store.settings.pages ?? {}) as Record<string, Record<string, string>>;
-  const body = pages[page]?.[locale] ?? pages[page]?.[fallback] ?? "";
+  const body = (pages[page]?.[locale] ?? pages[page]?.[fallback] ?? "").trim();
+  // Nothing written for this page in any locale — it does not exist. The footer no longer links
+  // to it either (see buildFooterProps), so this only catches direct hits and stale links.
+  if (!body) notFound();
   return (
     <PageShell width="narrow" title={t(page as (typeof PAGES)[number])}>
-      <div className="bidi-auto max-w-prose text-base leading-relaxed whitespace-pre-line text-muted-foreground">{body || "—"}</div>
+      <div className="bidi-auto rich-text max-w-prose whitespace-pre-line text-muted-foreground">{body}</div>
     </PageShell>
   );
 }

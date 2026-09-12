@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { CourierRow, DeliveryEventRow, DeliveryRow, DeliverySettlementRow, DeliveryState, OrderAddress, OrderStatus } from "@/lib/db/types";
 import type { ListParams } from "@/lib/admin/list-params";
 import { DELIVERABLE_STATUSES, type CourierWithLoad, type DeliveryKpis, type DeliveryListRow, type UndeliveredOrderRow } from "./types";
+import { dateTimeFormat } from "@/lib/number";
 
 /**
  * Store-local calendar date (YYYY-MM-DD). A delivery day is the store's day: at 01:00 in Istanbul
@@ -13,7 +14,7 @@ import { DELIVERABLE_STATUSES, type CourierWithLoad, type DeliveryKpis, type Del
 export function storeToday(timezone: string, offsetDays = 0): string {
   const d = new Date();
   if (offsetDays) d.setDate(d.getDate() + offsetDays);
-  return new Intl.DateTimeFormat("en-CA", { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+  return dateTimeFormat("en-CA", { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
 }
 
 type JoinedDelivery = DeliveryRow & {
@@ -415,7 +416,7 @@ export async function getDeliveryStats(storeId: string, timezone: string, days =
   const spine: { day: string; delivered: number; failed: number }[] = [];
   for (let i = days - 1; i >= 0; i--) spine.push({ day: storeToday(timezone, -i), delivered: 0, failed: 0 });
   const byDay = new Map(spine.map((d) => [d.day, d]));
-  const dayKey = (iso: string) => new Intl.DateTimeFormat("en-CA", { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(iso));
+  const dayKey = (iso: string) => dateTimeFormat("en-CA", { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(iso));
 
   const byCourier = new Map<string, CourierStat>();
   const hours = new Map<string, { sum: number; count: number }>();

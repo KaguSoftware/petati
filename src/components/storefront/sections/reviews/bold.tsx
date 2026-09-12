@@ -1,6 +1,7 @@
 import { BadgeCheck } from "lucide-react";
 import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import type { ReviewsProps } from "../types";
+import { dateTimeFormat } from "@/lib/number";
 
 /** Score board: a giant score with a bar on top, reviews as a grid of bordered tiles below. */
 export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, formSlot }: ReviewsProps) {
@@ -32,7 +33,7 @@ export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, f
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <RatingStars value={r.rating} size={16} />
                 <time className="ms-auto text-xs font-medium text-muted-foreground" dateTime={r.createdAt}>
-                  {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
+                  {dateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
                 </time>
               </div>
               {r.title && <p className="bidi-auto text-lg leading-tight font-extrabold tracking-tight">{r.title}</p>}

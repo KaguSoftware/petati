@@ -14,6 +14,7 @@ import { deliveryFromSettings, slotLabel } from "@/lib/delivery/settings";
 import { can } from "@/lib/auth/permissions";
 import { formatMoney } from "@/lib/money";
 import { stringParam, type SearchParams } from "@/lib/admin/list-params";
+import { dateTimeFormat } from "@/lib/number";
 
 type Props = PageProps<"/[locale]/admin/delivery/runs/[courierId]">;
 
@@ -65,7 +66,7 @@ async function Content({ params, searchParams }: { params: Props["params"]; sear
               <span className="hidden print:inline">{courier.name}</span>
             </h2>
             <p className="text-sm text-muted-foreground tabular-nums">
-              {new Intl.DateTimeFormat(ctx.locale, { dateStyle: "full" }).format(new Date(`${day}T12:00:00`))} · {t("run.stops", { count: stops.length })}
+              {dateTimeFormat(ctx.locale, { dateStyle: "full" }).format(new Date(`${day}T12:00:00`))} · {t("run.stops", { count: stops.length })}
               {cashTotal > 0 ? ` · ${money(cashTotal)}` : ""}
             </p>
             {courier.phone && (

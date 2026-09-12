@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { ProductGridWithWishlist } from "@/components/storefront/product-grid-with-wishlist";
 import { PageShell } from "@/components/storefront/shared/page-shell";
+import { ResultsSkeleton } from "@/components/storefront/shared/skeletons";
 import { ShopToolbar } from "@/components/storefront/shop-toolbar";
 import { Pagination } from "@/components/storefront/pagination";
 
@@ -22,23 +23,6 @@ export default async function ShopPage({ params, searchParams }: PageProps<"/[lo
   );
 }
 
-/** Toolbar row + a 2/3/4-up grid of tiles, so the page does not jump when the results land. */
-export function ResultsSkeleton() {
-  return (
-    <div className="flex flex-col gap-6" aria-hidden>
-      <div className="h-11 w-40 animate-pulse rounded-lg bg-muted" />
-      <div className="grid grid-cols-2 gap-x-3 gap-y-7 @tablet:grid-cols-3 @tablet:gap-x-5 @desktop:grid-cols-4 @desktop:gap-x-6">
-        {Array.from({ length: 8 }, (_, i) => (
-          <div key={i} className="flex flex-col gap-3">
-            <div className="aspect-square animate-pulse rounded-xl bg-muted" />
-            <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-1/3 animate-pulse rounded bg-muted" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 interface ResultsProps {
   ctx: StoreContext;
@@ -89,3 +73,5 @@ export async function Results({ ctx, searchParams, categorySlug, brandSlug }: Re
     </div>
   );
 }
+
+export { ResultsSkeleton };

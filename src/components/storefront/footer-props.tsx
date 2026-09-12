@@ -27,12 +27,23 @@ interface Input {
   resolved: ResolvedFooter;
   localeSlot: ReactNode;
   year: number;
+  /**
+   * `store.settings.pages` + the locales to read it in. The footer linked About/Privacy/Terms
+   * unconditionally, so a store whose owner had not written them showed three links to a page
+   * containing a single em-dash. Omit to link all three (previews and fixtures).
+   */
+  pages?: { content: Record<string, Record<string, string>>; locale: string; fallback: string };
 }
 
 /** One place that turns store data + settings into the footer contract, for the live chrome and the previews alike. */
 export async function buildFooterProps(input: Input): Promise<FooterProps> {
   const [tn, tf] = await Promise.all([getTranslations("nav"), getTranslations("footer")]);
   const { resolved } = input;
+  const hasPage = (key: string) => {
+    if (!input.pages) return true;
+    const { content, locale, fallback } = input.pages;
+    return Boolean((content[key]?.[locale] ?? content[key]?.[fallback] ?? "").trim());
+  };
   const defaults = DEFAULT_TRUST.map((d) => ({ icon: d.icon, title: tf(`trust.${d.key}.title`), text: tf(`trust.${d.key}.text`) }));
   const trustItems =
     resolved.trustItems === null
@@ -51,10 +62,10 @@ export async function buildFooterProps(input: Input): Promise<FooterProps> {
       ...input.categories.slice(0, MAX_FOOTER_CATEGORIES).map((c) => ({ href: `/c/${c.slug}`, label: c.name })),
     ],
     infoLinks: [
-      { href: "/about", label: tf("about") },
+      ...(hasPage("about") ? [{ href: "/about", label: tf("about") }] : []),
       { href: "/account", label: tf("account") },
-      { href: "/privacy", label: tf("privacy") },
-      { href: "/terms", label: tf("terms") },
+      ...(hasPage("privacy") ? [{ href: "/privacy", label: tf("privacy") }] : []),
+      ...(hasPage("terms") ? [{ href: "/terms", label: tf("terms") }] : []),
     ],
     contact: { email: input.email, phone: input.phone, address: resolved.address, hours: resolved.hours },
     social: resolved.social.map((s) => ({ ...s, label: tf(`social.${s.key}`) })),

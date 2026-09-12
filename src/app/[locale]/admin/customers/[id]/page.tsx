@@ -18,6 +18,7 @@ import { currentQuery, parseListParams, type SearchParams } from "@/lib/admin/li
 import { listOrders, ORDER_SORTS } from "@/lib/admin/orders/queries";
 import { can } from "@/lib/auth/permissions";
 import { formatMoney } from "@/lib/money";
+import { dateTimeFormat, numberFormat } from "@/lib/number";
 
 type Props = PageProps<"/[locale]/admin/customers/[id]">;
 
@@ -52,8 +53,8 @@ async function Content({ params, searchParams }: { params: Props["params"]; sear
     listOrders(ctx.store.id, { ...list, customerId: customer.id }),
     canDelivery ? getCustomerDeliverySummary(ctx.store.id, customer.id) : Promise.resolve(null),
   ]);
-  const date = new Intl.DateTimeFormat(ctx.locale, { dateStyle: "medium" });
-  const num = new Intl.NumberFormat(ctx.locale);
+  const date = dateTimeFormat(ctx.locale, { dateStyle: "medium" });
+  const num = numberFormat(ctx.locale);
   const query = currentQuery(sp, ["sort", "dir"]);
   const basePath = `/admin/customers/${customer.id}`;
   const name = customer.full_name ?? customer.email;

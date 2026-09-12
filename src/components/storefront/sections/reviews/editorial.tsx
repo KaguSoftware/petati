@@ -1,9 +1,10 @@
 import { BadgeCheck } from "lucide-react";
 import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import type { ReviewsProps } from "../types";
+import { dateTimeFormat } from "@/lib/number";
 
 export function ReviewsEditorial({ reviews, ratingAvg, ratingCount, locale, labels, formSlot }: ReviewsProps) {
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium" });
   return (
     <div className="grid gap-10 @desktop:grid-cols-[320px_1fr] @desktop:gap-14">
       <div className="flex flex-col gap-5">

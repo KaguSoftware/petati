@@ -1,6 +1,7 @@
 import { Star } from "lucide-react";
 import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
+import { numberFormat } from "@/lib/number";
 
 export function RatingStars({
   value,
@@ -26,7 +27,7 @@ export function RatingStars({
           />
         ))}
       </span>
-      {count !== undefined && <span className="text-xs text-muted-foreground">({new Intl.NumberFormat(locale).format(count)})</span>}
+      {count !== undefined && <span className="text-xs text-muted-foreground">({numberFormat(locale).format(count)})</span>}
     </span>
   );
 }

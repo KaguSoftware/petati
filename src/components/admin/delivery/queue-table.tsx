@@ -9,6 +9,7 @@ import { EntityLink } from "../shared/entity-link";
 import { StatusBadge } from "../shared/status-badge";
 import { DeliveryBulkBar } from "./delivery-bulk-bar";
 import { DeliveryRowCheckbox, DeliverySelectAll } from "./delivery-row-select";
+import { dateTimeFormat } from "@/lib/number";
 
 interface Props {
   rows: UndeliveredOrderRow[];
@@ -31,7 +32,7 @@ export async function QueueTable({ rows, storeId, locale, canAssign, couriers, t
   const t = await getTranslations("admin");
   const scope = "delivery:needs";
   const ids = rows.map((r) => r.id);
-  const date = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+  const date = dateTimeFormat(locale, { day: "numeric", month: "short" });
 
   const columns: Column<UndeliveredOrderRow>[] = [
     ...(canAssign

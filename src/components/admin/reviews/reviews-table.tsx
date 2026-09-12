@@ -8,6 +8,7 @@ import type { ReviewStatus } from "@/lib/db/types";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { ReviewActions } from "./review-actions";
+import { dateTimeFormat } from "@/lib/number";
 
 interface Props {
   rows: ReviewListRow[];
@@ -20,7 +21,7 @@ export async function ReviewsTable({ rows, storeId, locale, status }: Props) {
   const t = await getTranslations("admin.reviews");
   const ts = await getTranslations("admin.status.review");
   const tc = await getTranslations("admin.common");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium" });
   const columns: Column<ReviewListRow>[] = [
     {
       key: "product",

@@ -8,11 +8,12 @@ import { renderSection } from "@/lib/theme/registry";
 import { formatMoney } from "@/lib/money";
 import { CartLineControls } from "@/components/storefront/shared/cart-line-controls";
 import { CouponForm } from "@/components/storefront/shared/coupon-form";
+import { CartSkeleton } from "@/components/storefront/shared/skeletons";
 
 export default async function CartPage({ params }: PageProps<"/[locale]/s/[store]/cart">) {
   const ctx = await storeContext(params);
   return (
-    <Suspense fallback={<div className="mx-auto w-full max-w-7xl px-gutter py-8 text-muted-foreground @desktop:py-12">…</div>}>
+    <Suspense fallback={<CartSkeleton />}>
       <CartContent ctx={ctx} />
     </Suspense>
   );

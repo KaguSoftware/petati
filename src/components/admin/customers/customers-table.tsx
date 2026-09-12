@@ -6,6 +6,7 @@ import { formatMoney } from "@/lib/money";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { SortHeader } from "../shared/sort-header";
+import { dateTimeFormat, numberFormat } from "@/lib/number";
 
 interface Props {
   rows: CustomerStatsRow[];
@@ -17,8 +18,8 @@ interface Props {
 
 export async function CustomersTable({ rows, locale, currency, sort, query }: Props) {
   const t = await getTranslations("admin.customers");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
-  const num = new Intl.NumberFormat(locale);
+  const date = dateTimeFormat(locale, { dateStyle: "medium" });
+  const num = numberFormat(locale);
   const basePath = "/admin/customers";
   const columns: Column<CustomerStatsRow>[] = [
     {

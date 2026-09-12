@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 /** A round white button that reads on any photo; the heart fills red when the product is saved. */
 export const wishlistButtonClass =
-  "inline-flex size-10 items-center justify-center rounded-full bg-white text-foreground shadow-md ring-1 ring-black/10 transition hover:scale-105 hover:bg-white focus-visible:ring-4 focus-visible:ring-ring/50 focus-visible:outline-none motion-reduce:transition-none disabled:opacity-70";
+  "inline-flex size-11 items-center justify-center rounded-full bg-card text-card-foreground shadow-md ring-1 ring-foreground/10 transition hover:scale-105 focus-visible:ring-4 focus-visible:ring-ring/50 focus-visible:outline-none motion-reduce:transition-none disabled:opacity-70";
 
 export function WishlistButton({
   storeSlug,
@@ -43,7 +43,7 @@ export function WishlistButton({
       }
       className={cn(wishlistButtonClass, className)}
     >
-      <Heart className={cn("size-5 transition-colors", optimistic && "fill-red-500 text-red-500")} />
+      <Heart className={cn("size-5 transition-colors", optimistic && "fill-wishlist text-wishlist")} />
     </button>
   );
 }

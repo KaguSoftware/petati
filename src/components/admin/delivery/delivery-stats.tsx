@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import type { DeliveryStats } from "@/lib/admin/delivery/queries";
 import { formatMoney } from "@/lib/money";
 import { EntityLink } from "../shared/entity-link";
+import { dateTimeFormat } from "@/lib/number";
 
 /** 1-2-5 rounding so the axis lands on a readable number (same helper idea as the sales chart). */
 function niceMax(value: number): number {
@@ -19,7 +20,7 @@ function niceMax(value: number): number {
  */
 export async function DeliveryStatsPanel({ stats, locale, currency }: { stats: DeliveryStats; locale: string; currency: string }) {
   const t = await getTranslations("admin.delivery.stats");
-  const dateFmt = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+  const dateFmt = dateTimeFormat(locale, { day: "numeric", month: "short" });
   const peak = Math.max(1, ...stats.days.map((d) => d.delivered + d.failed));
   const top = niceMax(peak);
   const verifiedPct = stats.delivered > 0 ? Math.round((stats.verified / stats.delivered) * 100) : null;

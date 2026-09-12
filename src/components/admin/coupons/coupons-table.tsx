@@ -8,6 +8,7 @@ import { EmptyState } from "../shared/empty-state";
 import { SortHeader } from "../shared/sort-header";
 import { StatusBadge } from "../shared/status-badge";
 import { CouponActiveSwitch, CouponRowActions } from "./coupon-row-actions";
+import { dateTimeFormat, numberFormat } from "@/lib/number";
 
 interface Props {
   rows: CouponRow[];
@@ -25,8 +26,8 @@ export async function CouponsTable({ rows, storeId, locale, currency, now, sort,
   const t = await getTranslations("admin.coupons");
   const tt = await getTranslations("admin.discountType");
   const tc = await getTranslations("admin.common");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
-  const num = new Intl.NumberFormat(locale);
+  const date = dateTimeFormat(locale, { dateStyle: "medium" });
+  const num = numberFormat(locale);
   const basePath = "/admin/coupons";
 
   const valueLabel = (c: CouponRow) =>

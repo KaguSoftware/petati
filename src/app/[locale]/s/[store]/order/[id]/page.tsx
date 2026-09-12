@@ -13,6 +13,8 @@ import { PageShell } from "@/components/storefront/shared/page-shell";
 import { PrintButton } from "@/components/storefront/shared/print-button";
 import { ProductImage } from "@/components/storefront/shared/product-image";
 import type { OrderStatus } from "@/lib/db/types";
+import { dateTimeFormat } from "@/lib/number";
+import { OrderSkeleton } from "@/components/storefront/shared/skeletons";
 
 /** Statuses where the delivery code is still worth something to the customer. */
 const DELIVERY_CODE_VISIBLE: OrderStatus[] = ["paid", "processing", "shipped"];
@@ -22,7 +24,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/[l
   const { id } = await params;
   if (!z.string().uuid().safeParse(id).success) notFound();
   return (
-    <Suspense fallback={<div className="mx-auto w-full max-w-7xl px-gutter py-8 text-muted-foreground @desktop:py-12">…</div>}>
+    <Suspense fallback={<OrderSkeleton />}>
       <OrderContent ctx={ctx} id={id} searchParams={searchParams} />
     </Suspense>
   );
@@ -56,7 +58,7 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
             {t("title")} {order.number}
           </h1>
           <p className="text-sm text-muted-foreground">
-            {t("placedAt")} {new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(order.placed_at))}
+            {t("placedAt")} {dateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(order.placed_at))}
           </p>
         </div>
         <div className="flex items-center gap-3">

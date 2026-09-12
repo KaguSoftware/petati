@@ -55,7 +55,7 @@ export function ProductPageBold({ product, labels, purchasePanel, reviewsSection
         {product.description && (
           <section className="mx-auto max-w-3xl py-12">
             <h2 className="mb-3 text-sm font-extrabold tracking-widest uppercase">{labels.description}</h2>
-            <div className="bidi-auto prose prose-sm max-w-none whitespace-pre-line text-muted-foreground">{product.description}</div>
+            <div className="bidi-auto rich-text max-w-none whitespace-pre-line text-muted-foreground">{product.description}</div>
           </section>
         )}
         <section className="border-t-4 border-foreground pt-10">{reviewsSection}</section>

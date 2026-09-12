@@ -5,7 +5,8 @@ import { storeContext } from "@/lib/tenant/context";
 import { getBrands } from "@/lib/catalog/queries";
 import { BrandMark } from "@/components/storefront/shared/brand-mark";
 import { PageShell } from "@/components/storefront/shared/page-shell";
-import { Results, ResultsSkeleton } from "../../shop/page";
+import { Results } from "../../shop/page";
+import { ResultsSkeleton } from "@/components/storefront/shared/skeletons";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/s/[store]/b/[slug]">): Promise<Metadata> {
   const ctx = await storeContext(params);

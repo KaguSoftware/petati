@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import type { ExpenseTotals, SalesSummary } from "@/lib/admin/finance/types";
 import { formatMoney } from "@/lib/money";
 import { KpiCard } from "../shared/kpi-card";
+import { numberFormat } from "@/lib/number";
 
 interface Props {
   summary: SalesSummary;
@@ -20,7 +21,7 @@ export async function FinanceOverview({ summary, expenses, currency, locale, cou
   const { totals } = summary;
   const net = totals.paidGross - totals.refunds - totals.cogs - totals.shippingCost - expenses.total;
   const margin = totals.paidGross > 0 ? net / totals.paidGross : null;
-  const pct = new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 });
+  const pct = numberFormat(locale, { style: "percent", maximumFractionDigits: 1 });
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">

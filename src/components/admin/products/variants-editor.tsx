@@ -22,6 +22,7 @@ import { NumberInput } from "../shared/number-input";
 import { StatusBadge } from "../shared/status-badge";
 import { useActionToast } from "../shared/use-action-toast";
 import { useProductFieldErrors } from "./product-form";
+import { numberFormat } from "@/lib/number";
 
 interface Props {
   storeId: string;
@@ -275,7 +276,7 @@ function VariantCard({ storeId, productId, currency, locale, lowStockThreshold, 
   const initial = variant;
   const id = variant?.id ?? "new";
   const f = (name: string) => `${name}-${id}`;
-  const num = new Intl.NumberFormat(locale);
+  const num = numberFormat(locale);
   const level = variant ? (!variant.track_inventory ? "ok" : variant.stock_qty <= 0 ? "out" : variant.stock_qty <= lowStockThreshold ? "low" : "ok") : null;
 
   return (

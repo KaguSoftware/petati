@@ -12,6 +12,7 @@ import { requireAdminPage } from "@/lib/admin/context";
 import { getCouponWithRedemptions } from "@/lib/admin/coupons/queries";
 import { couponStatus, type CouponRedemptionDetail } from "@/lib/admin/coupons/types";
 import { formatMoney } from "@/lib/money";
+import { dateTimeFormat, numberFormat } from "@/lib/number";
 
 type Props = PageProps<"/[locale]/admin/coupons/[id]">;
 
@@ -33,8 +34,8 @@ async function Content({ params }: { params: Props["params"] }) {
   const now = new Date(); // after the runtime reads above (Cache Components)
   const currency = ctx.store.currency;
   const money = (n: number) => formatMoney(n, currency, ctx.locale);
-  const date = new Intl.DateTimeFormat(ctx.locale, { dateStyle: "medium", timeStyle: "short" });
-  const num = new Intl.NumberFormat(ctx.locale);
+  const date = dateTimeFormat(ctx.locale, { dateStyle: "medium", timeStyle: "short" });
+  const num = numberFormat(ctx.locale);
   const redemptions = coupon.coupon_redemptions;
   const totalDiscount = redemptions.reduce((sum, r) => sum + r.amount, 0);
   const valueLabel =

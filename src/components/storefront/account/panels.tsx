@@ -15,6 +15,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { ProductGridWithWishlist } from "@/components/storefront/product-grid-with-wishlist";
 import { AddressList } from "./address-form";
 import { PasswordForm, ProfileForm } from "./profile-forms";
+import { dateTimeFormat } from "@/lib/number";
 
 /**
  * The four account sections as server components. The account layout renders ALL of them up
@@ -47,7 +48,7 @@ export async function OrdersPanel({ orders, locale }: { orders: Pick<OrderRow, "
               <Link href={`/order/${o.id}`} className="flex items-center justify-between gap-3 p-4 text-sm hover:bg-muted/50">
                 <div>
                   <p className="font-medium">{o.number}</p>
-                  <p className="text-muted-foreground">{new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(o.placed_at))}</p>
+                  <p className="text-muted-foreground">{dateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(o.placed_at))}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge variant="secondary">{ts(o.status)}</Badge>

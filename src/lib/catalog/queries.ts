@@ -312,7 +312,7 @@ export async function getApprovedReviews(productId: string): Promise<ReviewData[
     rating: r.rating,
     title: r.title,
     body: r.body,
-    authorName: r.profiles?.full_name?.split(" ")[0] ?? "Customer",
+    authorName: r.profiles?.full_name?.split(" ")[0] ?? null,
     createdAt: r.created_at,
     isVerifiedPurchase: r.is_verified_purchase,
   }));

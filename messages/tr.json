@@ -19,7 +19,12 @@
     "notFound": "Sayfa bulunamadı",
     "close": "Kapat",
     "noResults": "Sonuç yok",
-    "selectCountry": "Ülke seçin"
+    "selectCountry": "Ülke seçin",
+    "retry": "Tekrar dene",
+    "customer": "Müşteri",
+    "notFoundBody": "Bu sayfa burada değil. Arama yapın ya da mağazaya göz atın.",
+    "errorBody": "Bizim tarafımızda bir şeyler ters gitti. Tekrar deneyin ya da mağazaya dönün.",
+    "confirm": "Onayla"
   },
   "nav": {
     "home": "Ana sayfa",
@@ -73,7 +78,18 @@
     "reviewBody": "Değerlendirmeniz",
     "verifiedPurchase": "Onaylı alışveriş",
     "signInToReview": "Değerlendirme yazmak için giriş yapın.",
-    "noReviewsTitle": "İlk değerlendirmeyi siz yazın"
+    "noReviewsTitle": "İlk değerlendirmeyi siz yazın",
+    "addedToCart": "Sepete eklendi",
+    "viewCart": "Sepeti gör",
+    "errors": {
+      "invalid": "Bu bilgiler geçerli değil.",
+      "auth": "Lütfen önce giriş yapın.",
+      "store": "Mağaza bulunamadı.",
+      "failed": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
+    },
+    "decreaseQty": "Adedi azalt",
+    "increaseQty": "Adedi artır",
+    "rateStars": "5 üzerinden {count} ver"
   },
   "cart": {
     "title": "Sepetiniz",
@@ -120,7 +136,8 @@
       "stock": "Bazı ürünler istenen adette artık mevcut değil.",
       "shipping": "Lütfen bir kargo yöntemi seçin.",
       "failed": "Siparişiniz oluşturulamadı. Lütfen tekrar deneyin."
-    }
+    },
+    "shippingMethod": "Teslimat yöntemi"
   },
   "account": {
     "title": "Hesabım",
@@ -145,7 +162,9 @@
     "phone": "Telefon",
     "noOrdersTitle": "Henüz sipariş yok",
     "wishlistEmptyTitle": "Henüz kayıtlı ürün yok",
-    "noAddressesTitle": "Henüz adres yok"
+    "noAddressesTitle": "Henüz adres yok",
+    "deleteAddressTitle": "Bu adres silinsin mi?",
+    "deleteAddressBody": "Kayıtlı adreslerinizden kaldırılacak. Daha sonra tekrar ekleyebilirsiniz."
   },
   "auth": {
     "signIn": "Giriş yap",
@@ -167,7 +186,9 @@
     "errors": {
       "phoneInvalid": "Seçilen ülke için geçerli bir telefon numarası girin.",
       "phoneTaken": "Bu telefon numarası zaten kullanılıyor.",
-      "oauth": "Google ile giriş başarısız. Tekrar deneyin."
+      "oauth": "Google ile giriş başarısız. Tekrar deneyin.",
+      "credentials": "E-posta veya şifre yanlış.",
+      "emailNotConfirmed": "Önce e-postanızı doğrulayın — bağlantıyı gönderdik."
     }
   },
   "orderStatus": {

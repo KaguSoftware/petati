@@ -10,6 +10,7 @@ import { SortHeader } from "../shared/sort-header";
 import { StatusBadge } from "../shared/status-badge";
 import { AdjustStockDialog } from "./adjust-stock-dialog";
 import { TrackingSwitch } from "./stock-controls";
+import { numberFormat } from "@/lib/number";
 
 interface Props {
   rows: StockRow[];
@@ -24,7 +25,7 @@ interface Props {
 
 export async function StockTable({ rows, storeId, locale, canAdjust, canWrite, sort, query, lowOnly }: Props) {
   const t = await getTranslations("admin");
-  const num = new Intl.NumberFormat(locale);
+  const num = numberFormat(locale);
   const basePath = "/admin/inventory";
   const columns: Column<StockRow>[] = [
     {

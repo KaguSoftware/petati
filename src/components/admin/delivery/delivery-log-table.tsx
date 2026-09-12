@@ -3,6 +3,7 @@ import type { DeliveryLogRow } from "@/lib/admin/delivery/queries";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { EntityLink } from "../shared/entity-link";
+import { dateTimeFormat } from "@/lib/number";
 
 const TONE: Record<string, string> = {
   delivered: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
@@ -28,7 +29,7 @@ function detail(r: DeliveryLogRow, t: Awaited<ReturnType<typeof getTranslations<
 /** The append-only feed. A row written by a courier has no staff actor — it says "Courier app". */
 export async function DeliveryLogTable({ rows, locale, hideCourier }: { rows: DeliveryLogRow[]; locale: string; hideCourier?: boolean }) {
   const t = await getTranslations("admin.delivery");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" });
+  const date = dateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" });
   const columns: Column<DeliveryLogRow>[] = [
     { key: "when", header: t("log.when"), cell: (r) => <span className="text-muted-foreground tabular-nums">{date.format(new Date(r.created_at))}</span> },
     {

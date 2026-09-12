@@ -9,6 +9,7 @@ import { DeliveryRowActions } from "../delivery/delivery-row-actions";
 import { EntityLink } from "../shared/entity-link";
 import { OptimisticStatusBadge } from "../shared/optimistic-status-badge";
 import { AssignInline } from "./assign-inline";
+import { dateTimeFormat } from "@/lib/number";
 
 type Attempt = DeliveryRow & { courier_name: string | null; events: DeliveryEventRow[] };
 
@@ -36,8 +37,8 @@ interface Props {
  */
 export async function OrderDeliveryCard({ storeId, orderId, attempts, locale, currency, canAssign, photoUrls, deliverable, couriers, today, tomorrow, slots }: Props) {
   const t = await getTranslations("admin.delivery");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
-  const day = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
+  const day = dateTimeFormat(locale, { dateStyle: "medium" });
   const latest = attempts[0];
   const open = latest && (latest.state === "pending" || latest.state === "assigned" || latest.state === "out_for_delivery");
   if (!latest && !deliverable) return null;

@@ -16,6 +16,7 @@ import { getDeliveryKpis, sumSettlements } from "@/lib/admin/delivery/queries";
 import { getExpenseTotals, getProductMargins, getSalesSummary, resolveDateRange } from "@/lib/admin/finance/queries";
 import { can } from "@/lib/auth/permissions";
 import type { SearchParams } from "@/lib/admin/list-params";
+import { dateTimeFormat } from "@/lib/number";
 
 type Props = PageProps<"/[locale]/admin/finance">;
 
@@ -46,7 +47,7 @@ async function Content({ locale, searchParams }: { locale: string; searchParams:
     canCash ? sumSettlements(ctx.store.id, from, to) : Promise.resolve(null),
     getTranslations("admin.finance"),
   ]);
-  const fmt = new Intl.DateTimeFormat(ctx.locale, { dateStyle: "medium" });
+  const fmt = dateTimeFormat(ctx.locale, { dateStyle: "medium" });
   const period = `${fmt.format(new Date(`${from}T00:00:00`))} – ${fmt.format(new Date(`${to}T00:00:00`))}`;
   const currency = ctx.store.currency;
 

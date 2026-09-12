@@ -1,3 +1,5 @@
+import { numberFormat } from "@/lib/number";
+
 /** Amounts are integers in minor units (kuruş, cents). Format only at the edge. */
 const ZERO_DECIMAL = new Set(["JPY", "KRW", "IRR", "IQD"]);
 
@@ -7,7 +9,7 @@ export function minorUnitsPerMajor(currency: string): number {
 
 export function formatMoney(amountMinor: number, currency: string, locale: string): string {
   const divisor = minorUnitsPerMajor(currency);
-  return new Intl.NumberFormat(locale, {
+  return numberFormat(locale, {
     style: "currency",
     currency,
     currencyDisplay: "narrowSymbol",

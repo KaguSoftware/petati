@@ -6,6 +6,7 @@ import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { SortHeader } from "../shared/sort-header";
 import { ExpenseRowActions } from "./expense-row-actions";
+import { dateTimeFormat } from "@/lib/number";
 
 interface Props {
   rows: ExpenseListRow[];
@@ -22,8 +23,8 @@ interface Props {
 
 export async function ExpensesTable({ rows, locale, currency, storeId, categories, sort, query, canWrite, basePath = "/admin/finance/expenses" }: Props) {
   const t = await getTranslations("admin.finance");
-  const date = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric" });
-  const shortDate = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+  const date = dateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric" });
+  const shortDate = dateTimeFormat(locale, { day: "numeric", month: "short" });
 
   const columns: Column<ExpenseListRow>[] = [
     {

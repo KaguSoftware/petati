@@ -53,7 +53,7 @@ export function ProductPageMinimal({ product, labels, purchasePanel, reviewsSect
           {product.description && (
             <section className="flex flex-col gap-2 border-t pt-6">
               <h2 className="font-semibold">{labels.description}</h2>
-              <div className="bidi-auto prose prose-sm max-w-none text-muted-foreground whitespace-pre-line">{product.description}</div>
+              <div className="bidi-auto rich-text max-w-none text-muted-foreground whitespace-pre-line">{product.description}</div>
             </section>
           )}
         </div>

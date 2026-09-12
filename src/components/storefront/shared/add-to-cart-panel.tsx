@@ -2,11 +2,12 @@
 
 import { useActionState, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Minus, Plus } from "lucide-react";
+import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { addToCartAction, type CartActionState } from "@/lib/cart/actions";
 import type { ProductDetail } from "@/lib/catalog/types";
 import { Price } from "./price";
+import { QuantityStepper } from "./quantity-stepper";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -20,7 +21,7 @@ interface Props {
 /** Option pickers → resolved variant → quantity → add. Shared by every product-page variant. */
 export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) {
   const t = useTranslations("product");
-  const tc = useTranslations("cart");
+  const router = useRouter();
   const defaultVariant = product.variants.find((v) => v.isDefault) ?? product.variants[0];
   const [selected, setSelected] = useState<Record<string, string>>(() => {
     const init: Record<string, string> = {};
@@ -46,7 +47,7 @@ export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) 
   const [state, action, pending] = useActionState(
     async (prev: CartActionState, fd: FormData) => {
       const res = await addToCartAction(prev, fd);
-      if (res.ok) toast.success(t("addToCart"));
+      if (res.ok) toast.success(t("addedToCart"), { action: { label: t("viewCart"), onClick: () => router.push("/cart") } });
       else if (res.error === "out_of_stock") toast.error(t("outOfStock"));
       return res;
     },
@@ -89,15 +90,7 @@ export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) 
       ))}
 
       <div className="flex items-center gap-3">
-        <div dir="ltr" className="inline-flex h-11 items-center rounded-lg border bg-background">
-          <button type="button" aria-label="-" className="grid size-11 place-items-center rounded-s-lg transition-colors hover:bg-muted" onClick={() => setQty((q) => Math.max(1, q - 1))}>
-            <Minus className="size-4" />
-          </button>
-          <span className="min-w-9 text-center tabular-nums">{qty}</span>
-          <button type="button" aria-label="+" className="grid size-11 place-items-center rounded-e-lg transition-colors hover:bg-muted" onClick={() => setQty((q) => Math.min(maxQty, q + 1))}>
-            <Plus className="size-4" />
-          </button>
-        </div>
+        <QuantityStepper value={qty} onChange={setQty} max={maxQty} />
         <span className="text-sm text-muted-foreground">
           {!variant
             ? t("selectOption", { option: product.options[0]?.name ?? "" })
@@ -112,7 +105,11 @@ export function AddToCartPanel({ product, storeSlug, currency, locale }: Props) 
       <Button type="submit" size="xl" disabled={!variant || !available || pending} className="w-full">
         {available ? t("addToCart") : t("outOfStock")}
       </Button>
-      {state.error === "invalid" && <p className="text-sm text-destructive">{tc("couponInvalid")}</p>}
+      {state.error && state.error !== "out_of_stock" && (
+        <p role="alert" className="text-sm text-destructive">
+          {t.has(`errors.${state.error}`) ? t(`errors.${state.error}`) : t("errors.failed")}
+        </p>
+      )}
     </form>
   );
 }

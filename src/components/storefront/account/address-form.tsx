@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { CountrySelect } from "@/components/forms/country-select";
 import { LatinInput, type LatinKind } from "@/components/forms/latin-input";
 import { EmptyState } from "@/components/storefront/shared/empty-state";
+import { ConfirmButton } from "@/components/storefront/shared/confirm-button";
 import { MapPin } from "lucide-react";
 import { deleteAddressAction, saveAddressAction, type SimpleState } from "@/lib/account/actions";
 import type { AddressRow } from "@/lib/db/types";
@@ -42,12 +43,20 @@ export function AddressList({ storeSlug, addresses, defaultCountry }: { storeSlu
               {a.full_name}<br />{a.line1}{a.line2 ? <><br />{a.line2}</> : null}<br />{a.postal_code} {a.city}{a.region ? `, ${a.region}` : ""}<br />{a.country}
             </address>
             <div className="mt-auto flex gap-2">
-              <Button size="sm" variant="outline" onClick={() => setEditing(a)}>{t("editAddress")}</Button>
-              <form action={deleteAddressAction}>
-                <input type="hidden" name="storeSlug" value={storeSlug} />
-                <input type="hidden" name="id" value={a.id} />
-                <Button size="sm" variant="ghost" type="submit">{t("deleteAddress")}</Button>
-              </form>
+              <Button variant="outline" onClick={() => setEditing(a)}>{t("editAddress")}</Button>
+              <ConfirmButton
+                trigger={<Button variant="ghost">{t("deleteAddress")}</Button>}
+                title={t("deleteAddressTitle")}
+                description={t("deleteAddressBody")}
+                confirmLabel={t("deleteAddress")}
+                destructive
+                onConfirm={() => {
+                  const fd = new FormData();
+                  fd.set("storeSlug", storeSlug);
+                  fd.set("id", a.id);
+                  return deleteAddressAction(fd);
+                }}
+              />
             </div>
           </li>
         ))}
@@ -56,7 +65,7 @@ export function AddressList({ storeSlug, addresses, defaultCountry }: { storeSlu
         <AddressForm storeSlug={storeSlug} address={editing === "new" ? null : editing} defaultCountry={defaultCountry} onDone={() => setEditing(null)} />
       ) : (
         addresses.length > 0 && (
-          <Button size="lg" className="self-start" onClick={() => setEditing("new")}>
+          <Button size="xl" className="self-start" onClick={() => setEditing("new")}>
             {t("addAddress")}
           </Button>
         )

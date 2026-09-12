@@ -9,7 +9,11 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Every stack ends in an Arabic-script face: Georgia/Times and the system mono faces carry NO
+     Persian glyphs, so without these tails `font-serif`/`font-mono` text fell back to an arbitrary
+     system font under `fa` — the exact thing src/lib/theme/fonts.ts exists to prevent. */
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, var(--font-vazirmatn), monospace;
+  --font-serif: var(--font-playfair), var(--font-amiri), ui-serif, Georgia, serif;
   --font-heading: var(--heading-font, var(--font-sans));
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -25,6 +29,7 @@
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
+  --color-wishlist: var(--wishlist);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
@@ -86,6 +91,9 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.625rem;
+  /* Saved/favourite. Its own token rather than `--destructive`: a filled heart is not a warning,
+     and the storefront should be able to recolour it without touching error styling. */
+  --wishlist: oklch(0.62 0.21 25);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -115,6 +123,7 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+  --wishlist: oklch(0.7 0.19 25);
   --chart-1: oklch(0.72 0.11 222);
   --chart-2: oklch(0.32 0.03 222);
   --chart-3: oklch(0.439 0 0);
@@ -276,9 +285,17 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
   padding: 0.75rem 0.875rem;
   font-size: 1rem;
 }
-[data-storefront] [data-slot="select-trigger"] {
+/* `size="sm"` on a storefront Select used to be a silent no-op: this rule's specificity (0,2,0)
+   beat Tailwind's `data-[size=sm]:h-7`, so the navbar locale pill rendered 44px inside a 64px bar
+   next to 40px icon buttons and was visibly the tallest thing there. Honour the prop — but at 40px,
+   matching `icon-lg`, not shadcn's 28px, which is under the touch-target floor for a shop. */
+[data-storefront] [data-slot="select-trigger"]:not([data-size="sm"]) {
   height: 2.75rem;
   font-size: 1rem;
+}
+[data-storefront] [data-slot="select-trigger"][data-size="sm"] {
+  height: 2.5rem;
+  font-size: 0.875rem;
 }
 /* Arabic-script display type needs room between lines; the Latin "leading-[0.95]" look collides. */
 [dir="rtl"] [data-storefront] :is(h1, h2, h3) {
@@ -309,4 +326,37 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
 }
 header[data-navbar-overlay] {
   transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+/* ---- Body copy for owner-authored text (product descriptions, page bodies) -------------------
+   Replaces `prose prose-sm`, which was dead: @tailwindcss/typography is not installed and never
+   was. The content is plain text rendered with `whitespace-pre-line`, so this only needs a
+   readable measure, comfortable leading and spacing for the few inline tags that may appear. */
+@utility rich-text {
+  line-height: 1.75;
+  & :is(p, ul, ol) + :is(p, ul, ol) {
+    margin-block-start: 0.75em;
+  }
+  & :is(ul, ol) {
+    padding-inline-start: 1.5em;
+  }
+  & ul {
+    list-style: disc;
+  }
+  & ol {
+    list-style: decimal;
+  }
+  & strong {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+  & a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  /* Arabic script needs more room between lines than the Latin default. */
+  [dir="rtl"] & {
+    line-height: 2;
+  }
 }

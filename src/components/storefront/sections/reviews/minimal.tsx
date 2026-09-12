@@ -2,6 +2,7 @@ import { BadgeCheck, MessageSquareText } from "lucide-react";
 import { EmptyState } from "@/components/storefront/shared/empty-state";
 import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import type { ReviewsProps } from "../types";
+import { dateTimeFormat } from "@/lib/number";
 
 export function ReviewsMinimal({ reviews, ratingAvg, ratingCount, locale, labels, formSlot }: ReviewsProps) {
   return (
@@ -31,7 +32,7 @@ export function ReviewsMinimal({ reviews, ratingAvg, ratingCount, locale, labels
                   </span>
                 )}
                 <time className="ms-auto text-xs text-muted-foreground" dateTime={r.createdAt}>
-                  {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
+                  {dateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
                 </time>
               </div>
               {r.title && <p className="bidi-auto font-medium">{r.title}</p>}

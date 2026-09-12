@@ -7,7 +7,8 @@ import { getCategories } from "@/lib/catalog/queries";
 import { Link } from "@/i18n/navigation";
 import { PageShell } from "@/components/storefront/shared/page-shell";
 import { ProductImage } from "@/components/storefront/shared/product-image";
-import { Results, ResultsSkeleton } from "../../shop/page";
+import { Results } from "../../shop/page";
+import { ResultsSkeleton } from "@/components/storefront/shared/skeletons";
 
 const chip =
   "inline-flex h-10 items-center rounded-full bg-muted px-4 text-sm font-medium transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:bg-primary focus-visible:text-primary-foreground focus-visible:outline-none";

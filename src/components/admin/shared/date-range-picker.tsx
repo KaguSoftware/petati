@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useListNavigation } from "./table-toolbar";
+import { dateTimeFormat } from "@/lib/number";
 
 const LOCALES = { en: enUS, tr, fa: faIR } as const;
 
@@ -30,7 +31,7 @@ export function DateRangePicker({ className }: { className?: string }) {
   const from = parse(params.get("from"));
   const to = parse(params.get("to"));
   const [draft, setDraft] = useState<DateRange | undefined>(from ? { from, to } : undefined);
-  const fmt = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+  const fmt = dateTimeFormat(locale, { day: "numeric", month: "short" });
 
   function apply(range: DateRange | undefined) {
     setParams({ from: range?.from ? iso(range.from) : null, to: range?.to ? iso(range.to) : range?.from ? iso(range.from) : null });

@@ -16,6 +16,7 @@ import { deliveryFromSettings } from "@/lib/delivery/settings";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { OrderDeliveryCard } from "@/components/admin/orders/order-delivery-card";
 import { can } from "@/lib/auth/permissions";
+import { dateTimeFormat } from "@/lib/number";
 
 type Props = PageProps<"/[locale]/admin/orders/[id]">;
 
@@ -53,7 +54,7 @@ async function Content({ params }: { params: Props["params"] }) {
   const settings = deliveryFromSettings(ctx.store.settings);
   const today = storeToday(ctx.store.timezone);
   const tomorrow = storeToday(ctx.store.timezone, settings.leadDays);
-  const date = new Intl.DateTimeFormat(ctx.locale, { dateStyle: "long", timeStyle: "short" });
+  const date = dateTimeFormat(ctx.locale, { dateStyle: "long", timeStyle: "short" });
   return (
     <>
       <CrumbLabel segment={order.id} label={order.number} />

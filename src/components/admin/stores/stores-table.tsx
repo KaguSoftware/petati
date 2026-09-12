@@ -11,6 +11,7 @@ import type { StoreListItem } from "@/lib/admin/stores/types";
 import { env } from "@/lib/env";
 import { customDomainUrl, storefrontUrl, subdomainHost } from "@/lib/tenant/urls";
 import { StoreRowActions } from "./store-row-actions";
+import { dateTimeFormat } from "@/lib/number";
 
 interface Props {
   rows: StoreListItem[];
@@ -21,7 +22,7 @@ interface Props {
 export async function StoresTable({ rows, locale }: Props) {
   const t = await getTranslations("stores");
   const ts = await getTranslations("admin.common");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium" });
   const rootDomain = env.rootDomain();
   const defaultSlug = env.defaultStoreSlug();
 

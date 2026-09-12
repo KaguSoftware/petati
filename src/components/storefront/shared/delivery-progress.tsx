@@ -1,12 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import type { CustomerDeliveryView } from "@/lib/account/delivery";
+import { dateTimeFormat } from "@/lib/number";
 
 /** The shopper's view of their parcel's journey: attempts, who has it, and how it was confirmed. */
 export async function DeliveryProgress({ attempts, locale }: { attempts: CustomerDeliveryView[]; locale: string }) {
   const t = await getTranslations("order");
   const tf = await getTranslations("courier.failureReason");
   if (attempts.length === 0) return null;
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium" });
 
   return (
     <section className="flex flex-col gap-2 rounded-xl border p-4">

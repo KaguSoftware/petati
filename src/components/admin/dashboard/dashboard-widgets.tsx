@@ -9,11 +9,12 @@ import { EmptyState } from "../shared/empty-state";
 import { EntityLink } from "../shared/entity-link";
 import { KpiCard } from "../shared/kpi-card";
 import { StatusBadge } from "../shared/status-badge";
+import { dateTimeFormat, numberFormat } from "@/lib/number";
 
 export async function KpiGrid({ data, locale }: { data: Dashboard; locale: string }) {
   const t = await getTranslations("admin.dashboard");
   const money = (n: number) => formatMoney(n, data.currency, locale);
-  const num = new Intl.NumberFormat(locale);
+  const num = numberFormat(locale);
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] gap-3">
       {data.sales && <KpiCard label={t("revenue30d")} value={money(data.sales.paidGross - data.sales.refunds)} hint={t("ordersInPeriod", { count: data.sales.ordersCount })} icon={TrendingUp} href="/admin/finance" />}
@@ -30,7 +31,7 @@ export async function DeliveryToday({ data, locale, canCash }: { data: Dashboard
   const t = await getTranslations("admin.dashboard.delivery");
   const d = data.delivery;
   if (!d) return null;
-  const num = new Intl.NumberFormat(locale);
+  const num = numberFormat(locale);
   return (
     <section className="flex min-w-0 flex-col gap-3">
       <div className="flex items-baseline justify-between gap-2">
@@ -69,8 +70,8 @@ export async function SalesBars({ data, locale }: { data: Dashboard; locale: str
   const { days } = data.sales;
   const money = (n: number) => formatMoney(n, data.currency, locale);
   const compact = (n: number) =>
-    new Intl.NumberFormat(locale, { style: "currency", currency: data.currency, currencyDisplay: "narrowSymbol", notation: "compact", maximumFractionDigits: 1 }).format(toMajor(n, data.currency));
-  const dateFmt = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+    numberFormat(locale, { style: "currency", currency: data.currency, currencyDisplay: "narrowSymbol", notation: "compact", maximumFractionDigits: 1 }).format(toMajor(n, data.currency));
+  const dateFmt = dateTimeFormat(locale, { day: "numeric", month: "short" });
   const total = days.reduce((a, d) => a + d.paid_gross, 0);
   const peak = Math.max(0, ...days.map((d) => d.paid_gross));
   const top = niceMax(peak);
@@ -140,7 +141,7 @@ export async function SalesBars({ data, locale }: { data: Dashboard; locale: str
 
 export async function RecentOrders({ data, locale }: { data: Dashboard; locale: string }) {
   const t = await getTranslations("admin");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium" });
   return (
     <section className="flex min-w-0 flex-col gap-3 rounded-xl border bg-card p-4">
       <div className="flex items-center justify-between">

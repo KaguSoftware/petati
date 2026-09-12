@@ -9,6 +9,7 @@ import { EmptyState } from "../shared/empty-state";
 import { SortHeader } from "../shared/sort-header";
 import { OptimisticStatusBadge } from "../shared/optimistic-status-badge";
 import { FeaturedSwitch, ProductRowActions } from "./product-row-controls";
+import { dateTimeFormat, numberFormat } from "@/lib/number";
 
 interface Props {
   rows: ProductListRow[];
@@ -24,8 +25,8 @@ interface Props {
 
 export async function ProductsTable({ rows, storeId, locale, currency, lowStockThreshold, canWrite, sort, query, emptyAction }: Props) {
   const t = await getTranslations("admin");
-  const num = new Intl.NumberFormat(locale);
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const num = numberFormat(locale);
+  const date = dateTimeFormat(locale, { dateStyle: "medium" });
   const basePath = "/admin/products";
   const price = (r: ProductListRow) => {
     if (r.priceMin == null || r.priceMax == null) return <span className="text-muted-foreground">—</span>;

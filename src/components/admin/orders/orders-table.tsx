@@ -9,6 +9,7 @@ import { SortHeader } from "../shared/sort-header";
 import { StatusBadge } from "../shared/status-badge";
 import { OrdersBulkBar } from "./orders-bulk-bar";
 import { RowCheckbox, SelectAllCheckbox } from "./row-select";
+import { dateTimeFormat } from "@/lib/number";
 
 interface Props {
   rows: OrderListRow[];
@@ -30,7 +31,7 @@ interface Props {
 
 export async function OrdersTable({ rows, locale, sort, query, basePath = "/admin/orders", hideCustomer, storeId, scope, couriers, today, tomorrow }: Props) {
   const t = await getTranslations("admin");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
   const selectable = Boolean(storeId && scope);
   const ids = rows.map((r) => r.id);
   const columns: Column<OrderListRow>[] = [

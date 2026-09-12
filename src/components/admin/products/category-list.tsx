@@ -9,6 +9,7 @@ import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { StatusBadge } from "../shared/status-badge";
 import { CategoryDeleteButton, CategoryDialog } from "./category-dialog";
+import { numberFormat } from "@/lib/number";
 
 interface Props {
   rows: CategoryAdminRow[];
@@ -40,7 +41,7 @@ function treeOrder(rows: CategoryAdminRow[]): (CategoryAdminRow & { depth: numbe
 
 export async function CategoryList({ rows, storeId, locale, defaultLocale, enabledLocales, canWrite }: Props) {
   const t = await getTranslations("admin");
-  const num = new Intl.NumberFormat(locale);
+  const num = numberFormat(locale);
   const parents: CategoryOption[] = rows.map((r) => ({ id: r.id, name: r.name, parentId: r.parent_id }));
   const ordered = treeOrder(rows);
   type Row = (typeof ordered)[number];

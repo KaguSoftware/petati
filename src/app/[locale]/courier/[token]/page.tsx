@@ -8,6 +8,7 @@ import { themeToCssVars } from "@/lib/theme/types";
 import { formatMoney } from "@/lib/money";
 import { StopList } from "@/components/courier/stop-list";
 import { StartRunButton } from "@/components/courier/start-run-button";
+import { dateTimeFormat } from "@/lib/number";
 
 type Props = PageProps<"/[locale]/courier/[token]">;
 
@@ -45,7 +46,7 @@ async function Content({ params }: { params: Props["params"] }) {
             <h1 className="truncate text-xl font-semibold tracking-tight">{ctx.courier.name}</h1>
           </div>
           <p className="shrink-0 text-sm text-muted-foreground tabular-nums">
-            {new Intl.DateTimeFormat(locale, { weekday: "short", day: "numeric", month: "short" }).format(new Date())}
+            {dateTimeFormat(locale, { weekday: "short", day: "numeric", month: "short" }).format(new Date())}
           </p>
         </div>
         <dl className="grid grid-cols-3 gap-2 text-center">

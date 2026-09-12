@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { OrderEventWithActor } from "@/lib/admin/orders/queries";
 import { formatMoney } from "@/lib/money";
+import { dateTimeFormat } from "@/lib/number";
 
 interface Props {
   events: OrderEventWithActor[];
@@ -10,7 +11,7 @@ interface Props {
 
 export async function OrderTimeline({ events, locale, currency }: Props) {
   const t = await getTranslations("admin");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
   const describe = (e: OrderEventWithActor): string => {
     const d = e.data ?? {};
     switch (e.type) {

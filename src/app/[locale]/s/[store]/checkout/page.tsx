@@ -10,11 +10,12 @@ import { getMyAddresses } from "@/lib/account/queries";
 import { pickJson } from "@/lib/catalog/types";
 import { CheckoutProvider, CheckoutSummary } from "@/components/storefront/checkout/checkout-client";
 import { CheckoutFormConnected } from "@/components/storefront/checkout/checkout-form-connected";
+import { CheckoutSkeleton } from "@/components/storefront/shared/skeletons";
 
 export default async function CheckoutPage({ params }: PageProps<"/[locale]/s/[store]/checkout">) {
   const ctx = await storeContext(params);
   return (
-    <Suspense fallback={<div className="mx-auto w-full max-w-7xl px-gutter py-8 text-muted-foreground @desktop:py-12">…</div>}>
+    <Suspense fallback={<CheckoutSkeleton />}>
       <CheckoutContent ctx={ctx} />
     </Suspense>
   );

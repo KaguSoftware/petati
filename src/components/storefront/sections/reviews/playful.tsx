@@ -1,6 +1,7 @@
 import { BadgeCheck } from "lucide-react";
 import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import type { ReviewsProps } from "../types";
+import { dateTimeFormat } from "@/lib/number";
 
 /** Speech bubbles in a row that scrolls sideways; the score and the form sit above. */
 export function ReviewsPlayful({ reviews, ratingAvg, ratingCount, locale, labels, formSlot }: ReviewsProps) {
@@ -27,7 +28,7 @@ export function ReviewsPlayful({ reviews, ratingAvg, ratingCount, locale, labels
               <div className="flex flex-wrap items-center gap-2">
                 <RatingStars value={r.rating} />
                 <time className="ms-auto text-xs text-muted-foreground" dateTime={r.createdAt}>
-                  {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
+                  {dateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(r.createdAt))}
                 </time>
               </div>
               {r.title && <p className="bidi-auto font-semibold">{r.title}</p>}

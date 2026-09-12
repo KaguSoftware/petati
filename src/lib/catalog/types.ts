@@ -72,7 +72,8 @@ export interface ReviewData {
   rating: number;
   title: string | null;
   body: string | null;
-  authorName: string;
+  /** `null` when the reviewer has no profile name; the page fills in a translated fallback. */
+  authorName: string | null;
   createdAt: string;
   isVerifiedPurchase: boolean;
 }

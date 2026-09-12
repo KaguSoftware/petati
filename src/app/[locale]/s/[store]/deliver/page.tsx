@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { storeContext, type StoreContext } from "@/lib/tenant/context";
 import { PageShell } from "@/components/storefront/shared/page-shell";
 import { DeliverForm } from "@/components/storefront/deliver-form";
+import { PageSkeleton } from "@/components/storefront/shared/skeletons";
 
 /**
  * Delivery confirmation for whoever hands the parcel over — reachable without an account at
@@ -13,7 +14,7 @@ import { DeliverForm } from "@/components/storefront/deliver-form";
 export default async function DeliverPage({ params, searchParams }: PageProps<"/[locale]/s/[store]/deliver">) {
   const ctx = await storeContext(params);
   return (
-    <Suspense fallback={<div className="mx-auto w-full max-w-7xl px-gutter py-8 text-muted-foreground @desktop:py-12">…</div>}>
+    <Suspense fallback={<PageSkeleton width="narrow" lines={3} />}>
       <DeliverContent ctx={ctx} searchParams={searchParams} />
     </Suspense>
   );

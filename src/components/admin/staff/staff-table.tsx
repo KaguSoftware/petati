@@ -14,6 +14,7 @@ import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { clearOptimistic, setOptimistic, useOptimisticRow } from "../shared/optimistic-store";
 import { useOptimisticAction } from "../shared/use-optimistic-action";
+import { dateTimeFormat } from "@/lib/number";
 
 interface Props {
   storeId: string;
@@ -29,7 +30,7 @@ export function StaffTable({ storeId, locale, rows, actor, inviteButton }: Props
   const tr = useTranslations("admin.roles");
   const tc = useTranslations("admin.common");
   const { run } = useOptimisticAction("admin.staff");
-  const dateFmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const dateFmt = dateTimeFormat(locale, { dateStyle: "medium" });
   // Base UI SelectValue renders the raw value unless items carry labels.
   const roleItems = STORE_ROLES.map((r) => ({ value: r, label: tr(r) }));
 

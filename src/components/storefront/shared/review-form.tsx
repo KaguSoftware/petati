@@ -24,15 +24,26 @@ export function ReviewForm({ storeSlug, productId }: { storeSlug: string; produc
       <p className="font-semibold">{t("writeReview")}</p>
       <div className="inline-flex self-start" dir="ltr">
         {[1, 2, 3, 4, 5].map((i) => (
-          <button key={i} type="button" aria-label={`${i}`} onClick={() => setRating(i)} className="p-0.5">
+          <button
+            key={i}
+            type="button"
+            aria-label={t("rateStars", { count: i })}
+            aria-pressed={i === rating}
+            onClick={() => setRating(i)}
+            className="grid size-11 place-items-center rounded-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
             <Star className={cn("size-5", i <= rating ? "fill-accent text-accent" : "text-muted-foreground/40")} />
           </button>
         ))}
       </div>
       <Input name="title" placeholder={t("reviewTitle")} maxLength={120} />
       <Textarea name="body" placeholder={t("reviewBody")} required minLength={3} rows={3} />
-      {state.error && <p className="text-sm text-destructive">{state.error}</p>}
-      <Button type="submit" size="lg" disabled={pending} className="self-start">
+      {state.error && (
+        <p role="alert" className="text-sm text-destructive">
+          {t.has(`errors.${state.error}`) ? t(`errors.${state.error}`) : t("errors.failed")}
+        </p>
+      )}
+      <Button type="submit" size="xl" disabled={pending} className="self-start">
         {t("writeReview")}
       </Button>
     </form>

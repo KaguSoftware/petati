@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button";
 export default function LocaleError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const t = useTranslations("common");
   useEffect(() => {
-    console.error(error);
+    if (process.env.NODE_ENV === "development") console.error(error);
   }, [error]);
 
   const dbDown = /ECONNREFUSED|fetch failed/i.test(error.message);
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-      <p className="text-2xl font-semibold">{t("error")}</p>
+      <h1 className="text-2xl font-semibold">{t("error")}</h1>
       {process.env.NODE_ENV === "development" && (
         <div className="max-w-xl rounded-md border bg-muted/50 p-4 text-start text-sm">
           {dbDown ? (
@@ -33,7 +33,7 @@ export default function LocaleError({ error, reset }: { error: Error & { digest?
         </div>
       )}
       <Button onClick={reset} variant="outline">
-        {t("back")}
+        {t("retry")}
       </Button>
     </main>
   );

@@ -30,7 +30,10 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/s/[st
   const product = await getProductBySlug(store.id, slug, locale, fallback);
   if (!product) notFound();
 
-  const [t, reviews] = await Promise.all([getTranslations("product"), getApprovedReviews(product.id)]);
+  const [t, tc, rawReviews] = await Promise.all([getTranslations("product"), getTranslations("common"), getApprovedReviews(product.id)]);
+  // The catalog query reports a missing reviewer name as null rather than inventing the English
+  // word "Customer", which used to render verbatim on the Persian storefront.
+  const reviews = rawReviews.map((r) => ({ ...r, authorName: r.authorName ?? tc("customer") }));
   return renderSection("productPage", store.theme.sections.productPage, {
     product,
     currency: store.currency,

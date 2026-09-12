@@ -14,6 +14,7 @@ import { ADJUST_REASONS, type AdjustReason } from "@/lib/admin/inventory/types";
 import { FormField } from "../shared/form-field";
 import { NumberInput } from "../shared/number-input";
 import { useActionToast } from "../shared/use-action-toast";
+import { numberFormat } from "@/lib/number";
 
 interface Props {
   storeId: string;
@@ -59,7 +60,7 @@ function AdjustForm({ storeId, variantId, productName, variantLabel, sku, curren
   const [mode, setMode] = useState<"delta" | "set">("delta");
   const [quantity, setQuantity] = useState<number | null>(mode === "set" ? currentQty : 0);
   const [reason, setReason] = useState<AdjustReason>("adjustment");
-  const num = new Intl.NumberFormat(locale);
+  const num = numberFormat(locale);
   const reasonItems = useMemo(() => ADJUST_REASONS.map((r) => ({ value: r, label: t(`stockReason.${r}`) })), [t]);
   const errors = useMemo(() => {
     if (!state.fieldErrors) return undefined;

@@ -4,6 +4,7 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import { useLocale } from "next-intl";
 import { OverlayScroll } from "@/components/ui/overlay-scroll";
 import { cn } from "@/lib/utils";
+import { numberFormat } from "@/lib/number";
 
 export interface StatusTabItem {
   value: string;
@@ -25,7 +26,7 @@ interface Props {
  * pill so each option reads at a glance. Scrolls horizontally on narrow screens.
  */
 export function StatusTabs({ value, onValueChange, items, label, className }: Props) {
-  const fmt = new Intl.NumberFormat(useLocale());
+  const fmt = numberFormat(useLocale());
   return (
     <OverlayScroll axis="x" className={cn("-mx-1 px-1", className)}>
       <TabsPrimitive.Root value={value} onValueChange={(v) => onValueChange(String(v))}>

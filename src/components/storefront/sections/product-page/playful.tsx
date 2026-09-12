@@ -57,7 +57,7 @@ export function ProductPagePlayful({ product, labels, purchasePanel, reviewsSect
           {product.description && (
             <section className="rounded-3xl bg-background p-6 ring-1 ring-foreground/5">
               <h2 className="mb-2 text-lg font-bold">{labels.description}</h2>
-              <div className="bidi-auto prose prose-sm max-w-none text-muted-foreground whitespace-pre-line">{product.description}</div>
+              <div className="bidi-auto rich-text max-w-none text-muted-foreground whitespace-pre-line">{product.description}</div>
             </section>
           )}
         </div>

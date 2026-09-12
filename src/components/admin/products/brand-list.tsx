@@ -6,6 +6,7 @@ import type { BrandAdminRow } from "@/lib/admin/brands/types";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
 import { BrandActiveSwitch, BrandDeleteButton, BrandDialog } from "./brand-dialog";
+import { numberFormat } from "@/lib/number";
 
 interface Props {
   rows: BrandAdminRow[];
@@ -26,7 +27,7 @@ function initials(name: string) {
 
 export async function BrandList({ rows, storeId, locale, canWrite }: Props) {
   const t = await getTranslations("admin");
-  const num = new Intl.NumberFormat(locale);
+  const num = numberFormat(locale);
   const columns: Column<BrandAdminRow>[] = [
     {
       key: "name",

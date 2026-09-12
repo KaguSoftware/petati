@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import type { ExpenseTotals } from "@/lib/admin/finance/types";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { numberFormat } from "@/lib/number";
 
 interface Props {
   data: ExpenseTotals;
@@ -15,7 +16,7 @@ interface Props {
 export async function ExpensesByCategory({ data, currency, locale }: Props) {
   const t = await getTranslations("admin.finance");
   const money = (n: number) => formatMoney(n, currency, locale);
-  const pct = new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 0 });
+  const pct = numberFormat(locale, { style: "percent", maximumFractionDigits: 0 });
   const max = Math.max(0, ...data.rows.map((r) => r.total));
 
   return (

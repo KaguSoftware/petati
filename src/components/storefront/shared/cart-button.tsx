@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import { getCart } from "@/lib/cart/cart";
 import type { Store } from "@/lib/tenant/store";
 import { cn } from "@/lib/utils";
+import { numberFormat } from "@/lib/number";
 
 const iconButton = buttonVariants({ variant: "ghost", size: "icon-lg" });
 
@@ -18,7 +19,7 @@ export async function CartButton({ store, locale }: { store: Store; locale: Loca
       <ShoppingBag className="size-5" />
       {cart.itemCount > 0 && (
         <span className="absolute top-0 end-0 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 text-[10px] leading-none font-semibold text-primary-foreground tabular-nums ring-2 ring-background">
-          {new Intl.NumberFormat(locale).format(cart.itemCount)}
+          {numberFormat(locale).format(cart.itemCount)}
         </span>
       )}
     </Link>

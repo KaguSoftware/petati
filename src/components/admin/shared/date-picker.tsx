@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { dateTimeFormat } from "@/lib/number";
 
 const LOCALES = { en: enUS, tr, fa: faIR } as const;
 
@@ -37,7 +38,7 @@ export function DatePicker({ id, name, defaultValue, required, disabled, placeho
   const locale = useLocale() as keyof typeof LOCALES;
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(() => parse(defaultValue));
-  const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const fmt = dateTimeFormat(locale, { dateStyle: "medium" });
 
   return (
     <div className={cn("w-full", className)}>

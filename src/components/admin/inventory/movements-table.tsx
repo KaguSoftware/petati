@@ -4,6 +4,7 @@ import type { MovementRow } from "@/lib/admin/inventory/types";
 import { cn } from "@/lib/utils";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
+import { dateTimeFormat, numberFormat } from "@/lib/number";
 
 interface Props {
   rows: MovementRow[];
@@ -22,8 +23,8 @@ const REASON_TONE: Record<MovementRow["reason"], string> = {
 
 export async function MovementsTable({ rows, locale }: Props) {
   const t = await getTranslations("admin");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
-  const num = new Intl.NumberFormat(locale, { signDisplay: "always" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
+  const num = numberFormat(locale, { signDisplay: "always" });
   const columns: Column<MovementRow>[] = [
     { key: "date", header: t("common.date"), cell: (r) => <span className="text-muted-foreground tabular-nums whitespace-nowrap">{date.format(new Date(r.created_at))}</span> },
     {

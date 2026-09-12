@@ -5,6 +5,7 @@ import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { DataTable, type Column } from "../shared/data-table";
 import { EmptyState } from "../shared/empty-state";
+import { numberFormat } from "@/lib/number";
 
 interface Props {
   rows: ProductMarginRow[];
@@ -16,8 +17,8 @@ interface Props {
 export async function MarginsTable({ rows, currency, locale }: Props) {
   const t = await getTranslations("admin.finance.margins");
   const money = (n: number) => formatMoney(n, currency, locale);
-  const num = new Intl.NumberFormat(locale);
-  const pct = new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 });
+  const num = numberFormat(locale);
+  const pct = numberFormat(locale, { style: "percent", maximumFractionDigits: 1 });
 
   const columns: Column<ProductMarginRow>[] = [
     {

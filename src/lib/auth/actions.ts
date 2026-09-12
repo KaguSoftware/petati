@@ -43,6 +43,14 @@ async function phoneTaken(e164: string, excludeUserId?: string): Promise<boolean
   return !!data;
 }
 
+/** Supabase auth error → a key under `auth.errors.*`; unknown causes fall back to a generic one. */
+function authErrorKey(code: string | undefined, message: string): string {
+  const hay = `${code ?? ""} ${message}`.toLowerCase();
+  if (hay.includes("invalid_credentials") || hay.includes("invalid login")) return "credentials";
+  if (hay.includes("email_not_confirmed") || hay.includes("email not confirmed")) return "emailNotConfirmed";
+  return "invalid";
+}
+
 export async function signInAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const parsed = credentials.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: "invalid" };
@@ -50,7 +58,9 @@ export async function signInAction(_prev: AuthState, formData: FormData): Promis
 
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: error.message };
+  // Never hand a raw Supabase string to the UI: it is English, and a Farsi shopper with a wrong
+  // password was being shown "Invalid login credentials". Map to keys under `auth.errors.*`.
+  if (error) return { error: authErrorKey(error.code, error.message) };
 
   const target = safeNext(next, locale);
   const { data: profile } = await supabase.from("profiles").select("phone").eq("id", data.user.id).maybeSingle<{ phone: string | null }>();

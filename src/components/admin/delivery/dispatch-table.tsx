@@ -11,6 +11,7 @@ import { OptimisticStatusBadge } from "../shared/optimistic-status-badge";
 import { DeliveryBulkBar } from "./delivery-bulk-bar";
 import { DeliveryRowActions } from "./delivery-row-actions";
 import { DeliveryRowCheckbox, DeliverySelectAll } from "./delivery-row-select";
+import { dateTimeFormat } from "@/lib/number";
 
 interface Props {
   rows: DeliveryListRow[];
@@ -35,7 +36,7 @@ export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, 
   // selection made on one tab act on another tab's rows.
   const scope = `delivery:${bucket}`;
   const ids = rows.map((r) => r.id);
-  const date = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+  const date = dateTimeFormat(locale, { day: "numeric", month: "short" });
   const selectable = canAssign && !noBulk;
 
   const columns: Column<DeliveryListRow>[] = [

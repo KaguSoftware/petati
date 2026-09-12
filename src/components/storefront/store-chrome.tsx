@@ -32,6 +32,7 @@ export async function StoreChrome({ ctx, children }: { ctx: StoreContext; childr
     resolved: resolveFooter(store.footer, locale, fallback),
     localeSlot: <LocaleSwitcher enabled={store.enabled_locales} />,
     year,
+    pages: { content: (store.settings.pages ?? {}) as Record<string, Record<string, string>>, locale, fallback },
   });
 
   return (

@@ -3,13 +3,14 @@ import { Link } from "@/i18n/navigation";
 import type { DeliverySettlementRow } from "@/lib/db/types";
 import { formatMoney } from "@/lib/money";
 import { EntityLink } from "../shared/entity-link";
+import { dateTimeFormat } from "@/lib/number";
 
 type Row = DeliverySettlementRow & { courier_name: string | null; settled_by_name?: string | null };
 
 /** Recent handovers. Each line links to the courier and to the log entries the settlement wrote. */
 export async function SettlementsList({ rows, currency, locale, hideCourier }: { rows: Row[]; currency: string; locale: string; hideCourier?: boolean }) {
   const t = await getTranslations("admin.delivery.cash");
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
+  const date = dateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
   if (rows.length === 0) return null;
   return (
     <section className="flex flex-col gap-2 rounded-xl border bg-card p-4">
