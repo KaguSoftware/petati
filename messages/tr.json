@@ -31,7 +31,10 @@
     "themeLight": "Açık",
     "themeDark": "Koyu",
     "themeSystem": "Sistem",
-    "accountMenu": "Hesap menüsü"
+    "accountMenu": "Hesap menüsü",
+    "errorOffline": "Bağlantınız kopmuş görünüyor. İnternetinizi kontrol edip tekrar deneyin.",
+    "errorRef": "Referans",
+    "backHome": "Ana sayfaya dön"
   },
   "nav": {
     "home": "Ana sayfa",

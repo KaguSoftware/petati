@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -44,13 +45,16 @@ export function UserMenu({ locale, user, role }: Props) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-56">
-        <DropdownMenuLabel className="flex flex-col gap-0.5">
-          <span className="truncate font-medium text-foreground">{user.name || user.email}</span>
-          <span className="truncate text-xs font-normal text-muted-foreground" dir="ltr">
-            {user.email}
-          </span>
-          <span className="text-[11px] font-normal tracking-wide text-muted-foreground uppercase">{t(`roles.${role}`)}</span>
-        </DropdownMenuLabel>
+        {/* Must be inside a Group — Base UI's Menu.GroupLabel throws without one. */}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex flex-col gap-0.5">
+            <span className="truncate font-medium text-foreground">{user.name || user.email}</span>
+            <span className="truncate text-xs font-normal text-muted-foreground" dir="ltr">
+              {user.email}
+            </span>
+            <span className="text-[11px] font-normal tracking-wide text-muted-foreground uppercase">{t(`roles.${role}`)}</span>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem render={<Link href="/account/profile" />}>
           <User />

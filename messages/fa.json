@@ -31,7 +31,10 @@
     "themeLight": "روشن",
     "themeDark": "تیره",
     "themeSystem": "مثل سیستم",
-    "accountMenu": "منوی حساب"
+    "accountMenu": "منوی حساب",
+    "errorOffline": "به نظر می‌رسد اینترنت ندارید. اتصال را بررسی کنید و دوباره تلاش کنید.",
+    "errorRef": "کد پیگیری",
+    "backHome": "برگشت به خانه"
   },
   "nav": {
     "home": "خانه",

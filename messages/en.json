@@ -31,7 +31,10 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "themeSystem": "System",
-    "accountMenu": "Account menu"
+    "accountMenu": "Account menu",
+    "errorOffline": "You appear to be offline. Check your connection and try again.",
+    "errorRef": "Reference",
+    "backHome": "Back to home"
   },
   "nav": {
     "home": "Home",

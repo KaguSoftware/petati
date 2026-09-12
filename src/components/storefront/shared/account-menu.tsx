@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
@@ -79,12 +80,17 @@ export function AccountMenu({ user, enabledLocales }: Props) {
       <DropdownMenuContent align="end" className="min-w-56">
         {user ? (
           <>
-            <DropdownMenuLabel className="flex flex-col gap-0.5">
-              {user.name && <span className="truncate font-medium text-foreground">{user.name}</span>}
-              <span className="truncate text-caption font-normal text-muted-foreground" dir="ltr">
-                {user.email}
-              </span>
-            </DropdownMenuLabel>
+            {/* The label MUST sit inside a Group: it renders Base UI's Menu.GroupLabel, which
+                throws "MenuGroupContext is missing" without one — taking the whole page down, not
+                just the menu. */}
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="flex flex-col gap-0.5">
+                {user.name && <span className="truncate font-medium text-foreground">{user.name}</span>}
+                <span className="truncate text-caption font-normal text-muted-foreground" dir="ltr">
+                  {user.email}
+                </span>
+              </DropdownMenuLabel>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem render={<Link href="/account" />}>
               <Package />
