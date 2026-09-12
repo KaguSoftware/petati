@@ -17,10 +17,10 @@ export function ProductCardPlayful({ product, currency, locale, labels, wishlist
           sizes="(min-width: 1024px) 14vw, (min-width: 640px) 20vw, 40vw"
         />
         {product.isNew && (
-          <span className="absolute start-2 top-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-accent-foreground shadow-sm">{labels.new}</span>
+          <span className="absolute start-2 top-2 rounded-full bg-accent px-2 py-0.5 text-micro font-semibold text-accent-foreground shadow-sm">{labels.new}</span>
         )}
         {!product.inStock && (
-          <span className="absolute inset-x-1.5 bottom-1.5 rounded-full bg-foreground/80 py-0.5 text-center text-[10px] font-semibold text-background">{labels.outOfStock}</span>
+          <span className="absolute inset-x-1.5 bottom-1.5 rounded-full bg-foreground/80 py-0.5 text-center text-micro font-semibold text-background">{labels.outOfStock}</span>
         )}
       </Link>
       <div className="flex min-w-0 flex-1 flex-col gap-1 py-1 pe-6">

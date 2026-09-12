@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import type { NavbarProps } from "../types";
 
 const navLink =
-  "inline-flex shrink-0 items-center rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all hover:bg-background hover:text-foreground hover:shadow-sm focus-visible:bg-background focus-visible:text-foreground focus-visible:shadow-sm focus-visible:outline-none";
+  "inline-flex shrink-0 items-center rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all hover:bg-background hover:text-foreground hover:shadow-sm focus-visible:bg-background focus-visible:text-foreground focus-visible:shadow-sm focus-ring";
 
 /** Category budget: Shop + Brands until @wide, then categories #1–#3 (the drawer lists them all); icon-only search at @tablet, the field from @desktop. A floating capsule: the whole header lives in a rounded pill that hovers over the page, with a pill nav inside. */
 export function NavbarPlayful({ storeName, logoUrl, categories, labels, cartSlot, accountSlot, localeSlot }: NavbarProps) {

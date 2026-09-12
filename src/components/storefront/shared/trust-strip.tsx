@@ -39,7 +39,7 @@ const PANEL: Record<TrustTone, { wrap: string; panel: string; icon: string; titl
     wrap: "border-b border-foreground/15",
     panel: "flex flex-col items-center gap-2 text-center",
     icon: "text-foreground/70",
-    title: "text-[11px] uppercase tracking-[0.18em]",
+    title: "text-micro uppercase tracking-[0.18em]",
     text: "font-serif text-sm italic text-muted-foreground",
   },
   cards: {

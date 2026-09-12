@@ -10,7 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 import type { NavbarProps } from "../types";
 
 const navLink =
-  "inline-flex shrink-0 items-center rounded-full px-3 py-1.5 text-sm whitespace-nowrap text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground focus-visible:outline-none";
+  "inline-flex shrink-0 items-center rounded-full px-3 py-1.5 text-sm whitespace-nowrap text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground focus-ring";
 
 /** Classic bar. Category budget: Shop + Brands until @wide, then categories #1–#3 (the drawer lists them all); the search field never truncates its placeholder. */
 export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot, accountSlot, localeSlot }: NavbarProps) {

@@ -8,6 +8,7 @@
  * choosing Playfair Display gives Persian headings a serif (Amiri) instead of always Vazirmatn.
  */
 export const FONT_OPTIONS = [
+  "IBM Plex Sans Arabic",
   "Inter",
   "Manrope",
   "DM Sans",
@@ -38,6 +39,13 @@ interface FontMeta {
 }
 
 export const FONTS: Record<FontOption, FontMeta> = {
+  /**
+   * The default. A true dual-script superfamily — IBM drew the Arabic and the Latin together, so
+   * they share weight, proportion and voice, and one font serves every locale. No `latinPair`:
+   * unlike the other Arabic faces here its Latin metrics are centred (caps sit 0.9% off the line
+   * box, against Vazirmatn's 10%), so Latin text does not ride high in buttons and inputs.
+   */
+  "IBM Plex Sans Arabic": { cssVar: "--font-ibm-plex-arabic", generic: "sans-serif", arabic: true },
   Inter: { cssVar: "--font-inter", generic: "sans-serif", arabic: false, pair: "Vazirmatn" },
   Manrope: { cssVar: "--font-manrope", generic: "sans-serif", arabic: false, pair: "Noto Sans Arabic" },
   "DM Sans": { cssVar: "--font-dm-sans", generic: "sans-serif", arabic: false, pair: "Cairo" },

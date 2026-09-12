@@ -62,7 +62,7 @@ export const DEFAULT_THEME: StoreTheme = {
     muted: "#f5f5f4",
     mutedForeground: "#57534e",
   },
-  fonts: { heading: "Inter", body: "Inter" },
+  fonts: { heading: "IBM Plex Sans Arabic", body: "IBM Plex Sans Arabic" },
   radius: "0.75rem",
   announcement: {},
 };

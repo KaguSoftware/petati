@@ -5,7 +5,7 @@ import { RatingStars } from "@/components/storefront/shared/rating-stars";
 import { cn } from "@/lib/utils";
 import type { ProductCardProps } from "../types";
 
-const squareBadge = "px-2 py-1 text-[10px] font-extrabold tracking-widest uppercase";
+const squareBadge = "px-2 py-1 text-micro font-extrabold tracking-widest uppercase";
 
 export function ProductCardBold({ product, currency, locale, labels, wishlistSlot }: ProductCardProps) {
   return (
@@ -23,7 +23,7 @@ export function ProductCardBold({ product, currency, locale, labels, wishlistSlo
       </Link>
       {wishlistSlot && <div className="absolute end-3 top-3">{wishlistSlot}</div>}
       <div className="flex flex-1 flex-col gap-2 p-3">
-        <p className="min-h-[1lh] truncate text-[10px] font-bold tracking-widest text-muted-foreground uppercase">{product.brand}</p>
+        <p className="min-h-[1lh] truncate text-micro font-bold tracking-widest text-muted-foreground uppercase">{product.brand}</p>
         <Link
           href={`/p/${product.slug}`}
           className="line-clamp-2 text-sm leading-tight font-extrabold tracking-tight uppercase decoration-2 underline-offset-4 hover:underline"

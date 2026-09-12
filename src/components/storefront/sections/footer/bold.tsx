@@ -10,7 +10,7 @@ const link = "text-xs font-bold tracking-widest whitespace-nowrap uppercase text
 function Row({ title, links }: { title: string; links: FooterLink[] }) {
   return (
     <nav aria-label={title} className="flex flex-col gap-3">
-      <p className="text-[11px] font-bold tracking-widest text-background/50 uppercase">{title}</p>
+      <p className="text-micro font-bold tracking-widest text-background/50 uppercase">{title}</p>
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
         {links.map((l) => (
           <Link key={l.href} href={l.href} className={link}>
@@ -34,11 +34,11 @@ export function FooterBold({ storeName, tagline, shopLinks, infoLinks, contact, 
         {tagline && <p className="bidi-auto max-w-md text-sm font-medium text-background/70">{tagline}</p>}
         <div className="grid gap-10 border-t-2 border-background/20 pt-8 @tablet:grid-cols-[1.2fr_1fr] @tablet:gap-14">
           <div className="flex flex-col gap-5">
-            <p className="text-[11px] font-bold tracking-widest text-background/50 uppercase">{labels.contact}</p>
+            <p className="text-micro font-bold tracking-widest text-background/50 uppercase">{labels.contact}</p>
             <ContactBlock contact={contact} labels={labels} tone="dark" phoneClassName="text-2xl font-extrabold tracking-tight text-background [&_svg]:mt-1.5 [&_svg]:size-5" />
             {social.length > 0 && (
               <div className="flex flex-col gap-3">
-                <p className="text-[11px] font-bold tracking-widest text-background/50 uppercase">{labels.followUs}</p>
+                <p className="text-micro font-bold tracking-widest text-background/50 uppercase">{labels.followUs}</p>
                 <SocialLinks links={social} variant="square" tone="dark" />
               </div>
             )}
@@ -48,7 +48,7 @@ export function FooterBold({ storeName, tagline, shopLinks, infoLinks, contact, 
             <Row title={labels.info} links={infoLinks} />
           </div>
         </div>
-        <div className="flex flex-col gap-4 border-t-2 border-background/20 pt-6 pb-2 text-[11px] font-bold tracking-widest text-background/60 uppercase @tablet:flex-row @tablet:items-center @tablet:justify-between">
+        <div className="flex flex-col gap-4 border-t-2 border-background/20 pt-6 pb-2 text-micro font-bold tracking-widest text-background/60 uppercase @tablet:flex-row @tablet:items-center @tablet:justify-between">
           <span>
             <bdi dir="ltr">© {year} {storeName}.</bdi> {labels.rights}
           </span>

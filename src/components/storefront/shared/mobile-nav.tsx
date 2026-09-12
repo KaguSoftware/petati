@@ -22,8 +22,8 @@ interface Props {
 }
 
 const bar = "h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-out motion-reduce:transition-none";
-const drawerLink = "stagger-in rounded-lg px-3 py-2.5 text-base transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none";
-const childLink = "py-2 text-[15px] text-foreground/75 hover:text-foreground focus-visible:text-foreground";
+const drawerLink = "stagger-in flex min-h-11 items-center rounded-lg px-3 py-2.5 text-body transition-colors hover:bg-muted focus-visible:bg-muted focus-ring";
+const childLink = "flex min-h-11 items-center py-2 text-label text-foreground/75 hover:text-foreground focus-visible:text-foreground";
 
 /**
  * Hamburger + full-height drawer from the inline-start edge (mirrors under RTL). Links close the

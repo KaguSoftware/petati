@@ -5,13 +5,14 @@ import { getTranslations } from "next-intl/server";
 import { storeContext } from "@/lib/tenant/context";
 import { getCategories } from "@/lib/catalog/queries";
 import { Link } from "@/i18n/navigation";
-import { PageShell } from "@/components/storefront/shared/page-shell";
+import { PageShell, pageHeading } from "@/components/storefront/shared/page-shell";
 import { ProductImage } from "@/components/storefront/shared/product-image";
 import { Results } from "../../shop/page";
 import { ResultsSkeleton } from "@/components/storefront/shared/skeletons";
+import { cn } from "@/lib/utils";
 
 const chip =
-  "inline-flex h-10 items-center rounded-full bg-muted px-4 text-sm font-medium transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:bg-primary focus-visible:text-primary-foreground focus-visible:outline-none";
+  "inline-flex h-10 items-center rounded-full bg-muted px-4 text-sm font-medium transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:bg-primary focus-visible:text-primary-foreground focus-ring";
 
 /**
  * Category listing. Categories form a tree: a parent page lists every product in its subtree
@@ -56,7 +57,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
           <div aria-hidden className="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-5 @tablet:p-8">
             {breadcrumb && <div className="text-white/80">{breadcrumb}</div>}
-            <h1 className="bidi-auto text-3xl font-semibold tracking-tight @tablet:text-5xl">{category.name}</h1>
+            <h1 className={cn("bidi-auto font-semibold tracking-tight", pageHeading.page)}>{category.name}</h1>
             {category.description && <p className="bidi-auto max-w-xl text-white/85">{category.description}</p>}
           </div>
         </header>

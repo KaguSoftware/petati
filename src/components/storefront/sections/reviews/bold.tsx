@@ -41,7 +41,7 @@ export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, f
               <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
                 <span className="text-sm font-extrabold tracking-wide uppercase">{r.authorName}</span>
                 {r.isVerifiedPurchase && (
-                  <span className="inline-flex items-center gap-1 bg-foreground px-1.5 py-0.5 text-[10px] font-bold tracking-widest text-background uppercase">
+                  <span className="inline-flex items-center gap-1 bg-foreground px-1.5 py-0.5 text-micro font-bold tracking-widest text-background uppercase">
                     <BadgeCheck className="size-3" /> {labels.verified}
                   </span>
                 )}

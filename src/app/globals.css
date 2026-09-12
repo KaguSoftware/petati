@@ -63,6 +63,35 @@
   --container-tablet: 48rem;
   --container-desktop: 64rem;
   --container-wide: 80rem;
+
+  /* ---- Type scale -----------------------------------------------------------------------------
+     Named by ROLE, not size, so a page says what a piece of text IS and the scale decides how big.
+     The storefront had 16 distinct sizes across ~120 files, `text-xs` through `text-7xl` with no
+     system, plus 22 arbitrary `text-[10px]`/`text-[11px]` one-offs.
+
+     Each step carries its own line-height (Tailwind v4 pairs `--text-x--line-height` with
+     `--text-x`). Body steps are loose enough for Arabic; display steps are tightened for Latin and
+     relaxed again under RTL further down, where ascenders and descenders need the room. */
+  --text-micro: 0.6875rem; /* 11px — badges, counters, overline labels */
+  --text-micro--line-height: 1.5;
+  --text-caption: 0.75rem; /* 12px — timestamps, helper text, fine print */
+  --text-caption--line-height: 1.5;
+  --text-label: 0.875rem; /* 14px — form labels, table cells, secondary copy */
+  --text-label--line-height: 1.5;
+  --text-body: 1rem; /* 16px — the default reading size */
+  --text-body--line-height: 1.6;
+  --text-lead: 1.125rem; /* 18px — intros, card titles, prices in a list */
+  --text-lead--line-height: 1.5;
+  --text-heading: 1.25rem; /* 20px — panel and card headings */
+  --text-heading--line-height: 1.4;
+  --text-title: 1.5rem; /* 24px — section headings within a page */
+  --text-title--line-height: 1.3;
+  --text-display: 2rem; /* 32px — page h1 */
+  --text-display--line-height: 1.2;
+  --text-display-lg: 2.5rem; /* 40px — the same h1 once there is room for it */
+  --text-display-lg--line-height: 1.15;
+  --text-hero: 3rem; /* 48px — hero and marketing statements */
+  --text-hero--line-height: 1.1;
 }
 
 :root {
@@ -259,6 +288,19 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
   margin-inline: calc(var(--gutter, 1rem) * -1);
 }
 
+/* ---- Focus -----------------------------------------------------------------------------------
+   The storefront had two idioms: a proper ring on buttons and cards, and — on most of the actual
+   NAVIGATION (all four navbars, the drawer, brand tiles, category chips) — `outline-none` plus a
+   background swap. On `brands/page.tsx` that meant focus was a ~15% alpha shift and nothing else,
+   which is not a visible focus indicator. `outline` rather than a ring so it follows border-radius
+   and never adds to layout. */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
 /* Mixed-direction content (an English product name on a Persian page): let each run pick its
    own direction so punctuation and numbers stay attached to their words. */
 @utility bidi-auto {
@@ -297,9 +339,17 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
   height: 2.5rem;
   font-size: 0.875rem;
 }
-/* Arabic-script display type needs room between lines; the Latin "leading-[0.95]" look collides. */
+/* Arabic-script type needs room between lines; the Latin "leading-[0.95]" look collides. Headings
+   were already handled — but the small end (badges, overlines, captions) never was, and that is
+   exactly where Persian was hardest to read. */
 [dir="rtl"] [data-storefront] :is(h1, h2, h3) {
   line-height: 1.3;
+}
+[dir="rtl"] [data-storefront] :is(.text-micro, .text-caption, .text-label) {
+  line-height: 1.7;
+}
+[dir="rtl"] [data-storefront] :is(.text-display, .text-display-lg, .text-hero, .text-title) {
+  line-height: 1.35;
 }
 /* Anchored headings never land under the sticky bar. */
 [data-storefront] :is(h1, h2, h3) {
@@ -318,11 +368,41 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
   --border: transparent;
   --input: rgb(255 255 255 / 0.25);
   --ring: rgb(255 255 255 / 0.6);
+  /* The scrim behind the bar. Tone-aware (see below) and ALWAYS present: a hero photo can be any
+     colour, and a transparent bar over a white one is simply invisible. */
+  --navbar-scrim: rgb(0 0 0 / 0.55);
   color: #ffffff;
   background-color: transparent;
   border-color: transparent;
   box-shadow: none;
   backdrop-filter: none;
+}
+
+/* Light photo behind the bar → dark text on a light scrim, so a bright hero keeps its brightness
+   instead of wearing a heavy dark veil. `data-hero-tone` is measured from the pixels actually
+   under the bar by <HeroTone>; absent (no JS yet, no photo, tainted canvas) means the dark
+   treatment above, which is what shipped before. */
+[data-storefront][data-hero-tone="light"]:has([data-hero-overlay]) header[data-navbar-overlay][data-at-top="true"] {
+  --foreground: var(--color-foreground);
+  --muted-foreground: color-mix(in oklch, var(--color-foreground) 78%, transparent);
+  --muted: rgb(0 0 0 / 0.08);
+  --input: rgb(0 0 0 / 0.18);
+  --ring: color-mix(in oklch, var(--color-foreground) 60%, transparent);
+  --navbar-scrim: rgb(255 255 255 / 0.72);
+  color: var(--color-foreground);
+}
+
+/* The scrim itself: a gradient that fades out just past the bar, so there is no hard edge across
+   the photo. Sits behind the bar's own children (the header is a stacking context via `sticky`). */
+[data-storefront]:has([data-hero-overlay]) header[data-navbar-overlay][data-at-top="true"]::before {
+  content: "";
+  position: absolute;
+  inset-block: 0 -2.5rem;
+  inset-inline: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--navbar-scrim), transparent);
+  transition: background 200ms ease;
 }
 header[data-navbar-overlay] {
   transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;

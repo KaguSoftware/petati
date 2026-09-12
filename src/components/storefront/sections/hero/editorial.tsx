@@ -39,7 +39,7 @@ function Slide({ title, subtitle, ctaLabel, ctaHref, imageUrl, index, total }: H
           {subtitle && <p className="bidi-auto max-w-prose font-serif text-lg italic text-muted-foreground @tablet:text-xl">{subtitle}</p>}
           <Link
             href={ctaHref}
-            className="group inline-flex items-center gap-2 self-start border-b border-foreground pb-1 text-xs uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary focus-visible:text-primary focus-visible:outline-none"
+            className="group inline-flex items-center gap-2 self-start border-b border-foreground pb-1 text-xs uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary focus-visible:text-primary focus-ring"
           >
             {ctaLabel}
             <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
@@ -50,7 +50,7 @@ function Slide({ title, subtitle, ctaLabel, ctaHref, imageUrl, index, total }: H
         <div className="relative aspect-[4/3] overflow-hidden bg-muted @tablet:aspect-[21/9]">
           {imageUrl && <Image src={imageUrl} alt="" fill sizes="(min-width: 1280px) 1280px, 100vw" className="object-cover" priority={index === 0} />}
         </div>
-        <figcaption aria-hidden className="flex items-center justify-between border-t border-foreground/15 pt-2 font-mono text-[10px] tracking-[0.2em] text-muted-foreground">
+        <figcaption aria-hidden className="flex items-center justify-between border-t border-foreground/15 pt-2 font-mono text-micro tracking-[0.2em] text-muted-foreground">
           <span dir="ltr">
             {nn(index + 1)} / {nn(total)}
           </span>

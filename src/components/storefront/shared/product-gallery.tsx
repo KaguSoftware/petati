@@ -95,7 +95,7 @@ export function ProductGallery({ images, fallbackAlt, labels, stageClassName, si
           <>
             {arrow("prev")}
             {arrow("next")}
-            <span aria-hidden className="absolute bottom-3 end-3 z-10 rounded-full bg-black/45 px-2 py-0.5 text-[11px] font-medium tabular-nums text-white backdrop-blur-sm">
+            <span aria-hidden className="absolute bottom-3 end-3 z-10 rounded-full bg-black/45 px-2 py-0.5 text-micro font-medium tabular-nums text-white backdrop-blur-sm">
               <bdi dir="ltr">
                 {active + 1} / {count}
               </bdi>

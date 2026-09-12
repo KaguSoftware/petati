@@ -25,7 +25,7 @@ const WORDMARK: Partial<Record<PaymentMethod, string>> = { visa: "VISA", troy: "
 export function PaymentBadges({ methods, caption, tone = "light", className }: Props) {
   if (methods.length === 0) return null;
   const pill = cn(
-    "inline-flex h-6 items-center gap-1 rounded border px-1.5 text-[10px] font-bold uppercase tracking-wide whitespace-nowrap",
+    "inline-flex h-6 items-center gap-1 rounded border px-1.5 text-micro font-bold uppercase tracking-wide whitespace-nowrap",
     tone === "dark" ? "border-background/30 text-background/80" : "border-border text-muted-foreground",
   );
   return (

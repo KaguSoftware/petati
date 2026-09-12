@@ -9,12 +9,13 @@ import { DeliveryProgress } from "@/components/storefront/shared/delivery-progre
 import { formatMoney } from "@/lib/money";
 import { pickJson } from "@/lib/catalog/types";
 import { Badge } from "@/components/ui/badge";
-import { PageShell } from "@/components/storefront/shared/page-shell";
+import { PageShell, pageHeading } from "@/components/storefront/shared/page-shell";
 import { PrintButton } from "@/components/storefront/shared/print-button";
 import { ProductImage } from "@/components/storefront/shared/product-image";
 import type { OrderStatus } from "@/lib/db/types";
 import { dateTimeFormat } from "@/lib/number";
 import { OrderSkeleton } from "@/components/storefront/shared/skeletons";
+import { cn } from "@/lib/utils";
 
 /** Statuses where the delivery code is still worth something to the customer. */
 const DELIVERY_CODE_VISIBLE: OrderStatus[] = ["paid", "processing", "shipped"];
@@ -54,7 +55,7 @@ async function OrderContent({ ctx, id, searchParams }: { ctx: StoreContext; id: 
       )}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight @tablet:text-3xl">
+          <h1 className={cn("bidi-auto font-semibold tracking-tight", pageHeading.sub)}>
             {t("title")} {order.number}
           </h1>
           <p className="text-sm text-muted-foreground">

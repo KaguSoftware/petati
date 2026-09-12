@@ -28,7 +28,7 @@ export function StoreLogo({ storeName, logoUrl, className, wordmarkClassName, ma
           {initial}
         </span>
       )}
-      <span className={cn("truncate text-lg font-semibold tracking-tight", wordmarkClassName)}>{storeName}</span>
+      <span className={cn("truncate font-heading text-lead font-semibold tracking-tight", wordmarkClassName)}>{storeName}</span>
     </Link>
   );
 }

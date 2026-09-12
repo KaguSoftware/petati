@@ -39,7 +39,7 @@ export default async function BrandsPage({ params }: PageProps<"/[locale]/s/[sto
             <li key={b.id}>
               <Link
                 href={`/b/${b.slug}`}
-                className="flex h-full flex-col items-center gap-3 rounded-xl bg-muted/60 p-5 text-center transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                className="flex h-full flex-col items-center gap-3 rounded-xl bg-muted/60 p-5 text-center transition-colors hover:bg-muted focus-visible:bg-muted focus-ring"
               >
                 <BrandMark name={b.name} logoUrl={b.logoUrl} size={72} className="bg-background" />
                 <span className="bidi-auto font-medium">{b.name}</span>

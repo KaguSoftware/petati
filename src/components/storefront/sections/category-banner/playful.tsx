@@ -17,7 +17,7 @@ export function CategoryBannerPlayful({ title, categories }: CategoryBannerProps
             <Link
               href={`/c/${c.slug}`}
               className={cn(
-                "group flex flex-col items-center gap-3 rounded-3xl p-4 ring-1 ring-foreground/5 transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/10 focus-visible:scale-105 focus-visible:outline-none motion-reduce:transition-none",
+                "group flex flex-col items-center gap-3 rounded-3xl p-4 ring-1 ring-foreground/5 transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/10 focus-visible:scale-105 focus-ring motion-reduce:transition-none",
                 tiles[i % tiles.length],
               )}
             >

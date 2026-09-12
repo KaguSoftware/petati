@@ -67,7 +67,7 @@ export function FooterEditorial({ storeName, tagline, shopLinks, infoLinks, cont
           </div>
         )}
         <SocialLinks links={social} variant="text" className="justify-center" />
-        <div className="flex flex-col items-center gap-4 text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+        <div className="flex flex-col items-center gap-4 text-micro uppercase tracking-[0.15em] text-muted-foreground">
           <PaymentBadges methods={payments} className="justify-center" />
           {localeSlot}
           <span>

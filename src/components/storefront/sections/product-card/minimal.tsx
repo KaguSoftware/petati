@@ -25,21 +25,21 @@ export function ProductCardMinimal({ product, currency, locale, labels, wishlist
           {!product.inStock && <div aria-hidden className="absolute inset-0 bg-background/45" />}
           <div className="absolute start-2.5 top-2.5 flex flex-col items-start gap-1.5 @tablet:start-3 @tablet:top-3">
             {product.isNew && product.inStock && (
-              <span className="rounded-full bg-accent px-2.5 py-1 text-[11px] leading-none font-semibold text-accent-foreground">{labels.new}</span>
+              <span className="rounded-full bg-accent px-2.5 py-1 text-micro leading-none font-semibold text-accent-foreground">{labels.new}</span>
             )}
             {onSale && savings >= 5 && product.inStock && (
-              <span className="rounded-full bg-primary px-2.5 py-1 text-[11px] leading-none font-semibold text-primary-foreground tabular-nums" dir="ltr">
+              <span className="rounded-full bg-primary px-2.5 py-1 text-micro leading-none font-semibold text-primary-foreground tabular-nums" dir="ltr">
                 {`-${savings}%`}
               </span>
             )}
             {!product.inStock && (
-              <span className="rounded-full bg-foreground/80 px-2.5 py-1 text-[11px] leading-none font-medium text-background">{labels.outOfStock}</span>
+              <span className="rounded-full bg-foreground/80 px-2.5 py-1 text-micro leading-none font-medium text-background">{labels.outOfStock}</span>
             )}
           </div>
         </div>
         <div className="flex flex-1 flex-col gap-1 px-0.5">
           {product.brand && <p className="truncate text-xs text-muted-foreground">{product.brand}</p>}
-          <h3 className="bidi-auto line-clamp-2 text-[15px] leading-snug font-medium text-balance">{product.name}</h3>
+          <h3 className="bidi-auto line-clamp-2 text-label leading-snug font-medium text-balance">{product.name}</h3>
           <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1 pt-1">
             <Price amount={product.price} compareAt={product.compareAtPrice} currency={currency} locale={locale} className="text-base" />
             {product.ratingCount > 0 && <RatingStars value={product.ratingAvg} count={product.ratingCount} size={13} />}

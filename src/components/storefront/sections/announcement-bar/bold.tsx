@@ -26,7 +26,7 @@ export function AnnouncementBarBold({ text }: AnnouncementBarProps) {
       role="status"
       aria-label={text}
       dir="ltr"
-      className="group overflow-hidden bg-foreground py-2 text-[11px] font-bold tracking-widest text-background uppercase [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
+      className="group overflow-hidden bg-foreground py-2 text-micro font-bold tracking-widest text-background uppercase [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
     >
       <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none">
         {track(false)}

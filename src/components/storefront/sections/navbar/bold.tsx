@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import type { NavbarProps } from "../types";
 
 const navLink =
-  "inline-flex shrink-0 items-center border-b-2 border-transparent px-1 py-2 text-xs font-bold tracking-widest whitespace-nowrap uppercase text-background/80 transition-colors hover:border-background hover:text-background focus-visible:border-background focus-visible:text-background focus-visible:outline-none";
+  "inline-flex shrink-0 items-center border-b-2 border-transparent px-1 py-2 text-xs font-bold tracking-widest whitespace-nowrap uppercase text-background/80 transition-colors hover:border-background hover:text-background focus-visible:border-background focus-visible:text-background focus-ring";
 
 /** Category budget: #1–#3 from @tablet, #1–#5 at @wide (own full-width row). Department-store header: search / big centred logo / icons on the first row, a dark full-width category bar below. */
 export function NavbarBold({ storeName, logoUrl, categories, labels, contactPhone, cartSlot, accountSlot, localeSlot }: NavbarProps) {

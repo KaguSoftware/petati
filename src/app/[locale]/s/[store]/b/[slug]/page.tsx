@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import { storeContext } from "@/lib/tenant/context";
 import { getBrands } from "@/lib/catalog/queries";
 import { BrandMark } from "@/components/storefront/shared/brand-mark";
-import { PageShell } from "@/components/storefront/shared/page-shell";
+import { PageShell, pageHeading } from "@/components/storefront/shared/page-shell";
 import { Results } from "../../shop/page";
 import { ResultsSkeleton } from "@/components/storefront/shared/skeletons";
+import { cn } from "@/lib/utils";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/s/[store]/b/[slug]">): Promise<Metadata> {
   const ctx = await storeContext(params);
@@ -26,7 +27,7 @@ export default async function BrandPage({ params, searchParams }: PageProps<"/[l
     <PageShell>
       <div className="flex items-center gap-4 @tablet:gap-5">
         <BrandMark name={brand.name} logoUrl={brand.logoUrl} size={72} />
-        <h1 className="bidi-auto text-3xl font-semibold tracking-tight @tablet:text-4xl">{brand.name}</h1>
+        <h1 className={cn("bidi-auto font-semibold tracking-tight", pageHeading.page)}>{brand.name}</h1>
       </div>
       <Suspense fallback={<ResultsSkeleton />}>
         <Results ctx={ctx} searchParams={searchParams} brandSlug={slug} />

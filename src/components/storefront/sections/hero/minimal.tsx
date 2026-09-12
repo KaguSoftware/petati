@@ -3,6 +3,7 @@ import { PawPrint } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/storefront/shared/hero-carousel";
+import { HeroTone } from "@/components/storefront/shared/hero-tone";
 import { cn } from "@/lib/utils";
 import type { HeroProps, HeroSlideProps } from "../types";
 
@@ -10,6 +11,7 @@ import type { HeroProps, HeroSlideProps } from "../types";
 export function HeroMinimal({ slides, labels, autoplay }: HeroProps) {
   return (
     <section data-hero-overlay className="relative isolate overflow-hidden bg-foreground text-white" style={{ marginTop: "calc(var(--hero-pull, 0px) * -1)" }}>
+      <HeroTone />
       <HeroCarousel
         slides={slides.map((s, i) => (
           <Slide key={i} {...s} first={i === 0} secondaryLabel={labels.secondary} secondaryHref="/brands" />
@@ -38,11 +40,10 @@ function Slide({ title, subtitle, ctaLabel, ctaHref, imageUrl, first, secondaryL
         </div>
       )}
       <div aria-hidden className="absolute inset-0 bg-linear-to-t from-black/80 via-black/35 to-transparent" />
-      <div aria-hidden className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/55 to-transparent" />
       <div className="absolute inset-x-0 bottom-0">
         <div className="mx-auto flex max-w-7xl flex-col items-start gap-4 px-gutter pb-14 @tablet:gap-5 @tablet:pb-16 @desktop:pb-20">
           {title && (
-            <Heading className="bidi-auto max-w-2xl text-[2.5rem] leading-[1.05] font-semibold tracking-tight text-balance [text-shadow:0_2px_12px_rgb(0_0_0/.35)] @tablet:text-6xl">
+            <Heading className="bidi-auto max-w-2xl text-display-lg leading-[1.05] font-semibold tracking-tight text-balance [text-shadow:0_2px_12px_rgb(0_0_0/.35)] @tablet:text-6xl">
               {title}
             </Heading>
           )}

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import type { NavbarProps } from "../types";
 
 const navLink =
-  "inline-flex shrink-0 items-center px-2.5 py-1.5 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:underline focus-visible:underline-offset-4 focus-visible:outline-none";
+  "inline-flex shrink-0 items-center px-2.5 py-1.5 text-micro uppercase tracking-[0.18em] whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:underline focus-visible:underline-offset-4 focus-ring";
 
 /**
  * Split header: links on the start side, a centred serif wordmark, more links and the icons on the end side.
