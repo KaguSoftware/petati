@@ -1,8 +1,8 @@
 import type { LookupMatch } from "@/lib/admin/delivery/queries";
 import type { ProductStatus } from "@/lib/db/types";
 
-export type SearchKind = "orders" | "customers" | "products" | "couriers";
-export const SEARCH_KINDS: readonly SearchKind[] = ["orders", "customers", "products", "couriers"];
+export type SearchKind = "orders" | "customers" | "products" | "brands" | "couriers";
+export const SEARCH_KINDS: readonly SearchKind[] = ["orders", "customers", "products", "brands", "couriers"];
 
 export interface CustomerHit {
   id: string;
@@ -19,6 +19,14 @@ export interface ProductHit {
   thumbnail: string | null;
 }
 
+export interface BrandHit {
+  id: string;
+  name: string;
+  logoUrl: string | null;
+  productCount: number;
+  isActive: boolean;
+}
+
 export interface CourierHit {
   id: string;
   name: string;
@@ -32,5 +40,6 @@ export interface GlobalSearchResult {
   orders?: LookupMatch[];
   customers?: CustomerHit[];
   products?: ProductHit[];
+  brands?: BrandHit[];
   couriers?: CourierHit[];
 }

@@ -9,6 +9,7 @@ import { TableSkeleton } from "@/components/admin/shared/table-skeleton";
 import { Pagination } from "@/components/shared/pagination";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { listBrandOptions } from "@/lib/admin/brands/queries";
 import { requireAdminPage } from "@/lib/admin/context";
 import { currentQuery, isPlainList, parseListParams, pickParam, stringParam, type SearchParams } from "@/lib/admin/list-params";
 import { listCategoryOptions, listProducts, productStatusCounts } from "@/lib/admin/products/queries";
@@ -64,9 +65,10 @@ async function ProductsList({ locale, searchParams }: { locale: string; searchPa
   const plain = isPlainList(sp, ["status"]);
   // Fast path: nothing but `status` in the URL → counts + page 1 of every bucket in ONE wave, tabs
   // switch client-side. Search/category/page/sort fall back to server-driven paging.
-  const [counts, categories, t, ta, ...pages] = await Promise.all([
+  const [counts, categories, brands, t, ta, ...pages] = await Promise.all([
     productStatusCounts(ctx.store.id),
     listCategoryOptions(ctx.store.id, ctx.locale, fallback),
+    listBrandOptions(ctx.store.id),
     getTranslations("common"),
     getTranslations("admin"),
     ...(plain ? BUCKETS.map((b) => listProducts(ctx.store.id, { ...list, status: b === "all" ? undefined : b, locale: ctx.locale, fallback })) : []),
@@ -90,7 +92,7 @@ async function ProductsList({ locale, searchParams }: { locale: string; searchPa
     });
     return (
       <TabbedPanels label={ta("common.status")} param="status" defaultValue="all" initial={status ?? "all"} panels={panels}>
-        <ProductsToolbar categories={categories} />
+        <ProductsToolbar categories={categories} brands={brands} />
       </TabbedPanels>
     );
   }
@@ -99,7 +101,7 @@ async function ProductsList({ locale, searchParams }: { locale: string; searchPa
   const query = currentQuery(sp, ["q", "status", "category", "brand", "sort", "dir"]);
   return (
     <>
-      <ProductsFilters counts={counts} status={status} categoryId={categoryId} categories={categories} />
+      <ProductsFilters counts={counts} status={status} categoryId={categoryId} categories={categories} brandId={brandId} brands={brands} />
       <ProductsTable rows={rows} {...tableProps} query={query} />
       <Pagination page={list.page} pageSize={list.pageSize} total={total} basePath="/admin/products" query={query} labels={labels} />
     </>

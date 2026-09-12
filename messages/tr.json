@@ -853,7 +853,9 @@
           "size": "{name} 5 MB'tan büyük.",
           "failed": "{name} yüklenemedi."
         }
-      }
+      },
+      "allBrands": "Tüm markalar",
+      "filterBrand": "Markaya göre filtrele"
     },
     "categories": {
       "title": "Kategoriler",
@@ -1717,7 +1719,8 @@
         "orders": "Siparişler",
         "customers": "Müşteriler",
         "products": "Ürünler",
-        "couriers": "Kuryeler"
+        "couriers": "Kuryeler",
+        "brands": "Markalar"
       },
       "navigate": "gez",
       "select": "aç",

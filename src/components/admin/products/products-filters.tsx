@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { BrandOption } from "@/lib/admin/brands/types";
 import type { CategoryOption } from "@/lib/admin/products/types";
 import { PRODUCT_STATUSES } from "@/lib/admin/products/types";
 import type { ProductStatus } from "@/lib/db/types";
@@ -11,6 +12,8 @@ import { TableToolbar, useListNavigation } from "../shared/table-toolbar";
 interface ToolbarProps {
   categoryId?: string;
   categories: CategoryOption[];
+  brandId?: string;
+  brands: BrandOption[];
   actions?: React.ReactNode;
 }
 
@@ -21,19 +24,32 @@ interface Props extends ToolbarProps {
 
 const ALL = "__all";
 
-/** Search + category filter (shared by the preloaded-tabs and the server-filtered list). */
-export function ProductsToolbar({ categoryId, categories, actions }: ToolbarProps) {
+/** Search + category + brand filters (shared by the preloaded-tabs and the server-filtered list). */
+export function ProductsToolbar({ categoryId, categories, brandId, brands, actions }: ToolbarProps) {
   const t = useTranslations("admin");
   const { setParam } = useListNavigation();
-  const items = [{ value: ALL, label: t("products.allCategories") }, ...categories.map((c) => ({ value: c.id, label: c.name }))];
+  const categoryItems = [{ value: ALL, label: t("products.allCategories") }, ...categories.map((c) => ({ value: c.id, label: c.name }))];
+  const brandItems = [{ value: ALL, label: t("products.allBrands") }, ...brands.map((b) => ({ value: b.id, label: b.name }))];
   return (
     <TableToolbar searchPlaceholder={t("products.searchPlaceholder")} actions={actions}>
-      <Select items={items} modal={false} value={categoryId ?? ALL} onValueChange={(v) => setParam("category", v === ALL || v == null ? null : String(v))}>
+      <Select items={categoryItems} modal={false} value={categoryId ?? ALL} onValueChange={(v) => setParam("category", v === ALL || v == null ? null : String(v))}>
         <SelectTrigger aria-label={t("products.filterCategory")} className="w-full sm:w-52">
           <SelectValue />
         </SelectTrigger>
         <SelectContent alignItemWithTrigger={false}>
-          {items.map((item) => (
+          {categoryItems.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Select items={brandItems} modal={false} value={brandId ?? ALL} onValueChange={(v) => setParam("brand", v === ALL || v == null ? null : String(v))}>
+        <SelectTrigger aria-label={t("products.filterBrand")} className="w-full sm:w-52">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent alignItemWithTrigger={false}>
+          {brandItems.map((item) => (
             <SelectItem key={item.value} value={item.value}>
               {item.label}
             </SelectItem>
@@ -45,7 +61,7 @@ export function ProductsToolbar({ categoryId, categories, actions }: ToolbarProp
 }
 
 /** Server-filtered mode (search/category/page active): status tabs navigate. */
-export function ProductsFilters({ counts, status, categoryId, categories, actions }: Props) {
+export function ProductsFilters({ counts, status, categoryId, categories, brandId, brands, actions }: Props) {
   const t = useTranslations("admin");
   const { setParam } = useListNavigation();
   return (
@@ -59,7 +75,7 @@ export function ProductsFilters({ counts, status, categoryId, categories, action
         ]}
         onValueChange={(v) => setParam("status", v === "all" ? null : v)}
       />
-      <ProductsToolbar categoryId={categoryId} categories={categories} actions={actions} />
+      <ProductsToolbar categoryId={categoryId} categories={categories} brandId={brandId} brands={brands} actions={actions} />
     </div>
   );
 }

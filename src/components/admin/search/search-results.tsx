@@ -1,9 +1,9 @@
 "use client";
 
-import { Package, Truck, UserRound } from "lucide-react";
+import { BadgeCheck, Package, Truck, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { LookupMatch } from "@/lib/admin/delivery/queries";
-import type { CourierHit, CustomerHit, GlobalSearchResult, ProductHit, SearchKind } from "@/lib/admin/search/types";
+import type { BrandHit, CourierHit, CustomerHit, GlobalSearchResult, ProductHit, SearchKind } from "@/lib/admin/search/types";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "../shared/status-badge";
 import { OrderHit } from "./order-hit";
@@ -12,6 +12,7 @@ export type FlatHit =
   | { id: string; kind: "orders"; href: string; hit: LookupMatch }
   | { id: string; kind: "customers"; href: string; hit: CustomerHit }
   | { id: string; kind: "products"; href: string; hit: ProductHit }
+  | { id: string; kind: "brands"; href: string; hit: BrandHit }
   | { id: string; kind: "couriers"; href: string; hit: CourierHit };
 
 /** One ordered list across groups, so arrow keys walk the whole palette. */
@@ -20,6 +21,8 @@ export function flatten(r: GlobalSearchResult): FlatHit[] {
   for (const m of r.orders ?? []) out.push({ id: `gs-orders-${m.orderId}`, kind: "orders", href: `/admin/orders/${m.orderId}`, hit: m });
   for (const c of r.customers ?? []) out.push({ id: `gs-customers-${c.id}`, kind: "customers", href: `/admin/customers/${c.id}`, hit: c });
   for (const p of r.products ?? []) out.push({ id: `gs-products-${p.id}`, kind: "products", href: `/admin/products/${p.id}`, hit: p });
+  // A brand has no detail page: open the products list already filtered to it.
+  for (const b of r.brands ?? []) out.push({ id: `gs-brands-${b.id}`, kind: "brands", href: `/admin/products?brand=${b.id}`, hit: b });
   for (const k of r.couriers ?? []) out.push({ id: `gs-couriers-${k.id}`, kind: "couriers", href: `/admin/delivery/couriers/${k.id}`, hit: k });
   return out;
 }
@@ -38,7 +41,7 @@ interface Props {
   onConfirm: (orderId: string, number: string) => void;
 }
 
-const ORDER: SearchKind[] = ["orders", "customers", "products", "couriers"];
+const ORDER: SearchKind[] = ["orders", "customers", "products", "brands", "couriers"];
 
 export function SearchResults({ id, query, result, flat, activeId, locale, canConfirm, confirming, onHover, onPick, onConfirm }: Props) {
   const t = useTranslations("admin.search");
@@ -85,6 +88,7 @@ export function SearchResults({ id, query, result, flat, activeId, locale, canCo
 
 function Row({ hit, locale, canConfirm, confirming, onConfirm }: { hit: FlatHit; locale: string; canConfirm: boolean; confirming: boolean; onConfirm: Props["onConfirm"] }) {
   const t = useTranslations("admin.search");
+  const tb = useTranslations("admin.brands");
   if (hit.kind === "orders") {
     const m = hit.hit;
     return <OrderHit match={m} locale={locale} canConfirm={canConfirm} confirming={confirming} onConfirm={() => onConfirm(m.orderId, m.orderNumber)} />;
@@ -126,6 +130,28 @@ function Row({ hit, locale, canConfirm, confirming, onConfirm }: { hit: FlatHit;
           )}
         </div>
         <StatusBadge kind="product" value={p.status} />
+      </div>
+    );
+  }
+  if (hit.kind === "brands") {
+    const b = hit.hit;
+    return (
+      <div className="flex items-center gap-3">
+        {b.logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={b.logoUrl} alt="" className="size-8 shrink-0 rounded-md border bg-muted object-contain p-0.5" />
+        ) : (
+          <span className="grid size-8 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground">
+            <BadgeCheck className="size-4" />
+          </span>
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-medium">{b.name}</p>
+          <p className="truncate text-xs text-muted-foreground">
+            {tb("products")}: {new Intl.NumberFormat(locale).format(b.productCount)}
+          </p>
+        </div>
+        {!b.isActive && <span className="text-xs text-muted-foreground">{t("inactive")}</span>}
       </div>
     );
   }

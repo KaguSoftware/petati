@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# owner drops: spreadsheets/photos handed over for catalog imports. Kept locally as the
+# source of record for a migration, never committed. Safe to delete once imported.
+/*.xlsx
+/PHOTO-*.jpg
+/PHOTO-*.jpeg

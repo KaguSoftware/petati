@@ -853,7 +853,9 @@
           "size": "{name} بزرگ‌تر از ۵ مگابایت است.",
           "failed": "بارگذاری {name} ناموفق بود."
         }
-      }
+      },
+      "allBrands": "همهٔ برندها",
+      "filterBrand": "فیلتر بر اساس برند"
     },
     "categories": {
       "title": "دسته‌بندی‌ها",
@@ -1717,7 +1719,8 @@
         "orders": "سفارش‌ها",
         "customers": "مشتریان",
         "products": "محصولات",
-        "couriers": "پیک‌ها"
+        "couriers": "پیک‌ها",
+        "brands": "برندها"
       },
       "navigate": "حرکت",
       "select": "باز کردن",

@@ -853,7 +853,9 @@
           "size": "{name} is larger than 5 MB.",
           "failed": "Could not upload {name}."
         }
-      }
+      },
+      "allBrands": "All brands",
+      "filterBrand": "Filter by brand"
     },
     "categories": {
       "title": "Categories",
@@ -1717,7 +1719,8 @@
         "orders": "Orders",
         "customers": "Customers",
         "products": "Products",
-        "couriers": "Couriers"
+        "couriers": "Couriers",
+        "brands": "Brands"
       },
       "navigate": "move",
       "select": "open",

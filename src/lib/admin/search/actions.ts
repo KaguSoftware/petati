@@ -17,6 +17,7 @@ const GROUP_PERMISSION: Record<SearchKind, Permission> = {
   orders: "orders.read",
   customers: "customers.read",
   products: "products.read",
+  brands: "products.read",
   couriers: "delivery.read",
 };
 

@@ -5,7 +5,7 @@ import { pickTranslation } from "@/lib/catalog/types";
 import { lookupDelivery } from "@/lib/admin/delivery/queries";
 import type { ProductStatus } from "@/lib/db/types";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { CourierHit, CustomerHit, GlobalSearchResult, ProductHit, SearchKind } from "./types";
+import type { BrandHit, CourierHit, CustomerHit, GlobalSearchResult, ProductHit, SearchKind } from "./types";
 
 export interface GlobalSearchOptions {
   locale: Locale;
@@ -83,6 +83,27 @@ async function products(db: Db, storeId: string, term: string, limit: number, lo
   return [...out.values()].slice(0, limit);
 }
 
+/** Brands by name. A hit opens the products list filtered to that brand (`?brand=<id>`). */
+async function brands(db: Db, storeId: string, term: string, limit: number): Promise<BrandHit[]> {
+  const { data } = await db
+    .from("brands")
+    .select("id, name, logo_url, is_active, products(count)")
+    .eq("store_id", storeId)
+    .ilike("name", `%${term}%`)
+    .order("is_active", { ascending: false })
+    .order("sort_order")
+    .order("name")
+    .limit(limit)
+    .returns<{ id: string; name: string; logo_url: string | null; is_active: boolean; products: { count: number }[] }[]>();
+  return (data ?? []).map((b) => ({
+    id: b.id,
+    name: b.name,
+    logoUrl: b.logo_url,
+    productCount: b.products?.[0]?.count ?? 0,
+    isActive: b.is_active,
+  }));
+}
+
 async function couriers(db: Db, storeId: string, term: string, limit: number): Promise<CourierHit[]> {
   const { data } = await db
     .from("couriers")
@@ -107,15 +128,17 @@ export async function globalSearch(storeId: string, q: string, opts: GlobalSearc
   const want = new Set(opts.groups);
   const quiet = <T,>(p: Promise<T>, empty: T) => p.catch(() => empty);
 
-  const [o, c, p, k] = await Promise.all([
+  const [o, c, p, b, k] = await Promise.all([
     want.has("orders") ? quiet(lookupDelivery(storeId, query, opts.attemptLimit), []) : Promise.resolve(undefined),
     want.has("customers") ? quiet(customers(db, storeId, term, limit), []) : Promise.resolve(undefined),
     want.has("products") ? quiet(products(db, storeId, term, limit, opts.locale, opts.fallback), []) : Promise.resolve(undefined),
+    want.has("brands") ? quiet(brands(db, storeId, term, limit), []) : Promise.resolve(undefined),
     want.has("couriers") ? quiet(couriers(db, storeId, term, limit), []) : Promise.resolve(undefined),
   ]);
   if (o) result.orders = o.slice(0, limit);
   if (c) result.customers = c;
   if (p) result.products = p;
+  if (b) result.brands = b;
   if (k) result.couriers = k;
   return result;
 }
