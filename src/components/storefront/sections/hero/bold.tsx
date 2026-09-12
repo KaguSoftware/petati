@@ -40,7 +40,7 @@ function Slide({ title, subtitle, ctaLabel, ctaHref, imageUrl, first }: HeroSlid
           {ctaLabel}
         </Link>
       </div>
-      <div className="relative me-2 mb-2 aspect-[4/3] overflow-hidden rounded-none border-4 border-background bg-muted shadow-[8px_8px_0_0_var(--color-accent)] rtl:shadow-[-8px_8px_0_0_var(--color-accent)]">
+      <div className="relative me-2 mb-2 aspect-[4/3] overflow-hidden rounded-none border-4 border-inverse-foreground bg-muted shadow-[8px_8px_0_0_var(--color-accent)] rtl:shadow-[-8px_8px_0_0_var(--color-accent)]">
         {imageUrl && <Image src={imageUrl} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" priority={first} />}
       </div>
     </div>

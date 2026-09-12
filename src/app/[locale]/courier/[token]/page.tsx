@@ -38,7 +38,7 @@ async function Content({ params }: { params: Props["params"] }) {
   const canStart = open.some((s) => s.state === "assigned");
 
   return (
-    <main style={themeToCssVars(ctx.store.theme, locale) as React.CSSProperties} className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-4 pb-16">
+    <main data-store-theme style={themeToCssVars(ctx.store.theme, locale) as React.CSSProperties} className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-4 pb-16">
       <header className="flex flex-col gap-3 rounded-xl border bg-card p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">

@@ -24,7 +24,10 @@
     "customer": "Customer",
     "notFoundBody": "That page is not here. Try a search, or browse the shop.",
     "errorBody": "Something went wrong on our side. Try again, or head back to the shop.",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "theme": "Theme",
+    "themeToDark": "Switch to dark mode",
+    "themeToLight": "Switch to light mode"
   },
   "nav": {
     "home": "Home",

@@ -63,7 +63,7 @@ export function AccountNav({ labels, active, onSelect, signOut }: { labels: Labe
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-lg px-3.5 text-sm whitespace-nowrap transition-colors outline-none select-none",
-                  isActive ? "bg-background font-medium text-foreground shadow-sm" : "text-muted-foreground hover:bg-background/60 hover:text-foreground",
+                  isActive ? "bg-background font-medium text-foreground shadow-sm dark:bg-input/30 dark:shadow-none" : "text-muted-foreground hover:bg-background/60 hover:text-foreground",
                   "focus-visible:ring-3 focus-visible:ring-ring/50",
                 )}
               >

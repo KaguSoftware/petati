@@ -33,7 +33,7 @@ export function ProductCardMinimal({ product, currency, locale, labels, wishlist
               </span>
             )}
             {!product.inStock && (
-              <span className="rounded-full bg-foreground/80 px-2.5 py-1 text-micro leading-none font-medium text-background">{labels.outOfStock}</span>
+              <span className="rounded-full bg-inverse/80 px-2.5 py-1 text-micro leading-none font-medium text-inverse-foreground">{labels.outOfStock}</span>
             )}
           </div>
         </div>

@@ -18,7 +18,7 @@ export function ProductCardBold({ product, currency, locale, labels, wishlistSlo
         />
         {product.isNew && <span className={cn("absolute start-3 top-3 flex min-h-10 items-center bg-accent text-accent-foreground", squareBadge)}>{labels.new}</span>}
         {!product.inStock && (
-          <span className={cn("absolute inset-x-0 bottom-0 bg-foreground text-center text-background", squareBadge)}>{labels.outOfStock}</span>
+          <span className={cn("absolute inset-x-0 bottom-0 bg-inverse text-center text-inverse-foreground", squareBadge)}>{labels.outOfStock}</span>
         )}
       </Link>
       {wishlistSlot && <div className="absolute end-3 top-3">{wishlistSlot}</div>}
@@ -36,7 +36,7 @@ export function ProductCardBold({ product, currency, locale, labels, wishlistSlo
           compareAt={product.compareAtPrice}
           currency={currency}
           locale={locale}
-          className="mt-auto self-start bg-foreground px-2 py-1 text-sm text-background [&_s]:text-background/60 [&_span]:text-background"
+          className="mt-auto self-start bg-inverse px-2 py-1 text-sm text-inverse-foreground [&_s]:text-inverse-foreground/60 [&_span]:text-inverse-foreground"
         />
       </div>
     </article>

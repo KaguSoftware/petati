@@ -12,7 +12,7 @@ export function BrandMark({ name, logoUrl, size = 64, className }: { name: strin
       .join("") || "•";
   if (logoUrl) {
     return (
-      <span className={cn("grid shrink-0 place-items-center overflow-hidden rounded-xl bg-muted p-2", className)} style={{ width: size, height: size }}>
+      <span className={cn("grid shrink-0 place-items-center overflow-hidden rounded-xl bg-muted p-2 dark:bg-white", className)} style={{ width: size, height: size }}>
         <Image src={logoUrl} alt="" width={size} height={size} className="size-full object-contain" />
       </span>
     );

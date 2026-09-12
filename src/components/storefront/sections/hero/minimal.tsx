@@ -10,7 +10,7 @@ import type { HeroProps, HeroSlideProps } from "../types";
 /** Full-bleed photo with the copy laid over a bottom scrim; a brand gradient stands in when there is no photo. */
 export function HeroMinimal({ slides, labels, autoplay }: HeroProps) {
   return (
-    <section data-hero-overlay className="relative isolate overflow-hidden bg-foreground text-white" style={{ marginTop: "calc(var(--hero-pull, 0px) * -1)" }}>
+    <section data-hero-overlay className="relative isolate overflow-hidden bg-inverse text-white" style={{ marginTop: "calc(var(--hero-pull, 0px) * -1)" }}>
       <HeroTone />
       <HeroCarousel
         slides={slides.map((s, i) => (
@@ -55,7 +55,7 @@ function Slide({ title, subtitle, ctaLabel, ctaHref, imageUrl, first, secondaryL
             {secondaryLabel && (
               <Link
                 href={secondaryHref}
-                className={cn(buttonVariants({ variant: "outline", size: "xl" }), "border-white/60 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-foreground")}
+                className={cn(buttonVariants({ variant: "outline", size: "xl" }), "border-white/60 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-black")}
               >
                 {secondaryLabel}
               </Link>

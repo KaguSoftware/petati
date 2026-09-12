@@ -80,7 +80,7 @@ export function DomainStep({ draft, update, errors, rootDomain }: Props) {
           />
           <span className="pointer-events-none absolute inset-y-0 end-2.5 grid place-items-center">
             {shown.kind === "checking" && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
-            {shown.kind === "ok" && <CheckCircle2 className="size-4 text-emerald-600" />}
+            {shown.kind === "ok" && <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />}
             {shown.kind === "error" && <CircleAlert className="size-4 text-destructive" />}
           </span>
         </div>

@@ -9,6 +9,7 @@ import { dirFor, locales, type Locale } from "@/i18n/config";
 import { Toaster } from "@/components/ui/sonner";
 import { AppIntlProvider } from "@/components/intl-provider";
 import { DocumentScrollbars } from "@/components/scroll/document-scrollbars";
+import { ThemeProvider } from "@/components/theme-provider";
 import "../globals.css";
 
 // The default face for every locale: one family that carries Arabic and Latin with matching
@@ -58,16 +59,19 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     <html
       lang={locale}
       dir={dir}
+      suppressHydrationWarning
       className={`${ibmPlexArabic.variable} ${inter.variable} ${vazirmatn.variable} ${themeFontClasses} h-full antialiased`}
       style={{ ["--font-sans" as string]: fontFamily }}
       data-overlayscrollbars-initialize=""
     >
       <body className="flex min-h-full flex-col bg-background text-foreground" data-overlayscrollbars-initialize="">
         <DocumentScrollbars />
-        <AppIntlProvider locale={locale} dir={dir} messages={messages}>
-          <Suspense fallback={null}>{children}</Suspense>
-          <Toaster position={dir === "rtl" ? "bottom-left" : "bottom-right"} />
-        </AppIntlProvider>
+        <ThemeProvider>
+          <AppIntlProvider locale={locale} dir={dir} messages={messages}>
+            <Suspense fallback={null}>{children}</Suspense>
+            <Toaster position={dir === "rtl" ? "bottom-left" : "bottom-right"} />
+          </AppIntlProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

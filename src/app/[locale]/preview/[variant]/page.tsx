@@ -33,7 +33,7 @@ export default async function PreviewPage({ params }: PageProps<"/[locale]/previ
 
   return (
     <div className="@container">
-      <div data-storefront className={cn("flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[v])} style={themeToCssVars(DEFAULT_THEME, locale) as React.CSSProperties}>
+      <div data-storefront data-store-theme className={cn("flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[v])} style={themeToCssVars(DEFAULT_THEME, locale) as React.CSSProperties}>
         <StoreProvider value={store}>
         {p.announcementBar[v]}
         {p.navbar[v]}

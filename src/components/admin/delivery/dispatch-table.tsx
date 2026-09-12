@@ -95,7 +95,7 @@ export async function DispatchTable({ rows, bucket, storeId, locale, canAssign, 
       cell: (r) => (
         <span className="flex items-center gap-1.5">
           <OptimisticStatusBadge id={r.id} kind="delivery" value={r.state} field="state" />
-          {r.state === "delivered" && !r.verified && <AlertTriangle className="size-3.5 text-amber-600" aria-label={t("delivery.unverified")} />}
+          {r.state === "delivered" && !r.verified && <AlertTriangle className="size-3.5 text-amber-600 dark:text-amber-400" aria-label={t("delivery.unverified")} />}
         </span>
       ),
     },

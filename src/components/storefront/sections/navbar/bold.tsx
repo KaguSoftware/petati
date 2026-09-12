@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import type { NavbarProps } from "../types";
 
 const navLink =
-  "inline-flex shrink-0 items-center border-b-2 border-transparent px-1 py-2 text-xs font-bold tracking-widest whitespace-nowrap uppercase text-background/80 transition-colors hover:border-background hover:text-background focus-visible:border-background focus-visible:text-background focus-ring";
+  "inline-flex shrink-0 items-center border-b-2 border-transparent px-1 py-2 text-xs font-bold tracking-widest whitespace-nowrap uppercase text-inverse-foreground/80 transition-colors hover:border-inverse-foreground hover:text-inverse-foreground focus-visible:border-inverse-foreground focus-visible:text-inverse-foreground focus-ring";
 
 /** Category budget: #1–#3 from @tablet, #1–#5 at @wide (own full-width row). Department-store header: search / big centred logo / icons on the first row, a dark full-width category bar below. */
 export function NavbarBold({ storeName, logoUrl, categories, labels, contactPhone, cartSlot, accountSlot, localeSlot }: NavbarProps) {
@@ -52,7 +52,7 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, contactPhon
           {cartSlot}
         </div>
       </div>
-      <nav aria-label={labels.menu} className="hidden bg-foreground text-background @tablet:block">
+      <nav aria-label={labels.menu} className="hidden bg-inverse text-inverse-foreground @tablet:block">
         <div className="mx-auto flex h-11 max-w-7xl items-center justify-center gap-5 overflow-hidden px-gutter @desktop:gap-8">
           <Link href="/shop" className={navLink}>
             {labels.shop}

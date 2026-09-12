@@ -16,7 +16,7 @@ export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, f
             <div className="flex flex-1 flex-col gap-2">
               <RatingStars value={ratingAvg} count={ratingCount} size={20} />
               <div className="h-3 w-full max-w-xs bg-muted" aria-hidden>
-                <div className="h-full bg-foreground" style={{ width: `${ratingPct}%` }} />
+                <div className="h-full bg-inverse" style={{ width: `${ratingPct}%` }} />
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@ export function ReviewsBold({ reviews, ratingAvg, ratingCount, locale, labels, f
               <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
                 <span className="text-sm font-extrabold tracking-wide uppercase">{r.authorName}</span>
                 {r.isVerifiedPurchase && (
-                  <span className="inline-flex items-center gap-1 bg-foreground px-1.5 py-0.5 text-micro font-bold tracking-widest text-background uppercase">
+                  <span className="inline-flex items-center gap-1 bg-inverse px-1.5 py-0.5 text-micro font-bold tracking-widest text-inverse-foreground uppercase">
                     <BadgeCheck className="size-3" /> {labels.verified}
                   </span>
                 )}

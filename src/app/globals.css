@@ -30,6 +30,8 @@
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-wishlist: var(--wishlist);
+  --color-inverse: var(--inverse);
+  --color-inverse-foreground: var(--inverse-foreground);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
@@ -95,6 +97,7 @@
 }
 
 :root {
+  color-scheme: light;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -120,6 +123,12 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.625rem;
+  /* A deliberately contrasting band (announcement bar, bold footer, out-of-stock badge). This is a
+     LAYOUT device, not a theme: `bg-foreground` + `text-background` was used for it, which reads
+     correctly in light mode purely by accident and flips to a glaring white slab in dark. As its own
+     token it stays a dark band in both schemes, just raised a step when the page is already dark. */
+  --inverse: oklch(0.205 0 0);
+  --inverse-foreground: oklch(0.985 0 0);
   /* Saved/favourite. Its own token rather than `--destructive`: a filled heart is not a warning,
      and the storefront should be able to recolour it without touching error styling. */
   --wishlist: oklch(0.62 0.21 25);
@@ -134,6 +143,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -153,6 +163,8 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
   --wishlist: oklch(0.7 0.19 25);
+  --inverse: oklch(0.3 0 0);
+  --inverse-foreground: oklch(0.985 0 0);
   --chart-1: oklch(0.72 0.11 222);
   --chart-2: oklch(0.32 0.03 222);
   --chart-3: oklch(0.439 0 0);
@@ -184,6 +196,74 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* ---- Store palette -----------------------------------------------------------------------------
+   `themeToCssVars` puts the store's colours on the element as `--store-*` SOURCE values; these rules
+   turn them into the live shadcn tokens. The indirection is deliberate — an inline style outranks
+   every class rule, so while the inline style declared `--background` itself, no dark-mode rule
+   could ever override it. Now the inline style declares only sources and the stylesheet decides. */
+[data-store-theme] {
+  --background: var(--store-background);
+  --foreground: var(--store-foreground);
+  --card: var(--store-background);
+  --card-foreground: var(--store-foreground);
+  --popover: var(--store-background);
+  --popover-foreground: var(--store-foreground);
+  --muted: var(--store-muted);
+  --muted-foreground: var(--store-muted-foreground);
+  --secondary: var(--store-muted);
+  --secondary-foreground: var(--store-foreground);
+  --primary: var(--store-primary);
+  --primary-foreground: var(--store-primary-foreground);
+  --accent: var(--store-accent);
+  --accent-foreground: var(--store-accent-foreground);
+  --ring: var(--store-primary);
+  --inverse: oklch(from var(--store-primary) 0.22 0.02 h);
+  --inverse-foreground: oklch(from var(--store-primary) 0.98 0.005 h);
+}
+
+/* `data-scheme="light"` opts an element out: the admin Design page previews the store while the
+   owner edits its LIGHT colours, so that frame must stay light even when the admin chrome is dark.
+
+   Dark: derived from the SAME source colours, so every store gets an on-brand dark mode with no
+   second palette to author and no migration. Surfaces take the brand's hue at very low chroma, so
+   the dark is tinted rather than flatly neutral; lightness is fixed, which is what keeps contrast
+   predictable no matter how dark, light or saturated the store's own colours are.
+
+   Elevation goes UP in lightness (background → card → muted), the opposite of light mode.
+
+   These numbers are not guesses: `--input` sits at L .54 because that is where a control boundary
+   clears WCAG 1.4.11's 3:1 against `--card`, while `--border` stays a quiet hairline (~1.4:1, a
+   little more present than shadcn's stock dark border). Every foreground/background pair was checked
+   to ≥4.5:1 across six store palettes including a fully saturated red and a near-black brand.
+
+   `light-dark()` is not used here: relative colour syntax has a lower browser floor, and gating this
+   whole block behind `@supports` means an unsupporting browser falls through to the neutral `.dark`
+   palette on `:root` rather than losing its colours entirely. */
+@supports (color: oklch(from red l c h)) {
+  .dark [data-store-theme]:not([data-scheme="light"]) {
+    --background: oklch(from var(--store-primary) 0.16 0.012 h);
+    --foreground: oklch(from var(--store-primary) 0.97 0.006 h);
+    --card: oklch(from var(--store-primary) 0.21 0.016 h);
+    --card-foreground: oklch(from var(--store-primary) 0.97 0.006 h);
+    --popover: oklch(from var(--store-primary) 0.21 0.016 h);
+    --popover-foreground: oklch(from var(--store-primary) 0.97 0.006 h);
+    --muted: oklch(from var(--store-primary) 0.26 0.018 h);
+    --muted-foreground: oklch(from var(--store-primary) 0.72 0.02 h);
+    --secondary: oklch(from var(--store-primary) 0.26 0.018 h);
+    --secondary-foreground: oklch(from var(--store-primary) 0.97 0.006 h);
+    --border: oklch(from var(--store-primary) 0.32 0.015 h);
+    --input: oklch(from var(--store-primary) 0.54 0.02 h);
+    /* Chroma is capped so a neon brand colour does not glow on a dark ground. */
+    --primary: oklch(from var(--store-primary) 0.75 min(c, 0.16) h);
+    --primary-foreground: oklch(from var(--store-primary) 0.16 0.02 h);
+    --accent: oklch(from var(--store-accent) 0.8 min(c, 0.16) h);
+    --accent-foreground: oklch(from var(--store-accent) 0.18 0.02 h);
+    --ring: oklch(from var(--store-primary) 0.75 min(c, 0.16) h);
+    --inverse: oklch(from var(--store-primary) 0.3 0.022 h);
+    --inverse-foreground: oklch(from var(--store-primary) 0.98 0.005 h);
   }
 }
 
@@ -383,13 +463,19 @@ html[dir="rtl"] input[aria-hidden="true"][tabindex="-1"][style*="clip-path"] {
    under the bar by <HeroTone>; absent (no JS yet, no photo, tainted canvas) means the dark
    treatment above, which is what shipped before. */
 [data-storefront][data-hero-tone="light"]:has([data-hero-overlay]) header[data-navbar-overlay][data-at-top="true"] {
-  --foreground: var(--color-foreground);
-  --muted-foreground: color-mix(in oklch, var(--color-foreground) 78%, transparent);
+  /* LITERAL near-black, deliberately not a theme token — the mirror of the `#ffffff` above.
+     `data-hero-tone` describes the PHOTOGRAPH, not the page's colour scheme, so binding it to
+     `--foreground` was a category error. It was also already subtly wrong: `--color-foreground` is
+     an `@theme inline` alias substituted at `:root`, so it carried shadcn's default rather than the
+     store's own foreground. And under dark mode `:root`'s foreground is near-WHITE, which would
+     have painted white text on the white scrim below — the invisible navbar, straight back. */
+  --foreground: #0c0a09;
+  --muted-foreground: rgb(12 10 9 / 0.78);
   --muted: rgb(0 0 0 / 0.08);
   --input: rgb(0 0 0 / 0.18);
-  --ring: color-mix(in oklch, var(--color-foreground) 60%, transparent);
+  --ring: rgb(12 10 9 / 0.6);
   --navbar-scrim: rgb(255 255 255 / 0.72);
-  color: var(--color-foreground);
+  color: #0c0a09;
 }
 
 /* The scrim itself: a gradient that fades out just past the bar, so there is no hard edge across

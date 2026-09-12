@@ -68,7 +68,7 @@ export function PreviewFrame({ device, theme, dir, locale, children, label, clas
         }}
       >
         {/* Same split as the storefront root: the navbar's `@tablet:` variables must live below the container. */}
-        <div data-storefront className={cn("flex flex-col *:w-full", NAVBAR_VARS[theme.sections.navbar])}>
+        <div data-storefront data-store-theme data-scheme="light" className={cn("flex flex-col *:w-full", NAVBAR_VARS[theme.sections.navbar])}>
           {children}
         </div>
       </div>

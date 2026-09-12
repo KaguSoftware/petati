@@ -19,7 +19,7 @@ export function CategoryBannerBold({ title, categories }: CategoryBannerProps) {
                 href={`/c/${c.slug}`}
                 className={cn(
                   "group grid overflow-hidden outline-none focus-visible:ring-4 focus-visible:ring-ring/50 @tablet:grid-cols-2",
-                  flip ? "bg-primary text-primary-foreground" : "bg-foreground text-background",
+                  flip ? "bg-primary text-primary-foreground" : "bg-inverse text-inverse-foreground",
                 )}
               >
                 <ProductImage

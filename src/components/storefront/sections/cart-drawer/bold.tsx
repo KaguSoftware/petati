@@ -47,15 +47,15 @@ export function CartViewBold({ cart, totals, currency, locale, labels, lineContr
         {cart.lines.length > 0 && <div className="mt-6 max-w-md border-2 border-foreground p-4">{couponSlot}</div>}
       </div>
       {cart.lines.length > 0 && (
-        <div className="mt-10 bg-foreground text-background">
+        <div className="mt-10 bg-inverse text-inverse-foreground">
           <div className="mx-auto flex max-w-6xl flex-col gap-8 px-gutter py-10 @tablet:flex-row @tablet:items-end @tablet:justify-between @tablet:gap-12">
             <dl className="grid w-full gap-x-8 gap-y-2 text-sm font-medium @tablet:max-w-md">
               <Row label={labels.subtotal} value={money(totals.subtotal)} />
               {totals.discount > 0 && <Row label={labels.discount} value={`−${money(totals.discount)}`} />}
               <Row label={labels.shipping} value={totals.shipping === 0 ? labels.freeShipping : money(totals.shipping)} />
-              {labels.shippingNote && <p className="text-xs text-background/70">{labels.shippingNote}</p>}
+              {labels.shippingNote && <p className="text-xs text-inverse-foreground/70">{labels.shippingNote}</p>}
               {totals.tax > 0 && <Row label={labels.tax} value={money(totals.tax)} muted />}
-              <div className="my-2 border-t-2 border-background/30" />
+              <div className="my-2 border-t-2 border-inverse-foreground/30" />
               <Row label={labels.total} value={money(totals.total)} strong />
             </dl>
             <div className="flex flex-col gap-3">
@@ -75,7 +75,7 @@ export function CartViewBold({ cart, totals, currency, locale, labels, lineContr
 
 function Row({ label, value, strong, muted }: { label: string; value: string; strong?: boolean; muted?: boolean }) {
   return (
-    <div className={cn("flex justify-between gap-4", strong && "items-baseline text-base font-extrabold uppercase", muted && "text-background/70")}>
+    <div className={cn("flex justify-between gap-4", strong && "items-baseline text-base font-extrabold uppercase", muted && "text-inverse-foreground/70")}>
       <dt>{label}</dt>
       <dd className={cn("text-end tabular-nums", strong && "text-4xl tracking-tight")}>{value}</dd>
     </div>

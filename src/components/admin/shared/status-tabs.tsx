@@ -39,6 +39,7 @@ export function StatusTabs({ value, onValueChange, items, label, className }: Pr
                 "inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm whitespace-nowrap text-muted-foreground transition-colors outline-none select-none",
                 "hover:bg-background/60 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50",
                 "data-active:bg-background data-active:font-medium data-active:text-foreground data-active:shadow-sm",
+                "dark:data-active:bg-input/30 dark:data-active:shadow-none",
               )}
             >
               {item.label}

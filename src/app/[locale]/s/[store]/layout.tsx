@@ -26,6 +26,7 @@ export default async function StoreLayout({ children, params }: LayoutProps<"/[l
     <div className="@container">
       <div
         data-storefront
+        data-store-theme
         className={cn("flex min-h-screen flex-col bg-background font-sans text-foreground *:w-full", NAVBAR_VARS[store.theme.sections.navbar])}
         style={themeToCssVars(store.theme, locale) as React.CSSProperties}
       >

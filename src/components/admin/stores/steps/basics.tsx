@@ -97,7 +97,7 @@ export function BasicsStep({ draft, update, errors, rootDomain, defaultStoreSlug
           />
           <span className="pointer-events-none absolute inset-y-0 end-2.5 grid place-items-center">
             {status.kind === "checking" && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
-            {status.kind === "ok" && !slugError && <CheckCircle2 className="size-4 text-emerald-600" />}
+            {status.kind === "ok" && !slugError && <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />}
             {status.kind === "error" && <CircleAlert className="size-4 text-destructive" />}
           </span>
         </div>

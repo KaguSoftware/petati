@@ -3,6 +3,7 @@
 import { ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { OverlayScroll } from "@/components/ui/overlay-scroll";
 import { Link } from "@/i18n/navigation";
@@ -73,6 +74,7 @@ export function AdminShell({ locale, user, role, store, stores, multiStore, chil
           <Breadcrumbs className="min-w-0 flex-1" />
           <AdminSearch storeId={store.id} locale={locale} canConfirm={can(role, "orders.update")} />
           <div className="flex items-center gap-1">
+            <ThemeToggle />
             <LocaleSwitcher variant="compact" />
             <UserMenu locale={locale} user={user} role={role} />
           </div>

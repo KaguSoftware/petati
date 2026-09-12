@@ -112,25 +112,29 @@ export const NAVBAR_VARS: Record<VariantKey, string> = {
   playful: "[--navbar-h:4.25rem] [--hero-pull:4.25rem] @tablet:[--navbar-h:4.75rem] @tablet:[--hero-pull:4.75rem]",
 };
 
-/** CSS custom properties that re-skin shadcn tokens for the storefront subtree. Fonts depend on the locale's script. */
+/**
+ * The store's palette, as SOURCE colours — `--store-*`, not the final token names.
+ *
+ * This indirection is what makes dark mode possible. These are applied as an inline `style`, and an
+ * inline declaration outranks every class rule in CSS, so while this function emitted `--background`
+ * directly, no `.dark { --background: … }` could ever win — cascade layers rank *below* unlayered
+ * rules, and `!important` would have made dark mode un-themeable per store. Emitting the sources
+ * instead lets a stylesheet own the final tokens and pick a scheme (see `globals.css`), with nothing
+ * competing for the same property.
+ *
+ * Every element carrying these must also carry `data-store-theme` so the mapping rule matches.
+ */
 export function themeToCssVars(theme: StoreTheme, locale = "en"): Record<string, string> {
   const c = theme.colors;
   return {
-    "--primary": c.primary,
-    "--primary-foreground": c.primaryForeground,
-    "--accent": c.accent,
-    "--accent-foreground": c.accentForeground,
-    "--background": c.background,
-    "--foreground": c.foreground,
-    "--card": c.background,
-    "--card-foreground": c.foreground,
-    "--popover": c.background,
-    "--popover-foreground": c.foreground,
-    "--muted": c.muted,
-    "--muted-foreground": c.mutedForeground,
-    "--secondary": c.muted,
-    "--secondary-foreground": c.foreground,
-    "--ring": c.primary,
+    "--store-primary": c.primary,
+    "--store-primary-foreground": c.primaryForeground,
+    "--store-accent": c.accent,
+    "--store-accent-foreground": c.accentForeground,
+    "--store-background": c.background,
+    "--store-foreground": c.foreground,
+    "--store-muted": c.muted,
+    "--store-muted-foreground": c.mutedForeground,
     "--radius": theme.radius,
     // Fonts: the storefront wrapper carries `font-sans`, headings read `--font-heading` (globals.css).
     "--font-sans": fontStack(theme.fonts.body, locale),

@@ -25,11 +25,11 @@ export async function ProductGridBold({ title, products, currency, locale, cardV
   return (
     <section className="py-10 @tablet:py-14">
       {(title || viewAllHref) && (
-        <div className="bg-foreground text-background">
+        <div className="bg-inverse text-inverse-foreground">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-gutter py-4 @tablet:py-5">
             {title && <h2 className="text-2xl font-extrabold tracking-tight uppercase @tablet:text-4xl">{title}</h2>}
             {viewAllHref && (
-              <Link href={viewAllHref} className="ms-auto shrink-0 border-2 border-background px-3 py-1.5 text-xs font-bold tracking-widest whitespace-nowrap uppercase transition-colors hover:bg-background hover:text-foreground">
+              <Link href={viewAllHref} className="ms-auto shrink-0 border-2 border-inverse-foreground px-3 py-1.5 text-xs font-bold tracking-widest whitespace-nowrap uppercase transition-colors hover:bg-background hover:text-foreground">
                 {viewAllLabel}
               </Link>
             )}

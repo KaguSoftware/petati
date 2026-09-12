@@ -86,7 +86,7 @@ export function DeliveryBulkBar({ storeId, scope, kind, states, couriers, today,
   }
 
   return (
-    <div className="sticky bottom-4 z-10 flex flex-wrap items-center gap-2 rounded-xl border bg-card p-2 shadow-lg">
+    <div className="sticky bottom-4 z-10 flex flex-wrap items-center gap-2 rounded-xl border bg-card p-2 shadow-lg ring-1 ring-foreground/10 dark:ring-foreground/15">
       <span className="ps-2 text-sm font-medium">{t("bulk.selected", { count: ids.length })}</span>
       <Button type="button" variant="ghost" size="sm" onClick={() => clearSelection(scope)}>
         {t("bulk.clear")}

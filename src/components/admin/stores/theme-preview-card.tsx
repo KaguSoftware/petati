@@ -18,7 +18,7 @@ export function ThemePreviewCard({ colors, radius, name, logoUrl, className }: P
   const t = useTranslations("stores.branding");
   const vars = themeToCssVars({ ...DEFAULT_THEME, colors, radius }) as CSSProperties;
   return (
-    <div style={vars} className={cn("overflow-hidden rounded-xl border bg-background text-foreground shadow-xs", className)} aria-label={t("preview")}>
+    <div data-store-theme data-scheme="light" style={vars} className={cn("overflow-hidden rounded-xl border bg-background text-foreground shadow-xs", className)} aria-label={t("preview")}>
       <div className="flex items-center justify-between gap-3 border-b border-muted px-4 py-2.5">
         <div className="flex min-w-0 items-center gap-2">
           {logoUrl ? (

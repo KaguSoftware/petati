@@ -22,7 +22,7 @@ export function StoreLogo({ storeName, logoUrl, className, wordmarkClassName, ma
   return (
     <Link href="/" aria-label={storeName} className={cn("flex min-w-0 items-center gap-2.5 rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50", className)}>
       {logoUrl ? (
-        <Image src={logoUrl} alt="" width={36} height={36} className={cn("size-9 shrink-0 rounded-lg object-contain", markClassName)} />
+        <Image src={logoUrl} alt="" width={36} height={36} className={cn("size-9 shrink-0 rounded-lg object-contain dark:bg-white dark:p-0.5", markClassName)} />
       ) : (
         <span aria-hidden className={cn("grid size-9 shrink-0 place-items-center rounded-lg bg-primary text-base font-bold text-primary-foreground", markClassName)}>
           {initial}

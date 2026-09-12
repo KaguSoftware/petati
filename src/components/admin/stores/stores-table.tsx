@@ -33,6 +33,7 @@ export async function StoresTable({ rows, locale }: Props) {
       cell: (r) => (
         <div className="flex min-w-0 items-center gap-3">
           <Avatar className="rounded-lg after:rounded-lg">
+            {/* bg-white is deliberate in both schemes: merchant logos are usually dark-on-transparent. */}
             {r.logo_url && <AvatarImage src={r.logo_url} alt="" className="rounded-lg bg-white object-contain" />}
             <AvatarFallback className="rounded-lg">
               <Store className="size-4" />

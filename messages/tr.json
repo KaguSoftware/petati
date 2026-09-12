@@ -24,7 +24,10 @@
     "customer": "Müşteri",
     "notFoundBody": "Bu sayfa burada değil. Arama yapın ya da mağazaya göz atın.",
     "errorBody": "Bizim tarafımızda bir şeyler ters gitti. Tekrar deneyin ya da mağazaya dönün.",
-    "confirm": "Onayla"
+    "confirm": "Onayla",
+    "theme": "Tema",
+    "themeToDark": "Koyu temaya geç",
+    "themeToLight": "Açık temaya geç"
   },
   "nav": {
     "home": "Ana sayfa",
