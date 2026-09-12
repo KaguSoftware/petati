@@ -4,7 +4,7 @@ import { Suspense, type ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/config";
 import { LocaleSwitcher } from "@/components/locale-switcher";
-import { AccountButtonFallback } from "@/components/storefront/shared/account-button";
+import { AccountMenuFallback } from "@/components/storefront/shared/account-button";
 import { AddToCartPanel } from "@/components/storefront/shared/add-to-cart-panel";
 import { CartButtonFallback } from "@/components/storefront/shared/cart-button";
 import { CartLineControls } from "@/components/storefront/shared/cart-line-controls";
@@ -119,7 +119,7 @@ export async function buildSectionPreviews(input: PreviewInput): Promise<Section
         labels: { home: tn("home"), shop: tn("shop"), brands: tn("brands"), search: tn("search"), menu: tn("menu"), closeMenu: tn("closeMenu"), categories: tn("categories"), call: tn("call") },
         contactPhone: fixtureContactPhone,
         localeSlot: <LocaleSwitcher variant="compact" />,
-        accountSlot: <AccountButtonFallback />,
+        accountSlot: <AccountMenuFallback />,
         cartSlot: <CartButtonFallback />,
       }),
     ),

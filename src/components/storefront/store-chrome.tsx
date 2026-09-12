@@ -6,9 +6,8 @@ import { resolveFooter } from "@/lib/theme/footer";
 import { getCategories } from "@/lib/catalog/queries";
 import type { StoreContext } from "@/lib/tenant/context";
 import { LocaleSwitcher } from "@/components/locale-switcher";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { buildFooterProps } from "./footer-props";
-import { AccountButton, AccountButtonFallback } from "./shared/account-button";
+import { AccountMenuFallback, AccountMenuSlot } from "./shared/account-button";
 import { CartButton, CartButtonFallback } from "./shared/cart-button";
 
 /** Footer copyright year. Cached so Cache Components can prerender the chrome; refreshes daily. */
@@ -59,15 +58,10 @@ export async function StoreChrome({ ctx, children }: { ctx: StoreContext; childr
           call: t("call"),
         },
         contactPhone: store.contact_phone,
-        localeSlot: (
-          <>
-            <ThemeToggle />
-            <LocaleSwitcher enabled={store.enabled_locales} variant="compact" />
-          </>
-        ),
+        localeSlot: <LocaleSwitcher enabled={store.enabled_locales} variant="compact" />,
         accountSlot: (
-          <Suspense fallback={<AccountButtonFallback />}>
-            <AccountButton />
+          <Suspense fallback={<AccountMenuFallback />}>
+            <AccountMenuSlot enabledLocales={store.enabled_locales} />
           </Suspense>
         ),
         cartSlot: (

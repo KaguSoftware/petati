@@ -77,7 +77,6 @@ export function NavbarEditorial({ storeName, logoUrl, categories, labels, cartSl
             placeholder={labels.search}
             className="hidden w-48 shrink-0 @desktop:block @desktop:me-1 @wide:w-52 [&_input]:rounded-none [&_input]:border-0 [&_input]:border-b [&_input]:border-foreground/30 [&_input]:bg-transparent"
           />
-          <div className="hidden @desktop:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>

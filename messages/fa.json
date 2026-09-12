@@ -27,7 +27,11 @@
     "confirm": "تأیید",
     "theme": "تم",
     "themeToDark": "رفتن به حالت تیره",
-    "themeToLight": "رفتن به حالت روشن"
+    "themeToLight": "رفتن به حالت روشن",
+    "themeLight": "روشن",
+    "themeDark": "تیره",
+    "themeSystem": "مثل سیستم",
+    "accountMenu": "منوی حساب"
   },
   "nav": {
     "home": "خانه",

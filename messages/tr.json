@@ -27,7 +27,11 @@
     "confirm": "Onayla",
     "theme": "Tema",
     "themeToDark": "Koyu temaya geç",
-    "themeToLight": "Açık temaya geç"
+    "themeToLight": "Açık temaya geç",
+    "themeLight": "Açık",
+    "themeDark": "Koyu",
+    "themeSystem": "Sistem",
+    "accountMenu": "Hesap menüsü"
   },
   "nav": {
     "home": "Ana sayfa",

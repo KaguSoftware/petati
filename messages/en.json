@@ -27,7 +27,11 @@
     "confirm": "Confirm",
     "theme": "Theme",
     "themeToDark": "Switch to dark mode",
-    "themeToLight": "Switch to light mode"
+    "themeToLight": "Switch to light mode",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "accountMenu": "Account menu"
   },
   "nav": {
     "home": "Home",

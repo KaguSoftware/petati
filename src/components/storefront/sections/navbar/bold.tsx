@@ -47,7 +47,6 @@ export function NavbarBold({ storeName, logoUrl, categories, labels, contactPhon
         </div>
         <div className="justify-self-center">{brand}</div>
         <div className="flex min-w-0 items-center justify-end gap-0.5 @tablet:gap-1">
-          <div className="hidden @desktop:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>

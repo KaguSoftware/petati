@@ -26,8 +26,8 @@ export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot
   return (
     <header data-navbar-overlay data-at-top="true" className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur supports-backdrop-filter:bg-background/70">
       <NavScrollState />
-      <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-gutter">
-        <div className="flex items-center gap-1">
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-gutter">
+        <div className="flex min-w-0 items-center gap-1">
           <MobileNav
             labels={{ menu: labels.menu, closeMenu: labels.closeMenu, categories: labels.categories, search: labels.search }}
             brand={brand}
@@ -43,11 +43,8 @@ export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot
           {brand}
         </div>
 
-        {/* Centred on the page (not between logo and icons) from desktop up. */}
-        <nav
-          aria-label={labels.menu}
-          className="hidden items-center gap-1 @tablet:flex @desktop:absolute @desktop:start-1/2 @desktop:-translate-x-1/2 @desktop:gap-2 rtl:@desktop:translate-x-1/2"
-        >
+        {/* The grid's centre cell, so these sit on the page centre and can never overlap the ends. */}
+        <nav aria-label={labels.menu} className="hidden items-center justify-center gap-1 @tablet:flex @desktop:gap-2">
           <Link href="/shop" className={navLink}>
             {labels.shop}
           </Link>
@@ -61,12 +58,11 @@ export function NavbarMinimal({ storeName, logoUrl, categories, labels, cartSlot
           ))}
         </nav>
 
-        <div className="flex items-center justify-end gap-0.5 @tablet:gap-1">
+        <div className="flex min-w-0 items-center justify-end gap-0.5 @tablet:gap-1">
           <Link href="/shop" aria-label={labels.search} className={cn(buttonVariants({ variant: "ghost", size: "icon-lg" }), "hidden @tablet:inline-flex @desktop:hidden")}>
             <Search className="size-5" />
           </Link>
           <SearchForm placeholder={labels.search} className="hidden w-48 shrink-0 @desktop:block @desktop:me-1 @wide:w-52" />
-          <div className="hidden @desktop:block">{localeSlot}</div>
           {accountSlot}
           {cartSlot}
         </div>
